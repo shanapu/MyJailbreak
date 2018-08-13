@@ -1,6 +1,114 @@
 ### Change Log
   
   
+**[Beta 14]** - Tags & Prefixs to configs, ingonito & vote your warden
+  
+    
+*Added*
+*  Add-On: EventDay Toggle - enable/disable commands, convars & plugins while event day is active
+    *  new plugin - disabled/eventday_toggle.smx
+    *  new config file - addons/sourcemod/configs/MyJailbreak/eventday_toggle.cfg
+*  Icons: Player command to enable/disable icons with clientprefs (cookies)
+    *  new command - sm_icons - Allows player to toggle the player icons.
+    *  new cvar - sm_icons_cmds - Set your custom chat commands for toggle icons(!icons (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+*  Warden: New overlay & sound for the player when he becomes new warden
+    *  new cvar - sm_warden_sounds_youwarden - Path to the soundfile which should be played for the new warden.
+    *  new cvar - sm_warden_overlays_warden - Path to the warden Overlay DONT TYPE .vmt or .vft
+*  Weapons: Limit the usages of the !guns command.
+    *  new cvar - sm_weapons_max_usages - Max usages of !guns command allowed.
+*  Ratio: new convar to disable guard queue.
+    *  new cvar - sm_ratio_disable_queue - 1 - disabled guard queue, 0 - enable guard queue
+*  Add-On: Ratio - voice check - Check with Voiceannounce_EX if player has already spoken before allow move to guards
+*  TeamGames: Version check
+*  Add-On: restrict areas for EventDays - specify restricted areas with Franugs devzones (zone name - "MyJB-NoGo")
+    *  new plugin - disabled/myjailbreak_devzones.smx
+*  Suicidebomber: new cvar to smaller the bomb damage radius against teammates to counteract trolls.
+    *  new cvar - sm_suicidebomber_bomb_radius_t - Radius for bomb damage on prisoners (reduce when you have problem with teamkiller) / 0 - disable team damage at all
+*  Warden: new glow feature for warden & deputy - need CustomPlayerSkins
+    *  new cvar - sm_warden_glow_enable - 0 - disabled, 1 - enable warden glow
+    *  new cvar - sm_warden_glow_random - 0 - disabled, 1 - enable warden random glow everytime / ignores RGB values
+    *  new cvar - sm_warden_glow_red - What glow to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_warden_glow_green - What glow to turn the warden into (rGb): x - green value
+    *  new cvar - sm_warden_glow_blue - What glow to turn the warden into (rgB): x - blue value
+    *  new cvar - sm_warden_glow_red_deputy - What glow to turn the deputy into (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_warden_glow_green_deputy - What glow to turn the deputy into (rGb): x - green value
+    *  new cvar - sm_warden_glow_blue_deputy - What glow to turn the deputy into (rgB): x - blue value
+*  Add-On: Ratio: Support for r1kos VIP core
+    *  new plugin - disabled/ratio_vipcore.smx
+*  Zombie: new convar to adjust zombie movement speed.
+    *  new cvar - sm_zombie_speed - Movement speed of zombies - 1.0 normal speed
+*  Warden: New kind to choose warden. On roundbeginn guards can applicate as warden with !w. after a countdown all player get a vote menu to vote their next warden. Idea by Hexah!
+    *  new cvar - sm_warden_choice - 0 - disabled, 1 - enable player choose their warden - ignores cooldowns
+    *  new cvar - sm_warden_choice_team - 0 - only Prisoner, 1 - Prisoner & guards can choose their warden
+    *  new cvar - sm_warden_choice_application_time - How many seconds after roundstart guards can applicate for warden
+    *  new cvar - sm_warden_choice_vote_time - 0 - disabled, rounds in a row a player can be warden
+    *  new cvar - sm_warden_choice_list - 0 - remove all applicans after vote, 1 - remove just the voted warden after vote, 2 - players stay on applicans list until !uw
+*  Add-On: Change ConVars, block or execute commands & un/load plugins on EventDay start/end
+    *  new plugin - disabled/eventday_toggle.smx
+    *  new config - sourcemod/configs/MyJailbreak/eventday_toggle.cfg check comments in this cfg for configuration
+*  Catch: Freezed players become an icecube model
+    *  new cvar - sm_catch_model - path to the ice model
+*  Add-On: Support for adding freeday to Zephyrus store
+    *  new plugin - disabled/warden_zephstore_freeday.smx
+		"FreeDay"
+		{
+			"price" "800"
+			"type" "freeday"
+		}
+  
+*Changed*
+*  All Plugins: moved the plugins chat prefix (e.g. [MyJB.Tag]) from translation to plugins .cfg
+    *  new cvar - sm_PLUGINNAME_prefix - Set your chat prefix for this plugin.
+*  Ratio: moved guard questions from translation own cfg file - BigThx to BaFer!
+    *  new config file - addons/sourcemod/configs/MyJailbreak/questions.cfg
+*  PlayerTags: Plugin rewritten. Incognito mode. Support admin groups & providing support for TogsClanTags, CCC & ZstoreTags. moved all the player tags(e.g. [Warden]) from translation and to new cfg
+    *  new command - sm_incognito - Allows admin to toggle incognito - show default tags instead of admin tags
+    *  new config - sourcemod/configs/MyJailbreak/player_tags.cfg check comments in this cfg for configuration
+    *  removed cvars - sm_playertag_flag - All cvars to set player tags are removed. check new config file.
+    *  new cvar - sm_playertag_extern - 0 - disabled, 1 - don't overwrite chat tags given by extern plugins like ccc, togsclantags or zephyrus store
+    *  changed cvar - sm_playertag_overwrite - 0 - if no tag is set in config clear the tag (show nothing) / 1 - if no tag is set in config show players steam group tag
+    *  new cvar - sm_playertag_prefix - Set your chat prefix for this plugin.
+    *  new cvar - sm_playertag_incognito_join - 0 - admins & VIP will recieve their tags right after join / 1 - admins & VIP will join incognito without admin tags
+    *  new cvar - sm_playertag_incognito_time - seconds how long admins stay incognito - 0 - disabled, you have to !incognito to enable
+    *  new cvar - sm_playertag_cmds - Set your custom chat commands for toggle incognito mode(!incognito (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
+*  Warden: Set minimum value of sm_warden_cooldown_roundstart to 0
+*  Freeday: Remove teleport to CT spawn
+*  EventDays: restrict weapon shooting while truce/freeze-time
+*  HUD: removed hosties dependency
+*  HUD: use the 'new HUD' system for csgo
+    *  new cvar - sm_hud_type - 0 - show hud via a center-bottom hint box (sm_hsay), 1 - show hud via 'new hud' system
+    *  new cvar - sm_hud_red - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (Rgb): x - red value
+    *  new cvar - sm_hud_green - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rGb): x - green value
+    *  new cvar - sm_hud_blue - Color of sm_hud_type '1' (set R, G and B values to 255 to disable) (rgB): x - blue value
+    *  new cvar - sm_hud_alpha - Alpha value of sm_hud_type '1' set value to 255 to disable for transparency
+    *  new cvar - sm_hud_x - x coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'
+    *  new cvar - sm_hud_y - y coordinate, from 0 to 1. -1.0 is the center of sm_hud_type '1'
+*  Warden: reset cooldowns (sm_warden_cooldown_limit) when all CTs reached max.
+  
+  
+  *Fixed*
+*  War, zombie & duckhunt: fix team damage
+*  Warden: taser clips
+*  events: fix sm_*eventname*_randomspawn
+*  minor errors, fixes & improvements
+  
+  
+  
+  
+  Developer stuff*
+*  New natives to dis/enable warden and check if enabled
+    *  new native - void warden_enable(bool status) - Disable & enable warden plugin
+    *  new native - bool warden_isenabled() - get the current status of warden plugin
+*  New native & forward to check for different VIP types - the native calls the forward
+    *  new native - bool MyJailbreak_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature) - take a look at template plugin
+    *  new forward - bool MyJailbreak_OnCheckVIP(int client, char[] feature) - features are named after their cvars (e.g "sm_ratio_flag")
+    *  new template plugin - Add-ons/template_vip_forward.sp - example to grand vip for different features through different "Vip"-types
+*  stock CheckVipFlag has been replaced with new native MyJailbreak_CheckVIPFlags
+*  Added Code contribution guidelines - read before do a pull request
+*  many code style adjustments - check https://github.com/shanapu/MyJailbreak/blob/dev/Code_Contribution_Guidelines.md
+  
+  
+  
 **[Beta 13]** - New Events, new features & many changes
   
 *Thanks* 

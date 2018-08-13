@@ -67,9 +67,9 @@ int g_iRoundNumber = 0;
 Handle gF_OnEventDayStart;
 Handle gF_OnEventDayEnd;
 Handle gF_ResetEventDay;
+Handle gF_OnCheckVIP;
 
 ArrayList g_aEventDayList = null;
-
 
 ConVar Cvar_sm_hosties_announce_rebel_down;
 ConVar Cvar_sm_hosties_rebel_color;
@@ -152,30 +152,22 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
+	}
 }
 
 // Initialize Plugin - check/set sv_tags for MyJailbreak
 public void OnConfigsExecuted()
 {
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
-
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
@@ -189,9 +181,25 @@ public void OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegAdminCmd(sCommand, Command_EndRound, ADMFLAG_CHANGEMAP);
+		}
 	}
+
+	if (!gc_bTag.BoolValue)
+		return;
+
+	ConVar hTags = FindConVar("sv_tags");
+	char sTags[128];
+	hTags.GetString(sTags, sizeof(sTags));
+
+	if (StrContains(sTags, "MyJailbreak", false) != -1)
+		return;
+
+	StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+	hTags.SetString(sTags);
 }
+
 
 /******************************************************************************
                    COMMANDS
@@ -221,7 +229,7 @@ public Action Command_ResetEvent(int client, int args)
 	}
 	else
 	{
-		ReplyToCommand(client, "No Event Day planned/running");
+		ReplyToCommand(client, "[MyJB] No Event Day planned/running");
 	}
 
 	return Plugin_Handled;
@@ -341,9 +349,12 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("MyJailbreak_BeaconOn", Native_BeaconOn);
 	CreateNative("MyJailbreak_BeaconOff", Native_BeaconOff);
 
+	CreateNative("MyJailbreak_CheckVIPFlags", Native_CheckVIPFlags);
+
 	gF_OnEventDayStart = CreateGlobalForward("MyJailbreak_OnEventDayStart", ET_Ignore, Param_String);
 	gF_OnEventDayEnd = CreateGlobalForward("MyJailbreak_OnEventDayEnd", ET_Ignore, Param_String, Param_Cell);
 	gF_ResetEventDay = CreateGlobalForward("MyJailbreak_ResetEventDay", ET_Ignore);
+	gF_OnCheckVIP = CreateGlobalForward("MyJailbreak_OnCheckVIP", ET_Single, Param_Cell, Param_String);
 
 	RegPluginLibrary("myjailbreak");
 
@@ -396,9 +407,7 @@ public int Native_RemoveEventDay(Handle plugin, int argc)
 public int Native_IsEventDayRunning(Handle plugin, int argc)
 {
 	if (!g_bEventDayRunning)
-	{
 		return false;
-	}
 
 	return true;
 }
@@ -407,9 +416,7 @@ public int Native_IsEventDayRunning(Handle plugin, int argc)
 public int Native_IsEventDayPlanned(Handle plugin, int argc)
 {
 	if (!g_bEventDayPlanned)
-	{
 		return false;
-	}
 
 	return true;
 }
@@ -439,9 +446,7 @@ public int Native_GetEventDayName(Handle plugin, int argc)
 public int Native_IsLastGuardRule(Handle plugin, int argc)
 {
 	if (!g_bLastGuardRuleActive)
-	{
 		return false;
-	}
 
 	return true;
 }
@@ -455,8 +460,10 @@ public int Native_SetLastGuardRule(Handle plugin, int argc)
 // Check if logging is active
 public int Native_GetActiveLogging(Handle plugin, int argc)
 {
-	if (gc_bLogging.BoolValue) return true;
-	else return false;
+	if (!gc_bLogging.BoolValue)
+		return false;
+
+	return true;
 }
 
 // Boolean Set Event Day running (true = running)
@@ -493,6 +500,37 @@ public int Native_SetEventDayRunning(Handle plugin, int argc)
 		ToggleHeal(true);
 	}
 }
+
+
+public int Native_CheckVIPFlags(Handle plugin, int argc)
+{
+	int client = GetNativeCell(1);
+
+	char sCommand[24];
+	GetNativeString(2, sCommand, sizeof(sCommand));
+
+	char sBuffer[32];
+	ConVar cFlags = GetNativeCell(3);
+	cFlags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+	if (CheckCommandAccess(client, sCommand, iFlags))
+		return true;
+
+	GetNativeString(4, sBuffer, sizeof(sBuffer));
+
+	bool result = false;
+	Call_StartForward(gF_OnCheckVIP);
+	Call_PushCell(client);
+	Call_PushString(sBuffer);
+	Call_Finish(result);
+
+	return result;
+}
+
 
 void ToggleConVars(bool IsEventDay)
 {

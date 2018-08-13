@@ -72,7 +72,7 @@ public void MarkRebel_OnPluginStart()
 
 public Action Command_MarkRebel(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && gp_bHosties && gp_bLastRequest)
+	if (gc_bPlugin.BoolValue && g_bEnabled && gp_bHosties && gp_bLastRequest)
 	{
 		if (gc_bMarkRebel.BoolValue)
 		{
@@ -80,7 +80,7 @@ public Action Command_MarkRebel(int client, int args)
 			{
 				Menu_MarkRebelMenu(client);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 		}
 	}
 

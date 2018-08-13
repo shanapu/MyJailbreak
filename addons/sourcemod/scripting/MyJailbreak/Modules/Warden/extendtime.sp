@@ -96,9 +96,9 @@ public Action Command_ExtendRoundTime(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_extendtimes", gc_iExtendLimit.IntValue);
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_extendtimes", gc_iExtendLimit.IntValue);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -125,7 +125,7 @@ public Action ExtendTime(int client, int args)
 	GameRules_SetProp("m_iRoundTime", GameRules_GetProp("m_iRoundTime", 4, 0)+args, 4, 0, true);
 	int extendminute = (args/60);
 	g_iRoundTime = g_iRoundTime + args;
-	CPrintToChatAll("%t %t", "warden_tag", "warden_extend", client, extendminute);
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_extend", client, extendminute);
 
 	return Plugin_Handled;
 }

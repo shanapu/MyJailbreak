@@ -172,7 +172,7 @@ stock Downloader_AddFileToDownloadsTable(char[] filename)
 		return true;
 	}
 
-	decl String:m_szExt[16];
+	decl String:m_szExt[32];
 	new m_iDot = FindCharInString(filename, '.', true);
 	if(m_iDot == -1)
 		return true;
@@ -180,7 +180,7 @@ stock Downloader_AddFileToDownloadsTable(char[] filename)
 	new m_iNumFiles = 0;
 
 	strcopy(m_szExt, sizeof(m_szExt), filename[m_iDot]);
-	decl String:m_szMaterials[8][PLATFORM_MAX_PATH];
+	decl String:m_szMaterials[16][PLATFORM_MAX_PATH];
 	decl m_iNum;
 	if(strcmp(m_szExt, ".mdl") == 0)
 	{

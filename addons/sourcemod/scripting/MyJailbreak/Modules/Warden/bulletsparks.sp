@@ -47,9 +47,6 @@ ConVar gc_sAdminFlagBulletSparks;
 // Booleans
 bool g_bBulletSparks[MAXPLAYERS+1] = true;
 
-// Strings
-char g_sAdminFlagBulletSparks[64];
-
 // Start
 public void BulletSparks_OnPluginStart()
 {
@@ -62,19 +59,7 @@ public void BulletSparks_OnPluginStart()
 	gc_sAdminFlagBulletSparks = AutoExecConfig_CreateConVar("sm_warden_bulletsparks_flag", "", "Set flag for admin/vip to get warden/deputy bulletimpact sparks. No flag = feature is available for all players!");
 
 	// Hooks 
-	HookConVarChange(gc_sAdminFlagBulletSparks, BulletSparks_OnSettingChanged);
 	HookEvent("bullet_impact", BulletSparks_Event_BulletImpact);
-
-	// FindConVar
-	gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
-}
-
-public void BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if (convar == gc_sAdminFlagBulletSparks)
-	{
-		strcopy(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks), newValue);
-	}
 }
 
 /******************************************************************************
@@ -83,29 +68,28 @@ public void BulletSparks_OnSettingChanged(Handle convar, const char[] oldValue, 
 
 public Action Command_BulletSparks(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bBulletSparks.BoolValue)
+		return Plugin_Handled;
+
+	if (!MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
+		return Plugin_Handled;
+
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
 	{
-		if (gc_bBulletSparks.BoolValue)
+		if (!g_bBulletSparks[client])
 		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
-			{
-				if (CheckVipFlag(client, g_sAdminFlagBulletSparks))
-				{
-					if (!g_bBulletSparks[client])
-					{
-						g_bBulletSparks[client] = true;
-						CPrintToChat(client, "%t %t", "warden_tag", "warden_bulletmarkon");
-					}
-					else if (g_bBulletSparks[client])
-					{
-						g_bBulletSparks[client] = false;
-						CPrintToChat(client, "%t %t", "warden_tag", "warden_bulletmarkoff");
-					}
-				}
-			}
-			else CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+			g_bBulletSparks[client] = true;
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkon");
+		}
+		else if (g_bBulletSparks[client])
+		{
+			g_bBulletSparks[client] = false;
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_bulletmarkoff");
 		}
 	}
+	else CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
+
+	return Plugin_Handled;
 }
 
 /******************************************************************************
@@ -116,7 +100,10 @@ public Action BulletSparks_Event_BulletImpact(Event event, char[] sName, bool bD
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
-	if (!gc_bPlugin.BoolValue || !gc_bBulletSparks.BoolValue || !g_bBulletSparks[client] || !CheckVipFlag(client, g_sAdminFlagBulletSparks))
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bBulletSparks.BoolValue || !g_bBulletSparks[client])
+		return Plugin_Continue;
+
+	if (!MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 		return Plugin_Continue;
 
 	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))

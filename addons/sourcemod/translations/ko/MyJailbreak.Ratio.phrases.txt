@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:05 UTC
+// Date: 2018-05-23 19:42:34 UTC
 // Language: Korean (ko)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ratio_tag"
-	{
-		"ko"		"[{green}MyJB.ratio{default}]"
-	}
 
 	"ratio_auto"
 	{
@@ -126,136 +121,6 @@
 	"ratio_notaccept"
 	{
 		"ko"		"저는 간수가 하고 싶지 않습니다."
-	}
-
-	"ratio_question_title"
-	{
-		"ko"		"간수가 되기 위해 다음 질문에 답하십시오."
-	}
-
-	"ratio_question1_line1"
-	{
-		"ko"		"감옥 문이 닫혀있고, 아직 죄수들은 감옥 안에 있습니다!"
-	}
-
-	"ratio_question1_line2"
-	{
-		"ko"		"당신은 무엇을 하실 것 입니까?"
-	}
-
-	"ratio_question1_wrong1"
-	{
-		"ko"		"감옥 문이 열리자 마자 나는 모두를 죽일 것 입니다!"
-	}
-
-	"ratio_question1_wrong2"
-	{
-		"ko"		"Last Request 까지 하나씩 죽이십시오."
-	}
-
-	"ratio_question1_right"
-	{
-		"ko"		"나는 소장의 첫 발언에 기다리겠습니다."
-	}
-
-	"ratio_question2_line1"
-	{
-		"ko"		"소장이 제대로 게임을 진행하지 않습니다."
-	}
-
-	"ratio_question2_line2"
-	{
-		"ko"		"당신의 총을 버리고 죄수들이 빠르게 반란을 할 수 있게 하십시오!"
-	}
-
-	"ratio_question2_wrong1"
-	{
-		"ko"		"좋은 생각 입니다."
-	}
-
-	"ratio_question2_wrong2"
-	{
-		"ko"		"Never! Just when the prisoner is my mate!"
-	}
-
-	"ratio_question2_right"
-	{
-		"ko"		"절때! 총을 드랍하는것은 금지되어있습니다!"
-	}
-
-	"ratio_question3_line1"
-	{
-		"ko"		"서버 규칙을 분명히 읽었습니까?"
-	}
-
-	"ratio_question3_line2"
-	{
-		"ko"		"서버 규칙을 완전히 이해했습니까?"
-	}
-
-	"ratio_question3_wrong1"
-	{
-		"ko"		"네, 읽었습니다. 나는 그들을 따라 가지 않을 것 입니다."
-	}
-
-	"ratio_question3_wrong2"
-	{
-		"ko"		"Reading? I'm here to play lol!"
-	}
-
-	"ratio_question3_right"
-	{
-		"ko"		"예, 저는 모두 읽었습니다. 나는 어떻게 서버에서 플레이 하는지 알고 있습니다."
-	}
-
-	"ratio_question4_line1"
-	{
-		"ko"		"당신은 작동이 되는 마이크를 가지고 있습니까?"
-	}
-
-	"ratio_question4_line2"
-	{
-		"ko"		"한국어를 할 줄 아십니까?"
-	}
-
-	"ratio_question4_wrong1"
-	{
-		"ko"		"죄송하지만 뭐라구요?"
-	}
-
-	"ratio_question4_wrong2"
-	{
-		"ko"		"마이크가 고장/사용불가 합니다. 명령을 채팅으로 치겠습니다."
-	}
-
-	"ratio_question4_right"
-	{
-		"ko"		"나는 좋은 품질의 마이크를 가지고 있습니다."
-	}
-
-	"ratio_question5_line1"
-	{
-		"ko"		"소장은 죽었고, 당신이 마지막 간수 입니다."
-	}
-
-	"ratio_question5_line2"
-	{
-		"ko"		"소장으로 플레이하고 싶으십니까?"
-	}
-
-	"ratio_question5_wrong1"
-	{
-		"ko"		"Better start a freeday..."
-	}
-
-	"ratio_question5_wrong2"
-	{
-		"ko"		"마지막 죄수를 Last Request 하기 전까지 모두 죽이십시오."
-	}
-
-	"ratio_question5_right"
-	{
-		"ko"		"간수가 된다면, 나는 소장을 플레이 하겠습니다."
 	}
 
 	"ratio_cooldown"

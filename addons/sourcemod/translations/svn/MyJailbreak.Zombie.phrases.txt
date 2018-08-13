@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:16 UTC
+// Date: 2018-05-23 19:26:26 UTC
 // Language: svn (svn)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"zombie_tag"
-	{
-		"svn"		"[{green}MyJB.Zombie{default}]"
-	}
 
 	"zombie_need"
 	{

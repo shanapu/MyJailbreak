@@ -47,9 +47,6 @@ ConVar gc_sAdminFlagBackstab;
 // Integers
 int g_iBackstabNumber[MAXPLAYERS+1];
 
-// Strings
-char g_sAdminFlagBackstab[64];
-
 // Start
 public void BackStab_OnPluginStart()
 {
@@ -61,18 +58,6 @@ public void BackStab_OnPluginStart()
 
 	// Hooks
 	HookEvent("round_start", BackStab_Event_RoundStart);
-	HookConVarChange(gc_sAdminFlagBackstab, BackStab_OnSettingChanged);
-
-	// FindConVar
-	gc_sAdminFlagBackstab.GetString(g_sAdminFlagBackstab, sizeof(g_sAdminFlagBackstab));
-}
-
-public void BackStab_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if (convar == gc_sAdminFlagBackstab)
-	{
-		strcopy(g_sAdminFlagBackstab, sizeof(g_sAdminFlagBackstab), newValue);
-	}
 }
 
 /******************************************************************************
@@ -81,32 +66,50 @@ public void BackStab_OnSettingChanged(Handle convar, const char[] oldValue, cons
 
 public void BackStab_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		g_iBackstabNumber[i] = gc_iBackstabNumber.IntValue;
+	}
 }
 
 public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	if (!gc_bBackstab.BoolValue)
+		return Plugin_Continue;
 
-	char sWeapon[32];
-	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (damage < 99.0)
+		return Plugin_Continue;
 
-	if (gc_bBackstab.BoolValue && IsClientInGame(attacker) && (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue)) && CheckVipFlag(victim, g_sAdminFlagBackstab))
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
+
+	if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(victim))
+		return Plugin_Continue;
+
+	if (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue))
 	{
-		if (gp_bHosties && gp_bLastRequest) if (IsClientInLastRequest(victim))
+		if (!MyJailbreak_CheckVIPFlags(victim, "sm_warden_backstab_flag", gc_sAdminFlagBackstab, "sm_warden_backstab_flag"))
 			return Plugin_Continue;
-		
-		if ((StrEqual(sWeapon, "weapon_knife", false)) && (damage > 99.0))
+
+		char sWeapon[32];
+		if (IsValidEntity(weapon))
+		{
+			GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+		}
+
+		if ((StrContains(sWeapon, "knife", false) != -1) || (StrContains(sWeapon, "bayonet", false) != -1))
 		{
 			if (gc_iBackstabNumber.IntValue == 0)
 			{
 				PrintCenterText(attacker, "%t", "warden_backstab");
+
 				return Plugin_Handled;
 			}
 			else if (g_iBackstabNumber[victim] > 0)
 			{
 				PrintCenterText(attacker, "%t", "warden_backstab");
 				g_iBackstabNumber[victim]--;
+
 				return Plugin_Handled;
 			}
 		}

@@ -177,28 +177,27 @@ public void Orders_OnConfigsExecuted()
 
 public Action Event_Say(int client, char[] command,int arg)
 {
-	if (gc_bPlugin.BoolValue)
-	{
-		if (gc_bOrders.BoolValue)
-		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOrdersDeputy.BoolValue))
-			{
-				// listen for custom order commands
-				char text[24];
-				GetCmdArgString(text, sizeof(text));
-				StripQuotes(text);
-				TrimString(text);
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bOrders.BoolValue)
+		return Plugin_Continue;
 
-				int inum;
-				if (GetTrieValue(g_hCommandTrie, text, inum))
-				{
-					char num[4];
-					IntToString(inum,num,sizeof(num));
-					Command_Handler(num);
-				}
-			}
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOrdersDeputy.BoolValue))
+	{
+		// listen for custom order commands
+		char text[24];
+		GetCmdArgString(text, sizeof(text));
+		StripQuotes(text);
+		TrimString(text);
+
+		int inum;
+		if (GetTrieValue(g_hCommandTrie, text, inum))
+		{
+			char num[4];
+			IntToString(inum,num,sizeof(num));
+			Command_Handler(num);
 		}
-	}
+	}	
+
+	return Plugin_Continue;
 }
 
 
@@ -223,7 +222,7 @@ void Command_Handler(char[] number)
 			kvMenu.GetString("chat", sValue, sizeof(sValue));
 			if (strlen(sValue) > 0)
 			{
-				CPrintToChatAll("%t %s", "warden_tag", sValue);
+				CPrintToChatAll("%s %s", g_sPrefix, sValue);
 			}
 
 			kvMenu.GetString("HUD", sValue, sizeof(sValue));
@@ -267,17 +266,14 @@ void Command_Handler(char[] number)
 
 public Action Command_OrderMenu(int client, int iItem)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bOrders.BoolValue)
+		return Plugin_Handled;
+
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOrdersDeputy.BoolValue))
 	{
-		if (gc_bOrders.BoolValue)
-		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOrdersDeputy.BoolValue))
-			{
-				Menu_BuildOrderMenu(client);
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
-		}
+		Menu_BuildOrderMenu(client);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
@@ -373,7 +369,7 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 				kvMenu.GetString("chat", sValue, sizeof(sValue));
 				if (strlen(sValue) > 0)
 				{
-					CPrintToChatAll("%t %s", "warden_tag", sValue);
+					CPrintToChatAll("%s %s", g_sPrefix, sValue);
 				}
 
 				kvMenu.GetString("HUD", sValue, sizeof(sValue));

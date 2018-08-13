@@ -68,35 +68,37 @@ public void Color_OnPluginStart()
 
 public void Color_OnWardenCreation(int client)
 {
-	CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(1.0, Timer_WardenFixColor, GetClientUserId(client), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void Color_OnWardenRemoved(int client)
 {
-	CreateTimer(0.1, Timer_RemoveColor, client);
+	CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(client));
 }
 
 public void Color_OnDeputyCreation(int client)
 {
-	CreateTimer(1.0, Timer_WardenFixColor, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(1.0, Timer_WardenFixColor, GetClientUserId(client), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public void Color_OnDeputyRemoved(int client)
 {
-	CreateTimer(0.1, Timer_RemoveColor, client);
+	CreateTimer(0.1, Timer_RemoveColor, GetClientUserId(client));
 }
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
 
-public Action Timer_WardenFixColor(Handle timer, any client)
+public Action Timer_WardenFixColor(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, false, false))
 	{
 		if (IsClientWarden(client) || IsClientDeputy(client))
 		{
-			if (gc_bPlugin.BoolValue)
+			if (gc_bPlugin.BoolValue && g_bEnabled)
 			{
 				if (gc_bColor.BoolValue)
 				{

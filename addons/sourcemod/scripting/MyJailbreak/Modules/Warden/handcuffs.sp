@@ -79,7 +79,6 @@ int TickTime[MAXPLAYERS+1];
 // Strings
 char g_sSoundCuffsPath[256];
 char g_sOverlayCuffsPath[256];
-char g_sAdminFlagCuffs[64];
 char g_sSoundBreakCuffsPath[256];
 char g_sSoundUnLockCuffsPath[256];
 char g_sEquipWeapon[MAXPLAYERS+1][32];
@@ -123,14 +122,12 @@ public void HandCuffs_OnPluginStart()
 	HookConVarChange(gc_sSoundBreakCuffsPath, HandCuffs_OnSettingChanged);
 	HookConVarChange(gc_sSoundUnLockCuffsPath, HandCuffs_OnSettingChanged);
 	HookConVarChange(gc_sOverlayCuffsPath, HandCuffs_OnSettingChanged);
-	HookConVarChange(gc_sAdminFlagCuffs, HandCuffs_OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundCuffsPath.GetString(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath));
 	gc_sSoundBreakCuffsPath.GetString(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath));
 	gc_sSoundUnLockCuffsPath.GetString(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath));
 	gc_sOverlayCuffsPath.GetString(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath));
-	gc_sAdminFlagCuffs.GetString(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs));
 }
 
 public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
@@ -138,26 +135,38 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 	if (convar == gc_sSoundCuffsPath)
 	{
 		strcopy(g_sSoundCuffsPath, sizeof(g_sSoundCuffsPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundCuffsPath);
+		}
 	}
 	else if (convar == gc_sSoundBreakCuffsPath)
 	{
 		strcopy(g_sSoundBreakCuffsPath, sizeof(g_sSoundBreakCuffsPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundBreakCuffsPath);
+		}
 	}
 	else if (convar == gc_sSoundUnLockCuffsPath)
 	{
 		strcopy(g_sSoundUnLockCuffsPath, sizeof(g_sSoundUnLockCuffsPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundUnLockCuffsPath);
+		}
 	}
 	else if (convar == gc_sOverlayCuffsPath)
 	{
 		strcopy(g_sOverlayCuffsPath, sizeof(g_sOverlayCuffsPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
-	}
-	else if (convar == gc_sAdminFlagCuffs)
-	{
-		strcopy(g_sAdminFlagCuffs, sizeof(g_sAdminFlagCuffs), newValue);
+
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayCuffsPath);
+		}
 	}
 }
 
@@ -167,7 +176,7 @@ public void HandCuffs_OnSettingChanged(Handle convar, const char[] oldValue, con
 
 public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	if (!g_bIsLR && gc_bStayWarden.BoolValue)
@@ -188,7 +197,7 @@ public void HandCuffs_Event_RoundStart(Event event, const char[] name, bool dont
 
 public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -205,7 +214,7 @@ public void HandCuffs_Event_ItemEquip(Event event, const char[] name, bool dontB
 
 public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroadcast) 
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	int client = GetClientOfUserId(event.GetInt("userid")); // Get the dead clients id
@@ -222,7 +231,7 @@ public void HandCuffs_Event_PlayerTeamDeath(Event event, const char[] name, bool
 
 public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
 		return;
 
 	int client = GetClientOfUserId(event.GetInt("userid"));
@@ -235,7 +244,7 @@ public void HandCuffs_Event_WeaponFire(Event event, char[] name, bool dontBroadc
 		if (StrEqual(sWeapon, "weapon_taser"))
 		{
 			int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
-			SetPlayerAmmo(client, weapon, _, 2);
+			SetEntProp(weapon, Prop_Data, "m_iClip1", 2);
 		}
 	}
 }
@@ -256,7 +265,7 @@ public Action HandCuffs_OnPlayerRunCmd(int client, int &buttons, int &impulse, f
 {
 	if (buttons & IN_ATTACK2)
 	{
-		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+		if (gc_bHandCuff.BoolValue && (StrEqual(g_sEquipWeapon[client], "taser")) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 		{
 			int Target = GetClientAimTarget(client, true);
 			
@@ -350,18 +359,20 @@ public void OnButtonRelease2(int client, int button)
 
 public Action HandCuffs_OnTakedamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &weapon, float damageForce[3], float damagePosition[3], int damagecustom)
 {
-	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false)) return Plugin_Continue;
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
 
-	char sWeapon[32];
-	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
+		return Plugin_Continue;
 
 	if (g_bCuffed[attacker])
 		return Plugin_Handled;
 
-	if (!gc_bPlugin.BoolValue || !gc_bHandCuff.BoolValue || (!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
-	{
+	if ((!IsClientWarden(attacker) && !IsClientDeputy(attacker)) || (IsClientDeputy(attacker) && !gc_bHandCuffDeputy.BoolValue) || !IsValidEdict(weapon) || (!gc_bHandCuffCT.BoolValue && (GetClientTeam(victim) == CS_TEAM_CT)))
 		return Plugin_Continue;
-	}
+
+	char sWeapon[32];
+	if (IsValidEntity(weapon)) GetEntityClassname(weapon, sWeapon, sizeof(sWeapon));
 
 	if (!StrEqual(sWeapon, "weapon_taser"))
 		return Plugin_Continue;
@@ -495,9 +506,9 @@ void CuffsEm(int client, int attacker)
 		g_iCuffed++;
 		if (gc_bSounds)EmitSoundToAllAny(g_sSoundCuffsPath);
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_cuffson", attacker, client);
-		CPrintToChat(attacker, "%t %t", "warden_tag", "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
-		if (CheckVipFlag(client, g_sAdminFlagCuffs))
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffson", attacker, client);
+		CPrintToChat(attacker, "%s %t", g_sPrefix, "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
+		if (MyJailbreak_CheckVIPFlags(client, "sm_warden_handcuffs_flag", gc_sAdminFlagCuffs, "sm_warden_handcuffs_flag"))
 		{
 			CreateTimer (2.5, Timer_HasPaperClip, client);
 		}
@@ -518,9 +529,9 @@ void FreeEm(int client, int attacker)
 	if ((attacker != 0) && (g_iCuffed == 0) && (g_iPlayerHandCuffs[attacker] < 1))
 	{
 		int weapon = GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon");
-		SetPlayerAmmo(attacker, weapon, _, 0);
+		SetEntProp(weapon, Prop_Data, "m_iClip1", 0);
 	}
-	if (attacker != 0) CPrintToChatAll("%t %t", "warden_tag", "warden_cuffsoff", attacker, client);
+	if (attacker != 0) CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffsoff", attacker, client);
 }
 
 /******************************************************************************
@@ -544,7 +555,7 @@ public Action Timer_HasPaperClip(Handle timer, int client)
 
 		if (g_iPlayerPaperClips[client] > 0) // if yes tell him that
 		{
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 			PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		}
 	}
@@ -671,7 +682,7 @@ public Action Timer_ProgressOpen(Handle timer, int client)
 	{
 		if (gc_bSounds) StopSoundAny(client, SNDCHAN_AUTO, g_sSoundUnLockCuffsPath);
 		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀▀▀▀▀▀▀▀▀▀▀▀▀█\n\t░░░<font color='#00FF00'>█░█░█░█░█░█░█░</font>█\n\t<u>░░░░░░░░░░░░░░░░░█</u>");
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_unlock");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_unlock");
 		if (gc_bSounds) EmitSoundToAllAny(g_sSoundBreakCuffsPath);
 		SetEntityMoveType(client, MOVETYPE_WALK);
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", 1.0);
@@ -700,7 +711,7 @@ public Action Timer_ProgressBroke(Handle timer, int client)
 		PrintCenterText(client, "%s", "<font size='14'>\t░░░█▀█▀█▀█▀█▀█▀█▀█\n\t░░░█<font color='#FF0000'>■█■█■█■█■█■█■</font>█\n\t<u>░░░░░░░░░░░░░░░░░█</u>");
 		g_iPlayerPaperClips[client]--;
 		TickTime[client]= 0;
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_brokepaperclip");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_brokepaperclip");
 		return Plugin_Continue;
 	}
 	else if (TickTime[client] == 0)
@@ -719,7 +730,7 @@ public Action Timer_StillPaperClip(Handle timer, int client)
 {
 	if (g_bCuffed[client])
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 		PrintCenterText(client, "%t", "warden_gotpaperclip", g_iPlayerPaperClips[client]);
 	}
 }

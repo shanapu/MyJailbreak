@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -73,47 +74,48 @@ public void Disarm_Event_RoundStart(Event event, const char[] name, bool dontBro
 
 public Action Disarm_Event_PlayerHurt(Event event, char[] name, bool dontBroadcast)
 {
-	if (gc_bPlugin.BoolValue && gc_bDisarm.BoolValue && !g_bIsLR)
-	{
-		int victim = GetClientOfUserId(event.GetInt("userid"));
-		int attacker = GetClientOfUserId(event.GetInt("attacker"));
-		int hitgroup = event.GetInt("hitgroup");
-		int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bDisarm.BoolValue || g_bIsLR)
+		return Plugin_Continue;
+
+	int victim = GetClientOfUserId(event.GetInt("userid"));
+	int attacker = GetClientOfUserId(event.GetInt("attacker"));
+	int hitgroup = event.GetInt("hitgroup");
+	int victimweapon = GetEntPropEnt(victim, Prop_Send, "m_hActiveWeapon");
 		
-		if (IsValidClient(attacker, true, false) && IsValidClient(victim, true, false))
+	if (IsValidClient(attacker, true, false) && IsValidClient(victim, true, false))
+	{
+		if ((IsClientWarden(attacker) && g_iDisarm == 1) || ((IsClientWarden(attacker) || IsClientDeputy(attacker)) && g_iDisarm == 2) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 3) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 4))
 		{
-			if ((IsClientWarden(attacker) && g_iDisarm == 1) || ((IsClientWarden(attacker) || IsClientDeputy(attacker)) && g_iDisarm == 2) || ((GetClientTeam(attacker) == CS_TEAM_CT) && g_iDisarm == 3) || ((GetClientTeam(attacker) != GetClientTeam(victim)) && g_iDisarm == 4))
+			if (hitgroup == 4 || hitgroup == 5)
 			{
-				if (hitgroup == 4 || hitgroup == 5)
+				if (victimweapon != -1)
 				{
-					if (victimweapon != -1)
+					char sWeaponName[64];
+					GetEdictClassname(victimweapon, sWeaponName, sizeof(sWeaponName));
+
+					if (gc_bDisarmKnife.BoolValue && (StrContains(sWeaponName, "knife", false) != -1 || StrContains(sWeaponName, "bayonet", false) != -1))
+						return Plugin_Handled;
+					
+					CPrintToChatAll("%s %t", g_sPrefix, "warden_disarmed", victim, attacker);
+					PrintCenterText(victim, "%t", "warden_lostgun");
+					
+					if (gc_iDisarmMode.IntValue == 1)
 					{
-						char sWeaponName[64];
-						GetEdictClassname(victimweapon, sWeaponName, sizeof(sWeaponName));
-						if (gc_bDisarmKnife.BoolValue && (StrContains(sWeaponName, "knife") != -1))
-							return Plugin_Handled;
+						CS_DropWeapon(victim, victimweapon, true, true);
+						return Plugin_Stop;
+					}
+					else if (gc_iDisarmMode.IntValue == 2)
+					{
+						CS_DropWeapon(victim, victimweapon, true, true);
 						
-						CPrintToChatAll("%t %t", "warden_tag", "warden_disarmed", victim, attacker);
-						PrintCenterText(victim, "%t", "warden_lostgun");
-						
-						if (gc_iDisarmMode.IntValue == 1)
+						if (IsValidEdict(victimweapon))
 						{
-							CS_DropWeapon(victim, victimweapon, true, true);
-							return Plugin_Stop;
-						}
-						else if (gc_iDisarmMode.IntValue == 2)
-						{
-							CS_DropWeapon(victim, victimweapon, true, true);
-							
-							if (IsValidEdict(victimweapon))
+							if (GetEntPropEnt(victimweapon, Prop_Data, "m_hOwnerEntity") == -1)
 							{
-								if (GetEntPropEnt(victimweapon, Prop_Data, "m_hOwnerEntity") == -1)
-								{
-									AcceptEntityInput(victimweapon, "Kill");
-								}
+								AcceptEntityInput(victimweapon, "Kill");
 							}
-							return Plugin_Stop;
 						}
+						return Plugin_Stop;
 					}
 				}
 			}

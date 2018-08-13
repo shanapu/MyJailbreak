@@ -53,6 +53,7 @@
 // Console Variables
 ConVar gc_bPlugin;
 ConVar gc_bSounds;
+ConVar gc_sPrefix;
 ConVar gc_sCustomCommandRequest;
 
 // Booleans
@@ -73,6 +74,9 @@ Handle g_hTimerRequest;
 
 // Float
 float g_fDeathOrigin[MAXPLAYERS+1][3];
+
+// Strings
+char g_sPrefix[64];
 
 // Modules
 #include "MyJailbreak/Modules/Request/refuse.sp"
@@ -115,6 +119,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_request_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_request_enable", "1", "0 - disabled, 1 - enable Request Plugin");
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_request_prefix", "[{green}MyJB.Request{default}]", "Set your chat prefix for this plugin.");
 	gc_bSounds = AutoExecConfig_CreateConVar("sm_request_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandRequest = AutoExecConfig_CreateConVar("sm_request_cmds", "req, requestmenu", "Set your custom chat command for requestmenu (!request (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 
@@ -132,16 +137,28 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
+		for (int i = 1; i <= MaxClients; i++)		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
 		g_bIsLateLoad = false;
+	}
+}
+
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
@@ -156,31 +173,41 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "warden"))
+	}
+	else if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
+	}
 }
 
 /******************************************************************************
@@ -233,7 +260,7 @@ public Action Command_RequestMenu(int client, int args)
 			reqmenu.ExitBackButton = true;
 			reqmenu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
 	}
 
 	return Plugin_Handled;
@@ -292,6 +319,8 @@ public void OnMapStart()
 
 public void OnConfigsExecuted()
 {
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
 	Refuse_OnConfigsExecuted();
 	Capitulation_OnConfigsExecuted();
 	Heal_OnConfigsExecuted();
@@ -384,10 +413,19 @@ public int Command_RequestMenuHandler(Menu reqmenu, MenuAction action, int clien
                    TIMER
 ******************************************************************************/
 
-public Action Timer_IsRequest(Handle timer, any client)
+public Action Timer_IsRequest(Handle timer)
 {
 	g_bIsRequest = false;
 	g_hTimerRequest = null;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (g_bFreeKilled[i]) g_bFreeKilled[i] = false;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (IsClientInGame(i))
+			continue;
+
+		if (!g_bFreeKilled[i])
+			continue;
+
+		g_bFreeKilled[i] = false;
+	}
 }

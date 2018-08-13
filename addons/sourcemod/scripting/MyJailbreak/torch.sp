@@ -39,6 +39,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <smartjaildoors>
 #include <CustomPlayerSkins>
 #include <myjailbreak>
@@ -63,6 +64,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
@@ -71,6 +73,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -113,27 +116,27 @@ int g_iRound;
 int g_iSprintStatus[MAXPLAYERS+1];
 int g_iMaxRound;
 int g_iBurningZero = -1;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerSprint[MAXPLAYERS+1];
 Handle g_hTimerTruce;
 
 // Strings
+char g_sPrefix[64];
 char g_sSoundClearTorchPath[256];
 char g_sSoundOnTorchPath[256];
 char g_sHasVoted[1500];
 char g_sOverlayOnTorch[256];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Floats
 float g_fPos[3];
 
 // Info
-public Plugin myinfo = {
+public Plugin myinfo =
+{
 	name = "MyJailbreak - Torch Relay",
 	author = "shanapu",
 	description = "Event Day for Jailbreak Server",
@@ -166,6 +169,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_torch_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_torch_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_torch_prefix", "[{green}MyJB.TorchRelay{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_torch_cmds_vote", "tor", "Set your custom chat command for Event voting(!torch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_torch_cmds_set", "storch, stor", "Set your custom chat command for set Event(!settorch (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_torch_warden", "1", "0 - disabled, 1 - allow warden to set torch round", _, true, 0.0, true, 1.0);
@@ -215,7 +219,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundOnTorchPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundClearTorchPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
@@ -226,10 +230,6 @@ public void OnPluginStart()
 	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -237,8 +237,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -253,40 +256,62 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sSoundOnTorchPath)
 	{
 		strcopy(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundOnTorchPath);
-	}
-	else if (convar == gc_sAdminFlag)
-	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundOnTorchPath);
+		}
 	}
 	else if (convar == gc_sSoundClearTorchPath)
 	{
 		strcopy(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundClearTorchPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundClearTorchPath);
+		}
 	}
 	else if (convar == gc_sOverlayOnTorch)
 	{
 		strcopy(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayOnTorch);
+
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayOnTorch);
+		}
 	}
 	else if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
+	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
+
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
-	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
 	gp_bMyWeapons = LibraryExists("myweapons");
 }
@@ -294,51 +319,81 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iMaxRound = gc_iRounds.IntValue;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sSoundOnTorchPath.GetString(g_sSoundOnTorchPath, sizeof(g_sSoundOnTorchPath));
+	gc_sSoundClearTorchPath.GetString(g_sSoundClearTorchPath, sizeof(g_sSoundClearTorchPath));
+	gc_sOverlayOnTorch.GetString(g_sOverlayOnTorch, sizeof(g_sOverlayOnTorch));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 
 	// Set custom Commands
 	int iCount = 0;
@@ -372,11 +427,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("torch");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("torch");
 }
 
@@ -390,7 +451,8 @@ public Action Command_SetTorch(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -399,26 +461,26 @@ public Action Command_SetTorch(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event Torch Relay was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_torch_flag", gc_sAdminFlag, "sm_torch_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "torch_tag", "torch_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "torch_tag", "torch_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -429,23 +491,23 @@ public Action Command_SetTorch(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "torch_tag", "torch_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "torch_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "torch_tag", "torch_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -456,19 +518,22 @@ public Action Command_SetTorch(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "torch_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "torch_tag", "torch_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -479,23 +544,23 @@ public Action Command_SetTorch(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "torch_tag", "torch_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "torch_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "torch_tag", "torch_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -504,7 +569,7 @@ public Action Command_SetTorch(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -516,19 +581,22 @@ public Action Command_VoteTorch(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -539,14 +607,16 @@ public Action Command_VoteTorch(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "torch_tag", "torch_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "torch_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -555,7 +625,8 @@ public Action Command_VoteTorch(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -570,9 +641,7 @@ public Action Command_VoteTorch(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -581,7 +650,7 @@ public Action Command_VoteTorch(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "torch_tag", "torch_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "torch_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -635,7 +704,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
@@ -666,9 +735,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			if (gp_bWarden)
+			if (gp_bMyJBWarden)
 			{
-				SetCvar("sm_warden_enable", 1);
+				warden_enable(true);
 			}
 
 			if (gp_bMyWeapons)
@@ -685,18 +754,21 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-			CPrintToChatAll("%t %t", "torch_tag", "torch_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "torch_end");
 		}
 	}
 
 	if (g_bStartTorch)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "torch_tag", "torch_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "torch_next");
 		PrintCenterTextAll("%t", "torch_next_nc");
 	}
 }
@@ -755,9 +827,12 @@ public void MyJailbreak_ResetEventDay()
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		CreateTimer(0.0, DeleteOverlay, GetClientUserId(i));
 
@@ -777,6 +852,8 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
 	}
 
 	g_iBurningZero = -1;
@@ -792,9 +869,9 @@ void ResetEventDay()
 		SetCvar("sm_hosties_lr", 1);
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 1);
+		warden_enable(true);
 	}
 
 	if (gp_bMyWeapons)
@@ -811,7 +888,7 @@ void ResetEventDay()
 		MyJailbreak_SetEventDayName("none");
 	}
 
-	CPrintToChatAll("%t %t", "torch_tag", "torch_end");
+	CPrintToChatAll("%s %t", g_sPrefix, "torch_end");
 }
 
 // Map End
@@ -903,7 +980,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -912,16 +989,21 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsTorch = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "torch_tag", "torch_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "torch_now");
 		PrintCenterTextAll("%t", "torch_now_nc");
 	}
 	else
@@ -929,7 +1011,7 @@ void StartEventRound(bool thisround)
 		g_bStartTorch = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "torch_tag", "torch_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "torch_next");
 		PrintCenterTextAll("%t", "torch_next_nc");
 	}
 }
@@ -956,8 +1038,11 @@ void PrepareDay(bool thisround)
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				RandomCT = i;
@@ -967,8 +1052,11 @@ void PrepareDay(bool thisround)
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsClientInGame(i))
+					continue;
+
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
 				g_fPos[2] = g_fPos[2] + 5;
@@ -978,11 +1066,16 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		if (!IsClientInGame(i))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		EnableWeaponFire(i, false);
 
 		SetEntityMoveType(i, MOVETYPE_NONE);
 		
@@ -1005,9 +1098,9 @@ void PrepareDay(bool thisround)
 		MyJailbreak_SetEventDayRunning(true, 0);
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -1025,7 +1118,7 @@ void PrepareDay(bool thisround)
 
 	g_hTimerTruce = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
-	CPrintToChatAll("%t %t", "torch_tag", "torch_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "torch_rounds", g_iRound, g_iMaxRound);
 }
 
 // Set client as torch
@@ -1052,14 +1145,17 @@ void TorchEm(int client)
 		CreateTimer(3.0, DeleteOverlay, GetClientUserId(client));
 	}
 
-	CPrintToChatAll("%t %t", "torch_tag", "torch_torchem", client);
+	CPrintToChatAll("%s %t", g_sPrefix, "torch_torchem", client);
 }
 
 // remove client as torch
 void ExtinguishEm(int client)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		g_bImmuneTorch[i] = false;
 	}
 
@@ -1078,7 +1174,7 @@ void ExtinguishEm(int client)
 		EmitSoundToClientAny(client, g_sSoundClearTorchPath);
 	}
 
-	CPrintToChatAll("%t %t", "torch_tag", "torch_untorch", client);
+	CPrintToChatAll("%s %t", g_sPrefix, "torch_untorch", client);
 }
 
 // check is torch still alive
@@ -1092,7 +1188,7 @@ void CheckStatus()
 	if (number == 0)
 	{
 		CS_TerminateRound(5.0, CSRoundEnd_Draw);
-		CPrintToChatAll("%t %t", "torch_tag", "torch_win");
+		CPrintToChatAll("%s %t", g_sPrefix, "torch_win");
 	}
 }
 
@@ -1142,8 +1238,11 @@ public Action OnSetTransmit_Wallhack(int iSkin, int client)
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Handled;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		if (!CPS_HasSkin(i) || !g_bOnTorch[client])
 		{
 			continue;
@@ -1224,8 +1323,11 @@ public Action Timer_StartEvent(Handle timer)
 
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				SetEntityMoveType(i, MOVETYPE_WALK);
 			}
 		}
@@ -1240,7 +1342,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	if (g_iBurningZero > 0)
 	{
-		CPrintToChatAll("%t %t", "torch_tag", "torch_random", g_iBurningZero);
+		CPrintToChatAll("%s %t", g_sPrefix, "torch_random", g_iBurningZero);
 
 		SetEntityRenderColor(g_iBurningZero, 255, 120, 0, 255);
 		g_bOnTorch[g_iBurningZero] = true;
@@ -1261,8 +1363,11 @@ public Action Timer_StartEvent(Handle timer)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)&& IsPlayerAlive(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		if (gp_bCustomPlayerSkins && gc_bWallhack.BoolValue)
 		{
 			Setup_WallhackSkin(i);
@@ -1287,7 +1392,7 @@ public Action Timer_StartEvent(Handle timer)
 	g_hTimerTruce = null;
 
 	PrintCenterTextAll("%t", "torch_start_nc");
-	CPrintToChatAll("%t %t", "torch_tag", "torch_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "torch_start");
 
 	return Plugin_Stop;
 }
@@ -1301,7 +1406,8 @@ public Action Command_StartSprint(int client, int args)
 {
 	if (!g_bIsTorch)
 	{
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -1317,9 +1423,9 @@ public Action Command_StartSprint(int client, int args)
 		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSprintSpeed.FloatValue);
 		EmitSoundToClient(client, "player/suit_sprint.wav", SOUND_FROM_PLAYER, SNDCHAN_AUTO, SNDLEVEL_NORMAL, SND_NOFLAGS, 0.8);
 
-		CReplyToCommand(client, "%t %t", "torch_tag", "torch_sprint");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "torch_sprint");
 
-		g_hTimerSprint[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, client);
+		g_hTimerSprint[client] = CreateTimer(gc_fSprintTime.FloatValue, Timer_SprintEnd, GetClientUserId(client));
 	}
 
 	return Plugin_Handled;
@@ -1332,8 +1438,11 @@ public void OnGameFrame()
 		return;
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		if (GetClientButtons(i) & IN_USE)
 		{
 			Command_StartSprint(i, 0);
@@ -1360,8 +1469,10 @@ void ResetSprint(int client)
 	}
 }
 
-public Action Timer_SprintEnd(Handle timer, any client)
+public Action Timer_SprintEnd(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimerSprint[client] = null;
 
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintUsing))
@@ -1370,22 +1481,24 @@ public Action Timer_SprintEnd(Handle timer, any client)
 		g_iSprintStatus[client] &= ~ IsSprintUsing;
 		if (IsPlayerAlive(client) && GetClientTeam(client) > 1)
 		{
-			g_hTimerSprint[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, client);
-			CPrintToChat(client, "%t %t", "torch_tag", "torch_sprintend", gc_iSprintCooldown.IntValue);
+			g_hTimerSprint[client] = CreateTimer(gc_iSprintCooldown.FloatValue, Timer_SprintCooldown, userid);
+			CPrintToChat(client, "%s %t", g_sPrefix, "torch_sprintend", gc_iSprintCooldown.IntValue);
 		}
 	}
 
 	return Plugin_Handled;
 }
 
-public Action Timer_SprintCooldown(Handle timer, any client)
+public Action Timer_SprintCooldown(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimerSprint[client] = null;
 
 	if (IsClientInGame(client) && (g_iSprintStatus[client] & IsSprintCoolDown))
 	{
 		g_iSprintStatus[client] &= ~ IsSprintCoolDown;
-		CPrintToChat(client, "%t %t", "torch_tag", "torch_sprintagain", gc_iSprintCooldown.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefix, "torch_sprintagain", gc_iSprintCooldown.IntValue);
 	}
 
 	return Plugin_Handled;

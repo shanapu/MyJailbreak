@@ -43,6 +43,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <myjailbreak>
 #include <myweapons>
 #include <myicons>
@@ -63,6 +64,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
@@ -72,6 +74,7 @@ bool gp_bMyWeapons;
 
 // Console Variables    gc_i = global convar integer / gc_b = global convar bool ...
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_iCooldownStart;
 ConVar gc_bSetA;
@@ -128,7 +131,6 @@ int g_iBestREDdamage = 0;
 int g_iBestBLUEdamage = 0;
 int g_iBestPlayer = -1;
 int g_iTotalDamage = 0;
-int g_iCollision_Offset;
 int g_iClientTeam[MAXPLAYERS+1] = -1;
 int g_iBlueTeamCount;
 int g_iRedTeamCount;
@@ -138,10 +140,10 @@ Handle g_hTimerTruce;
 Handle g_hTimerBeacon;
 
 // Strings    g_s = global string
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 char g_sOverlayBluePath[256];
 char g_sOverlayRedPath[256];
@@ -182,6 +184,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_dealdamage_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_dealdamage_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_dealdamage_prefix", "[{green}MyJB.DealDamage{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_dealdamage_cmds_vote", "dd, damage, deal", "Set your custom chat command for Event voting(!dealdamage (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_dealdamage_cmds_set", "sdd, sdeal, sdamage", "Set your custom chat command for set Event(!setdealdamage (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_dealdamage_warden", "1", "0 - disabled, 1 - allow warden to set dealdamage round", _, true, 0.0, true, 1.0);
@@ -226,11 +229,11 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sOverlayBluePath, OnSettingChanged);
 	HookConVarChange(gc_sOverlayRedPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPathRed, OnSettingChanged);
 	HookConVarChange(gc_sModelPathBlue, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Find
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
@@ -239,10 +242,6 @@ public void OnPluginStart()
 	gc_sOverlayRedPath.GetString(g_sOverlayRedPath, sizeof(g_sOverlayRedPath));
 	gc_sModelPathRed.GetString(g_sModelPathRed, sizeof(g_sModelPathRed));
 	gc_sModelPathBlue.GetString(g_sModelPathBlue, sizeof(g_sModelPathBlue));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -250,8 +249,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -306,18 +308,19 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheSoundAnyDownload(g_sSoundStartPath);
 		}
 	}
-	else if (convar == gc_sAdminFlag)
+	else if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
-	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
 	gp_bMyWeapons = LibraryExists("myweapons");
 	gp_bMyIcons = LibraryExists("myicons");
@@ -325,50 +328,74 @@ public void OnAllPluginsLoaded()
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "myicons"))
-		gp_bMyIcons = false;
-
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailbreak = false;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
+	else if (StrEqual(name, "myicons"))
+	{
+		gp_bMyIcons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "myicons"))
-		gp_bMyIcons = true;
-
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailbreak = true;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
+	else if (StrEqual(name, "myicons"))
+	{
+		gp_bMyIcons = true;
+	}
 }
 
 // Initialize Plugin
@@ -379,7 +406,14 @@ public void OnConfigsExecuted()
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 
-	// Set custom Commands
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayBluePath.GetString(g_sOverlayBluePath, sizeof(g_sOverlayBluePath));
+	gc_sOverlayRedPath.GetString(g_sOverlayRedPath, sizeof(g_sOverlayRedPath));
+	gc_sModelPathRed.GetString(g_sModelPathRed, sizeof(g_sModelPathRed));
+	gc_sModelPathBlue.GetString(g_sModelPathBlue, sizeof(g_sModelPathBlue));
+
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
 
@@ -411,11 +445,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("dealdamage");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("dealdamage");
 }
 
@@ -429,7 +469,8 @@ public Action Command_SetDealDamage(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -438,20 +479,19 @@ public Action Command_SetDealDamage(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event Deal Damage was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_dealdamage_flag", gc_sAdminFlag, "sm_dealdamage_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
@@ -462,23 +502,23 @@ public Action Command_SetDealDamage(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -489,13 +529,15 @@ public Action Command_SetDealDamage(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "dealdamage_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_setbywarden");
+
 			return Plugin_Handled;
 		}
 
@@ -506,23 +548,23 @@ public Action Command_SetDealDamage(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -531,7 +573,7 @@ public Action Command_SetDealDamage(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -542,13 +584,15 @@ public Action Command_VoteDealDamage(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_voting");
+
 		return Plugin_Handled;
 	}
 
@@ -559,14 +603,16 @@ public Action Command_VoteDealDamage(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -575,7 +621,8 @@ public Action Command_VoteDealDamage(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "dealdamage_tag", "dealdamage_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "dealdamage_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -590,9 +637,7 @@ public Action Command_VoteDealDamage(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -601,7 +646,7 @@ public Action Command_VoteDealDamage(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -655,7 +700,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		CalcResults();
 		
-		if(gc_bKillLoser.BoolValue)
+		if (gc_bKillLoser.BoolValue)
 		{
 			if (g_iDamageBLUE > g_iDamageRED) 
 			{
@@ -675,9 +720,12 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			}
 		}
 
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+			if (!IsClientInGame(i))
+				continue;
+
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntityModel(i, g_sModelPathPrevious[i]);
 			if (gp_bCustomPlayerSkins) UnhookGlow(i);
 			CreateTimer(0.5, DeleteOverlay, GetClientUserId(i));
@@ -690,6 +738,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerTruce; // kill start time if still running
 		delete g_hTimerBeacon;
+		g_iTruceTime = gc_iTruceTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -714,9 +763,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			if (gp_bWarden)
+			if (gp_bMyJBWarden)
 			{
-				SetCvar("sm_warden_enable", 1);
+				warden_enable(true);
 			}
 
 			if (gc_bSpawnRandom.BoolValue)
@@ -742,18 +791,21 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sv_infinite_ammo", 0);
 			SetCvar("sm_hud_enable", g_iOldHUD);
 
-			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_end");
 		}
 	}
 
 	if (g_bStartDealDamage)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_next");
 		PrintCenterTextAll("%t", "dealdamage_next_nc");
 	}
 }
@@ -794,7 +846,7 @@ public void OnMapStart()
 	{
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
-	
+
 	Downloader_AddFileToDownloadsTable(g_sModelPathRed);
 	Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
 	PrecacheModel(g_sModelPathBlue);
@@ -816,6 +868,7 @@ public void OnMapEnd()
 	g_sHasVoted[0] = '\0';
 }
 
+
 public void MyJailbreak_ResetEventDay()
 {
 	g_bStartDealDamage = false;
@@ -826,9 +879,12 @@ public void MyJailbreak_ResetEventDay()
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true); // disbale noblock
+		if (!IsClientInGame(i))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default' // disbale noblock
 
 		SetEntityModel(i, g_sModelPathPrevious[i]);
 
@@ -849,10 +905,13 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
 	}
 
 	delete g_hTimerTruce; // kill start time if still running
 	delete g_hTimerBeacon;
+	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	// return to default start values
 	g_bIsDealDamage = false;
@@ -865,9 +924,9 @@ void ResetEventDay()
 		SetCvar("sm_hosties_lr", 1);
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 1);
+		warden_enable(true);
 	}
 
 	if (gc_bSpawnRandom.BoolValue)
@@ -893,7 +952,7 @@ void ResetEventDay()
 	SetCvar("sv_infinite_ammo", 0);
 	SetCvar("sm_hud_enable", g_iOldHUD);
 
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_end");
+	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_end");
 }
 
 // Set Client Hook
@@ -917,8 +976,11 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 		g_iDamageRED = g_iDamageRED + RoundToCeil(damage);
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		PrintHintText(i, "<font face='Arial' color='#0055FF'>%t  </font> %i %t \n<font face='Arial' color='#FF0000'>%t  </font> %i %t \n<font face='Arial' color='#00FF00'>%t  </font> %i %t", "dealdamage_ctdealed", g_iDamageBLUE, "dealdamage_hpdamage", "dealdamage_tdealed", g_iDamageRED, "dealdamage_hpdamage", "dealdamage_clientdealed", g_iDamageDealed[i], "dealdamage_hpdamage");
 	}
 
@@ -952,7 +1014,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -962,16 +1024,21 @@ void StartEventRound(bool thisround)
 		g_bIsDealDamage = true;
 		g_bIsTruce = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_now");
 		PrintCenterTextAll("%t", "dealdamage_now_nc");
 	}
 	else
@@ -979,14 +1046,14 @@ void StartEventRound(bool thisround)
 		g_bStartDealDamage = true;
 		g_iCoolDown++;
 
-		if (gc_bSpawnRandom.BoolValue)
-		{
-			SetCvar("mp_randomspawn", 1);
-			SetCvar("mp_randomspawn_los", 1);
-		}
-
-		CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_next");
 		PrintCenterTextAll("%t", "dealdamage_next_nc");
+	}
+
+	if (gc_bSpawnRandom.BoolValue)
+	{
+		SetCvar("mp_randomspawn", 1);
+		SetCvar("mp_randomspawn_los", 1);
 	}
 }
 
@@ -1027,8 +1094,11 @@ void PrepareDay(bool thisround)
 		int RandomCT = 0;
 		int RandomT = 0;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -1053,8 +1123,11 @@ void PrepareDay(bool thisround)
 			g_fPosT[2] = g_fPosT[2] + 5;
 			g_fPosCT[2] = g_fPosCT[2] + 5;
 
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsClientInGame(i))
+					continue;
+
 				if (gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true)))
 				{
 					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
@@ -1071,14 +1144,19 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
+		EnableWeaponFire(i, false);
+
 		SetEntityMoveType(i, MOVETYPE_NONE);
-		
+
 		g_iDamageDealed[i] = 0;
 
 		if (bFlip)
@@ -1087,8 +1165,8 @@ void PrepareDay(bool thisround)
 			g_iBlueTeamCount++;
 			bFlip = false;
 			if (gc_bColor.BoolValue) SetEntityRenderColor(i, 0, 0, 240, 0);
-			CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamblue");
-			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamblue", i);
+			CPrintToChat(i, "%s %t", g_sPrefix, "dealdamage_teamblue");
+			CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_playerteamblue", i);
 			PrintCenterText(i, "%t \n<font face='Arial' color='#0000FF'>%t</font>", "dealdamage_start_nc", "dealdamage_teamblue_nc");
 			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayBluePath, 0.0);
 		}
@@ -1098,8 +1176,8 @@ void PrepareDay(bool thisround)
 			g_iRedTeamCount++;
 			bFlip = true;
 			if (gc_bColor.BoolValue) SetEntityRenderColor(i, 240, 0, 0, 0);
-			CPrintToChat(i, "%t %t", "dealdamage_tag", "dealdamage_teamred");
-			CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_playerteamred", i);
+			CPrintToChat(i, "%s %t", g_sPrefix, "dealdamage_teamred");
+			CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_playerteamred", i);
 			PrintCenterText(i, "%t \n<font face='Arial' color='#FF0000'>%t</font>", "dealdamage_start_nc", "dealdamage_teamred_nc");
 			if (gc_bOverlays.BoolValue)ShowOverlay(i, g_sOverlayRedPath, 0.0);
 		}
@@ -1127,9 +1205,9 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -1143,7 +1221,7 @@ void PrepareDay(bool thisround)
 		MyWeapons_AllowTeam(CS_TEAM_CT, true);
 	}
 
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1206,46 +1284,46 @@ void SendResults(int client)
 	InfoPanel.SetTitle(info);
 
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_result");
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_result");
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_total", g_iTotalDamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_total", g_iTotalDamage);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_total", g_iTotalDamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_most", g_iBestPlayer, g_iDamageDealed[g_iBestPlayer]);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_ct", g_iDamageBLUE);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_ct", g_iDamageBLUE);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_ct", g_iDamageBLUE);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_t", g_iDamageRED);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_t", g_iDamageRED);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_t", g_iDamageRED);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%t", "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_bestct", g_iBestBLUE, g_iBestBLUEdamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_bestt", g_iBestRED, g_iBestREDdamage);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 	Format(info, sizeof(info), "%t", "dealdamage_client", g_iDamageDealed[client]);
 	InfoPanel.DrawText(info);
 	if (gc_bConsole.BoolValue) PrintToConsole(client, info);
 	InfoPanel.DrawText("                                   ");
-	Format(info, sizeof(info), "%t %t", "dealdamage_tag", "dealdamage_client", g_iDamageDealed[client]);
+	Format(info, sizeof(info), "%s %t", g_sPrefix, "dealdamage_client", g_iDamageDealed[client]);
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 
 	if (gc_bShowPanel.BoolValue) InfoPanel.Send(client, Handler_NullCancel, 20); // open info Panel
@@ -1258,14 +1336,17 @@ void SendResults(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iTruceTime--;
+
 	if (g_iTruceTime > 0) // countdown to start
 	{
-		g_iTruceTime--;
-
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				SetEntityMoveType(i, MOVETYPE_WALK);
 			}
 		}
@@ -1275,12 +1356,16 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
-
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
 		{
@@ -1294,8 +1379,7 @@ public Action Timer_StartEvent(Handle timer)
 	}
 
 	PrintCenterTextAll("%t", "dealdamage_start_nc");
-	
-	CPrintToChatAll("%t %t", "dealdamage_tag", "dealdamage_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "dealdamage_start");
 
 	CreateTimer(2.2, Timer_Overlay);
 
@@ -1308,8 +1392,11 @@ public Action Timer_StartEvent(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 
@@ -1318,8 +1405,11 @@ public Action Timer_BeaconOn(Handle timer)
 
 void CalcResults()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		if (g_iClientTeam[i] == TEAM_BLUE && (g_iDamageDealed[i] > g_iBestBLUEdamage))
 		{
 			g_iBestBLUEdamage = g_iDamageDealed[i];
@@ -1410,8 +1500,11 @@ public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 	if (!IsPlayerAlive(client))
 		return Plugin_Handled;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		if (!CPS_HasSkin(i))
 		{
 			continue;

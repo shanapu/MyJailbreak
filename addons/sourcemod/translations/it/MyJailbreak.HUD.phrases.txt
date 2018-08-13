@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:58 UTC
+// Date: 2018-05-23 19:26:42 UTC
 // Language: Italian (it)
 // 
 // To view other translations for this plugin, please visit:
@@ -36,11 +36,6 @@
 	"hud_prisoner"
 	{
 		"it"		"Prigionieri:"
-	}
-
-	"hud_tag"
-	{
-		"it"		"[MyJB.HUD]"
 	}
 
 	"hud_on"

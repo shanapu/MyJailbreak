@@ -1,0 +1,61 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:22 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/231
+//
+"Phrases"
+{
+
+	"hud_planned"
+	{
+		"zho"		"下一回合:"
+	}
+
+	"hud_running"
+	{
+		"zho"		"這一回合:"
+	}
+
+	"hud_warden"
+	{
+		"zho"		"典獄長:"
+	}
+
+	"hud_nowarden"
+	{
+		"zho"		"目前沒有典獄長"
+	}
+
+	"hud_guards"
+	{
+		"zho"		"警衛:"
+	}
+
+	"hud_prisoner"
+	{
+		"zho"		"囚犯:"
+	}
+
+	"hud_on"
+	{
+		"zho"		"HUD {purple}已開啟!"
+	}
+
+	"hud_off"
+	{
+		"zho"		"HUD {purple}已關閉"
+	}
+
+	"hud_lastCT"
+	{
+		"zho"		"最後一位警衛:"
+	}
+
+	"hud_youwarden"
+	{
+		"zho"		"你現在是典獄長!"
+	}
+
+}

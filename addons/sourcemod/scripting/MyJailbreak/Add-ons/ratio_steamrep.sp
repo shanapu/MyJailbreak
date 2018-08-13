@@ -54,6 +54,8 @@ bool g_IsScammer[MAXPLAYERS+1];
 ConVar gc_bcheckIP;
 ConVar gc_sExclude;
 
+char g_sPrefixR[64];
+
 // Info
 public Plugin myinfo = {
 	name = "MyJailbreak - Ratio - SteamRep Support", 
@@ -92,8 +94,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientConnected(i);
 			OnClientPostAdminCheck(i);
 		}
@@ -106,6 +111,12 @@ public void OnAllPluginsLoaded()
 {
 	if (!LibraryExists("myratio"))
 		SetFailState("You're missing the MyJailbreak - Ratio (ratio.smx) plugin");
+}
+
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
 }
 
 public void OnClientConnected(int client)
@@ -125,7 +136,7 @@ public void OnClientPostAdminCheck(int client)
 	SocketConnect(socket, OnSocketConnected, OnSocketReceive, OnSocketDisconnected, "steamrep.com", 80);
 }
 
-public int OnSocketConnected(Handle socket, any userid)
+public int OnSocketConnected(Handle socket, int userid)
 {
 	// socket is connected, send the http request
 	int client = GetClientOfUserId(userid);
@@ -154,7 +165,7 @@ public int OnSocketConnected(Handle socket, any userid)
 	}
 }
 
-public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize, any userid)
+public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize, int userid)
 {
 	// receive chunk
 	int client = GetClientOfUserId(userid);
@@ -168,13 +179,13 @@ public int OnSocketReceive(Handle socket, char[] receiveData, const int dataSize
 	g_IsScammer[client] = true;
 }
 
-public int OnSocketDisconnected(Handle socket, any client)
+public int OnSocketDisconnected(Handle socket, int client)
 {
 	// Connection: close advises the webserver to close the connection when the transfer is finished
 	CloseHandle(socket);
 }
 
-public int OnSocketError(Handle socket, const int errorType, const int errorNum, any client)
+public int OnSocketError(Handle socket, const int errorType, const int errorNum, int client)
 {
 	// a socket error occured
 	LogError("socket error %d (errno %d)", errorType, errorNum);
@@ -185,14 +196,14 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (g_IsScammer[client])
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamrep");
 		return Plugin_Handled;
 	}
 
 	return Plugin_Continue;
 }
 
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
+public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -207,7 +218,7 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (g_IsScammer[client])
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamrep", gc_iMinSteamRepPoints.IntValue);
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 		return Plugin_Continue;
 	}
@@ -215,9 +226,9 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 	return Plugin_Continue;
 }
 
-public Action Timer_SlayPlayer(Handle hTimer, any iUserId) 
+public Action Timer_SlayPlayer(Handle timer, int userid)
 {
-	int client = GetClientOfUserId(iUserId);
+	int client = GetClientOfUserId(userid);
 
 	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
 	{

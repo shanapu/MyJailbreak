@@ -85,53 +85,47 @@ public void CellDoors_OnPluginStart()
 
 public Action Command_OpenDoors(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bOpen.BoolValue)
+		return Plugin_Handled;
+
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
 	{
-		if (gc_bOpen.BoolValue)
+		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
+			SJD_OpenDoors();
+
+		//	delete g_hTimerOpen; // why delete don't work?
+			if (g_hTimerOpen != null)
 			{
-				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
-				{
-					SJD_OpenDoors();
-
-				//	delete g_hTimerOpen; // why delete don't work?
-					if (g_hTimerOpen != null)
-					{
-						KillTimer(g_hTimerOpen);
-					}
-					g_hTimerOpen = null;
-
-					CPrintToChatAll("%t %t", "warden_tag", "warden_dooropen");
-				}
-				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_dooropen_unavailable");
+				KillTimer(g_hTimerOpen);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			g_hTimerOpen = null;
+
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_dooropen");
 		}
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_dooropen_unavailable");
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
 
 public Action Command_CloseDoors(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
-	{
-		if (gc_bOpen.BoolValue)
-		{
-			if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
-			{
-				if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) 
-				{
-					SJD_CloseDoors();
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bOpen.BoolValue)
+		return Plugin_Handled;
 
-					CPrintToChatAll("%t %t", "warden_tag", "warden_doorclose");
-				}
-				else CReplyToCommand(client, "%t %t", "warden_tag", "warden_doorclose_unavailable");
-			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bOpenDeputy.BoolValue))
+	{
+		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) 
+		{
+			SJD_CloseDoors();
+
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_doorclose");
 		}
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_doorclose_unavailable");
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
@@ -142,19 +136,20 @@ public Action Command_CloseDoors(int client, int args)
 
 public void CellDoors_Event_RoundStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (gc_bPlugin.BoolValue)
-	{
-		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
-		{
-			g_iOpenTimer = gc_iOpenTimer.IntValue;
-			g_hTimerOpen = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
-		}
-		else CPrintToChatAll("%t %t", "warden_tag", "warden_openauto_unavailable");
-	}
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
+		return;
 
-	if (GameRules_GetProp("m_bWarmupPeriod") == 1)
+	if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured())
 	{
-		if (gp_bSmartJailDoors) if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
+		g_iOpenTimer = gc_iOpenTimer.IntValue;
+		g_hTimerOpen = CreateTimer(1.0, Timer_OpenCounter, _, TIMER_REPEAT);
+	}
+	else CPrintToChatAll("%s %t", g_sPrefix, "warden_openauto_unavailable");
+
+
+	if (gp_bSmartJailDoors && GameRules_GetProp("m_bWarmupPeriod") == 1)
+	{
+		if (SJD_IsCurrentMapConfigured()) SJD_OpenDoors();
 	}
 }
 
@@ -199,42 +194,39 @@ public void CellDoors_OnConfigsExecuted()
 
 public Action Timer_OpenCounter(Handle timer, Handle pack)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bOpen.BoolValue)
 	{
-		--g_iOpenTimer;
-
-		if (g_iOpenTimer < 1)
-		{
-			if (g_iWarden == -1)
-			{
-				if (gc_bOpenTimer.BoolValue)
-				{
-					SJD_OpenDoors();
-					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
-
-					g_hTimerOpen = null;
-					return Plugin_Stop;
-				}
-			}
-			else if (gc_bOpenTimer.BoolValue)
-			{
-				if (gc_bOpenTimerWarden.BoolValue)
-				{
-					SJD_OpenDoors();
-					CPrintToChatAll("%t %t", "warden_tag", "warden_openauto");
-				}
-				else CPrintToChatAll("%t %t", "warden_tag", "warden_opentime");
-
-				g_hTimerOpen = null;
-				return Plugin_Stop;
-			}
-		}
-		
-		return Plugin_Continue;
+		g_hTimerOpen = null;
+		return Plugin_Stop;
 	}
 
-	g_hTimerOpen = null;
-	return Plugin_Stop;
+	--g_iOpenTimer;
+
+	if (g_iOpenTimer < 1)
+	{
+		if (g_iWarden == -1)
+		{
+			if (gc_bOpenTimer.BoolValue)
+			{
+				SJD_OpenDoors();
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_openauto");
+			}
+		}
+		else if (gc_bOpenTimer.BoolValue)
+		{
+			if (gc_bOpenTimerWarden.BoolValue)
+			{
+				SJD_OpenDoors();
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_openauto");
+			}
+			else CPrintToChatAll("%s %t", g_sPrefix, "warden_opentime");
+		}
+		
+		g_hTimerOpen = null;
+		return Plugin_Stop;
+	}
+	
+	return Plugin_Continue;
 }
 
 public void SJD_DoorsOpened(int caller, int activator)

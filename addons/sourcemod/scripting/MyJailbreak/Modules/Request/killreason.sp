@@ -111,23 +111,23 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 		{
 			if (choice == 1) // lostgame
 			{
-				CPrintToChatAll("%t %t", "request_tag", "request_killreason_lostgame_chat", client, victim);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_killreason_lostgame_chat", client, victim);
 			}
 			if (choice == 2) // rebel
 			{
-				CPrintToChatAll("%t %t", "request_tag", "request_killreason_rebel_chat", client, victim);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_killreason_rebel_chat", client, victim);
 			}
 			if (choice == 3) // broke rule
 			{
-				CPrintToChatAll("%t %t", "request_tag", "request_killreason_brokerule_chat", client, victim);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_killreason_brokerule_chat", client, victim);
 			}
 			if (choice == 4) // dictate
 			{
-				CPrintToChatAll("%t %t", "request_tag", "request_killreason_notfollow_chat", client, victim);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_killreason_notfollow_chat", client, victim);
 			}
 			if (choice == 5) // sry
 			{
-				CPrintToChatAll("%t %t", "request_tag", "request_killreason_sry_chat", client, victim);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_killreason_sry_chat", client, victim);
 
 				if (gc_bFreeKill.BoolValue)
 				{
@@ -136,7 +136,7 @@ public int Handler_KillReason(Menu menu, MenuAction action, int client, int Posi
 			}
 			if (choice == 6) // freekill
 			{
-				CPrintToChatAll("%t %t", "request_tag", "request_killreason_freekill_chat", client, victim);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_killreason_freekill_chat", client, victim);
 
 				if (gc_bFreeKill.BoolValue)
 				{

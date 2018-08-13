@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:04 UTC
+// Date: 2018-05-23 19:42:33 UTC
 // Language: German (de)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ratio_tag"
-	{
-		"de"		"[{green}MyJB.ratio{default}]"
-	}
 
 	"ratio_auto"
 	{
@@ -126,136 +121,6 @@
 	"ratio_notaccept"
 	{
 		"de"		"Nein, ich will kein Wächter werden."
-	}
-
-	"ratio_question_title"
-	{
-		"de"		"Bitte beantworte die folgenden Fragen um ein Wächter zu werden."
-	}
-
-	"ratio_question1_line1"
-	{
-		"de"		"Die Zellentüren sind geschlossen, die Gefangenen sind drinnen!"
-	}
-
-	"ratio_question1_line2"
-	{
-		"de"		"Was wirst du tun?"
-	}
-
-	"ratio_question1_wrong1"
-	{
-		"de"		"Ich warte bis alle Zellen offen sind und töte sie alle!"
-	}
-
-	"ratio_question1_wrong2"
-	{
-		"de"		"Bring einen nach dem anderen um bis zum Last Request."
-	}
-
-	"ratio_question1_right"
-	{
-		"de"		"Ich warte auf die erste Ansage."
-	}
-
-	"ratio_question2_line1"
-	{
-		"de"		"Der Warden ist scheiße & diese Runde ist total langweilig."
-	}
-
-	"ratio_question2_line2"
-	{
-		"de"		"Werf deine Waffe weg und gib sie an einen Gefangenen um die Runde zu beschleunigen!"
-	}
-
-	"ratio_question2_wrong1"
-	{
-		"de"		"Das ist eine gute Idee."
-	}
-
-	"ratio_question2_wrong2"
-	{
-		"de"		"Nie! Nur wenn der Gefangene mein Kumpel ist!"
-	}
-
-	"ratio_question2_right"
-	{
-		"de"		"Nie! Waffenschieben ist verboten!"
-	}
-
-	"ratio_question3_line1"
-	{
-		"de"		"Hast du die Servrregeln gelesen?"
-	}
-
-	"ratio_question3_line2"
-	{
-		"de"		"Verstehst du die Serverregeln?"
-	}
-
-	"ratio_question3_wrong1"
-	{
-		"de"		"Ja, ich habe sie gelesen. Ich werde sie nicht befolgen."
-	}
-
-	"ratio_question3_wrong2"
-	{
-		"de"		"Lesen? Ich bin hier um zu spielen lol!"
-	}
-
-	"ratio_question3_right"
-	{
-		"de"		"Ja, ich habe sie gelesen. Ich weiß wie man auf diesem Server spielt."
-	}
-
-	"ratio_question4_line1"
-	{
-		"de"		"Hast du ein funktionierendes Mikrofon?"
-	}
-
-	"ratio_question4_line2"
-	{
-		"de"		"Sprichst du die Serversprache?"
-	}
-
-	"ratio_question4_wrong1"
-	{
-		"de"		"Entschuldigung was?"
-	}
-
-	"ratio_question4_wrong2"
-	{
-		"de"		"Mein Mikrofon ist defekt, ich werde die Befehle schreiben."
-	}
-
-	"ratio_question4_right"
-	{
-		"de"		"Ich habe ein funktionierendes und akzeptables Mikrofon."
-	}
-
-	"ratio_question5_line1"
-	{
-		"de"		"Der Warden wurde getötet und du bist einer der letzten Wächter."
-	}
-
-	"ratio_question5_line2"
-	{
-		"de"		"Würdest du als Warden spielen?"
-	}
-
-	"ratio_question5_wrong1"
-	{
-		"de"		"Starte besser einen Freeday..."
-	}
-
-	"ratio_question5_wrong2"
-	{
-		"de"		"Bring alle Gefangenen nacheinander um bis zum Wunsch."
-	}
-
-	"ratio_question5_right"
-	{
-		"de"		"Als Wächter werde ich natürlich als der neue Warden spielen müssen."
 	}
 
 	"ratio_cooldown"

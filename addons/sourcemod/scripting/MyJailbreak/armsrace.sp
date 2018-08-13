@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -39,6 +40,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <myjailbreak>
 #include <myweapons>
 #include <smartjaildoors>
@@ -55,6 +57,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
@@ -62,6 +65,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -96,7 +100,6 @@ int g_iTruceTime;
 int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
-int g_iCollision_Offset;
 
 int g_iLevel[MAXPLAYERS+1];
 int g_iMaxLevel;
@@ -110,10 +113,10 @@ Handle g_hTimerBeacon;
 Handle g_aWeapons;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Info
@@ -143,6 +146,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_armsrace_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_armsrace_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_armsrace_prefix", "[{green}MyJB.ArmsRace{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_armsrace_cmds_vote", "arms, ar", "Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_armsrace_cmds_set", "sar, setarms", "Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_armsrace_warden", "1", "0 - disabled, 1 - allow warden to set armsrace round", _, true, 0.0, true, 1.0);
@@ -179,15 +183,11 @@ public void OnPluginStart()
 	HookEvent("player_death", Event_PlayerDeath);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -213,15 +213,16 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheSoundAnyDownload(g_sSoundStartPath);
 		}
 	}
-	else if (convar == gc_sAdminFlag)
+	else if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
@@ -231,45 +232,70 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 
 	GetWeapons();
 
@@ -305,11 +331,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("armsrace");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("armsrace");
 }
 
@@ -324,7 +356,8 @@ public Action Command_Setarmsrace(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -333,26 +366,26 @@ public Action Command_Setarmsrace(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event armsrace was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_armsrace_flag", gc_sAdminFlag, "sm_armsrace_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -363,23 +396,23 @@ public Action Command_Setarmsrace(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -390,19 +423,22 @@ public Action Command_Setarmsrace(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "armsrace_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -413,23 +449,23 @@ public Action Command_Setarmsrace(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -438,7 +474,7 @@ public Action Command_Setarmsrace(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -449,19 +485,22 @@ public Action Command_VoteArmsRace(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -472,14 +511,16 @@ public Action Command_VoteArmsRace(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -488,7 +529,8 @@ public Action Command_VoteArmsRace(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "armsrace_tag", "armsrace_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "armsrace_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -503,9 +545,7 @@ public Action Command_VoteArmsRace(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -514,7 +554,7 @@ public Action Command_VoteArmsRace(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -578,7 +618,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			if (gc_bKillLoser.BoolValue && g_iLevel[i] != g_iMaxLevel)
 			{
@@ -588,6 +628,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
+		g_iTruceTime = gc_iTruceTime.IntValue;
 
 		if (g_iRound == g_iMaxRound)
 		{
@@ -600,9 +641,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			if (gp_bWarden)
+			if (gp_bMyJBWarden)
 			{
-				SetCvar("sm_warden_enable", 1);
+				warden_enable(true);
 			}
 
 			if (gp_bMyWeapons)
@@ -628,17 +669,20 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("mp_death_drop_gun", 1);
 			SetCvar("mp_teammates_are_enemies", 0);
 
-			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "armsrace_end");
 		}
 	}
 	if (g_bStartArmsRace)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_next");
 		PrintCenterTextAll("%t", "armsrace_next_nc");
 	}
 }
@@ -696,9 +740,12 @@ public void MyJailbreak_ResetEventDay()
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		StripAllPlayerWeapons(i);
 
@@ -712,10 +759,13 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
 	}
 
 	delete g_hTimerTruce;
 	delete g_hTimerBeacon;
+	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	g_bIsArmsRace = false;
 	g_iRound = 0;
@@ -726,9 +776,9 @@ void ResetEventDay()
 		SetCvar("sm_hosties_lr", 1);
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 1);
+		warden_enable(true);
 	}
 
 	if (gp_bMyWeapons)
@@ -754,7 +804,7 @@ void ResetEventDay()
 	SetCvar("mp_death_drop_gun", 1);
 	SetCvar("mp_teammates_are_enemies", 0);
 
-	CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_end");
+	CPrintToChatAll("%s %t", g_sPrefix, "armsrace_end");
 }
 
 /******************************************************************************
@@ -775,7 +825,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -784,16 +834,21 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsArmsRace = true;
 		
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 		
 		CreateTimer(3.0, Timer_PrepareEvent);
 		
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_now");
 		PrintCenterTextAll("%t", "armsrace_now_nc");
 		
 	}
@@ -802,14 +857,14 @@ void StartEventRound(bool thisround)
 		g_bStartArmsRace = true;
 		g_iCoolDown++;
 
-		if (gc_bSpawnRandom.BoolValue)
-		{
-			SetCvar("mp_randomspawn", 1);
-			SetCvar("mp_randomspawn_los", 1);
-		}
-
-		CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "armsrace_next");
 		PrintCenterTextAll("%t", "armsrace_next_nc");
+	}
+
+	if (gc_bSpawnRandom.BoolValue)
+	{
+		SetCvar("mp_randomspawn", 1);
+		SetCvar("mp_randomspawn_los", 1);
 	}
 }
 
@@ -836,8 +891,11 @@ void PrepareDay(bool thisround)
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnRandom.BoolValue && !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -848,8 +906,11 @@ void PrepareDay(bool thisround)
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
 				g_fPos[2] = g_fPos[2] + 5;
@@ -861,11 +922,16 @@ void PrepareDay(bool thisround)
 
 	char buffer[32];
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		if (!IsClientInGame(i))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		EnableWeaponFire(i, false);
 
 		CreateInfoPanel(i);
 
@@ -896,9 +962,9 @@ void PrepareDay(bool thisround)
 		MyJailbreak_FogOn();
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -912,7 +978,7 @@ void PrepareDay(bool thisround)
 		MyWeapons_AllowTeam(CS_TEAM_CT, false);
 	}
 
-	CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "armsrace_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -968,14 +1034,17 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iTruceTime--;
+
 	if (g_iTruceTime > 0)
 	{
-		g_iTruceTime--;
-
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				SetEntityMoveType(i, MOVETYPE_WALK);
 			}
 		}
@@ -985,11 +1054,16 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
 		{
@@ -1010,7 +1084,7 @@ public Action Timer_StartEvent(Handle timer)
 	g_hTimerTruce = null;
 
 	PrintCenterTextAll("%t", "armsrace_start_nc");
-	CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "armsrace_start");
 
 	return Plugin_Stop;
 }
@@ -1018,8 +1092,11 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) 
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 
@@ -1044,7 +1121,7 @@ void GetWeapons()
 	{
 		char line[128];
 
-		if(!ReadFileLine(file, line, sizeof(line)))
+		if (!ReadFileLine(file, line, sizeof(line)))
 		{
 			break;
 		}
@@ -1086,8 +1163,8 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 		if (g_iLevel[attacker] == g_iMaxLevel)
 		{
-			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_youwon");
-			CPrintToChatAll("%t %t", "armsrace_tag", "armsrace_winner", attacker);
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "armsrace_youwon");
+			CPrintToChatAll("%s %t", g_sPrefix, "armsrace_winner", attacker);
 			CS_TerminateRound(5.0, CSRoundEnd_Draw);
 			return;
 		}
@@ -1100,8 +1177,8 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 				g_iLevel[victim] = 0;
 			}
 			
-			CPrintToChat(victim, "%t %t", "armsrace_tag", "armsrace_downgraded");
-			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_downgrade", victim);
+			CPrintToChat(victim, "%s %t", g_sPrefix, "armsrace_downgraded");
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "armsrace_downgrade", victim);
 		}
 		else
 		{
@@ -1126,7 +1203,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 
 			ReplaceString(buffer, sizeof(buffer), "weapon_", "", false);
 			StringToUpper(buffer);
-			CPrintToChat(attacker, "%t %t", "armsrace_tag", "armsrace_levelup", buffer);
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "armsrace_levelup", buffer);
 		}
 	}
 	
@@ -1179,7 +1256,7 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 
-	if(g_iLevel[client] == g_iMaxLevel)
+	if (g_iLevel[client] == g_iMaxLevel)
 	{
 		return Plugin_Continue;
 	}

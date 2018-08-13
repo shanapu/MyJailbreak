@@ -42,6 +42,9 @@ public SharedPlugin __pl_myjbwarden =
 #if !defined REQUIRE_PLUGIN
 public __pl_myjbwarden_SetNTVOptional()
 {
+	MarkNativeAsOptional("warden_enable");
+	MarkNativeAsOptional("warden_isenabled");
+	
 	MarkNativeAsOptional("warden_get");
 	MarkNativeAsOptional("warden_getlast");
 
@@ -147,6 +150,24 @@ forward void warden_OnDeputyRemoved(int client);
  *********************************************************/
 forward void warden_OnDeputyCreated(int client);
 
+
+
+/*********************************************************
+ * Disable & enable warden plugin
+ *
+ * @param status		true = enabled, false = disabled
+ * @Return
+ *********************************************************/
+native void warden_enable(bool status);
+
+
+/*********************************************************
+ * get the current status of warden plugin
+ *
+ * 	
+ * @Return				true = enabled, false = disabled
+ *********************************************************/
+native bool warden_isenabled();
 
 
 /*********************************************************

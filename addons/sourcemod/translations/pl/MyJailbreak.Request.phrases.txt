@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:02 UTC
+// Date: 2018-08-13 17:29:24 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"request_tag"
-	{
-		"pl"		"[{green}MyJB.Zyczenia{default}]"
-	}
 
 	"request_openrefuse"
 	{
@@ -163,9 +158,59 @@
 		"pl"		"Zbuntuj Sie"
 	}
 
+	"request_killfreekiller"
+	{
+		"pl"		"Zgładź Freekiller'a"
+	}
+
+	"request_freeday"
+	{
+		"pl"		"Następna runda Freeday"
+	}
+
+	"request_aliveorct"
+	{
+		"pl"		"Jesteś albo żywy albo strażnikiem!"
+	}
+
+	"request_killbcfreekill"
+	{
+		"pl"		"Zostałeś zabity z powodu {darkred}Freekill'a!"
+	}
+
+	"request_handlerespawn"
+	{
+		"pl"		"Gdzie chciałbyś respawn?"
+	}
+
+	"request_respawncell"
+	{
+		"pl"		"Odrodzenie w celi"
+	}
+
+	"request_killreason_lostgame"
+	{
+		"pl"		"On przegrał grę"
+	}
+
+	"request_killreason_brokerule"
+	{
+		"pl"		"On złamał zasady"
+	}
+
+	"request_killreason_sry_chat"
+	{
+		"pl"		"Strażnik {green}{1}{default} chce przeprosić za przypadkowe zabicie {darkred}{2}{default}"
+	}
+
 	"request_capitulated"
 	{
 		"pl"		"{purple}{1} {default}. {purple}skapitulowal!"
+	}
+
+	"request_close"
+	{
+		"pl"		"Wyjście"
 	}
 
 	"request_countdownstop"

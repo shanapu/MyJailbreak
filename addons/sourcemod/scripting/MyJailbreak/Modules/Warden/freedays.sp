@@ -71,7 +71,7 @@ public void Freedays_OnPluginStart()
 	// AutoExecConfig
 	gc_bFreeDay = AutoExecConfig_CreateConVar("sm_warden_freeday_enable", "1", "0 - disabled, 1 - Allow the warden to set a personal freeday", _, true, 0.0, true, 1.0);
 	gc_sCustomCommandGiveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday", "gfd, setfreeday, sfd", "Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
-	gc_sCustomCommandRemoveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday_remove", "rfd, nofreeday", "Set your custom chat command for give a freeday(!givefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
+	gc_sCustomCommandRemoveFreeDay = AutoExecConfig_CreateConVar("sm_warden_cmds_freeday_remove", "rfd, nofreeday", "Set your custom chat command for remove a freeday(!removefreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))", _, true, 0.0, true, 1.0);
 	gc_iFreeDayColorRed = AutoExecConfig_CreateConVar("sm_warden_freeday_color_red", "0", "What color to turn the player with freeday into (set R, G and B values to 255 to disable) (Rgb): x - red value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorGreen = AutoExecConfig_CreateConVar("sm_warden_freeday_color_green", "200", "What color to turn the player with freeday into (rGb): x - green value", _, true, 0.0, true, 255.0);
 	gc_iFreeDayColorBlue = AutoExecConfig_CreateConVar("sm_warden_freeday_color_blue", "0", "What color to turn the player with freeday into (rgB): x - blue value", _, true, 0.0, true, 255.0);
@@ -89,86 +89,86 @@ public void Freedays_OnPluginStart()
 
 public Action Command_FreeDay(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && gc_bFreeDay.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bFreeDay.BoolValue)
+		return Plugin_Continue;
+		
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
+		char info1[255];
+		Menu menu = CreateMenu(Handler_GiveFreeDayChoose);
+
+		Format(info1, sizeof(info1), "%T", "warden_givefreeday", client);
+		menu.SetTitle(info1);
+
+		int iValidCount = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			char info1[255];
-			Menu menu = CreateMenu(Handler_GiveFreeDayChoose);
-
-			Format(info1, sizeof(info1), "%T", "warden_givefreeday", client);
-			menu.SetTitle(info1);
-
-			int iValidCount = 0;
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+			if ((GetClientTeam(i) == CS_TEAM_T) && !g_bGetFreeDay[i] && !g_bHasFreeDay[i])
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && !g_bGetFreeDay[i] && !g_bHasFreeDay[i])
-				{
-					char userid[11];
-					char username[MAX_NAME_LENGTH];
-					IntToString(GetClientUserId(i), userid, sizeof(userid));
-					if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
-					if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
-					menu.AddItem(userid, username);
-					iValidCount++;
-				}
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
+				if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
+				menu.AddItem(userid, username);
+				iValidCount++;
 			}
-
-			if (iValidCount == 0)
-			{
-				Format(info1, sizeof(info1), "%T", "warden_noplayer", client);
-				menu.AddItem("", info1, ITEMDRAW_DISABLED);
-			}
-
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+
+		if (iValidCount == 0)
+		{
+			Format(info1, sizeof(info1), "%T", "warden_noplayer", client);
+			menu.AddItem("", info1, ITEMDRAW_DISABLED);
+		}
+
+		menu.ExitBackButton = true;
+		menu.ExitButton = true;
+		menu.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
 
 public Action Command_RemoveFreeDay(int client, int args)
 {
-	if (gc_bPlugin.BoolValue && gc_bFreeDay.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bFreeDay.BoolValue)
+		return Plugin_Continue;
+		
+	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
 	{
-		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bFreeDayDeputy.BoolValue) || (GetClientTeam(client) == CS_TEAM_CT && gc_bFreeDayGuards.BoolValue))
+		char info1[255];
+		Menu menu = CreateMenu(Handler_RemoveFreeDayChoose);
+
+		Format(info1, sizeof(info1), "%T", "warden_removefreeday", client);
+		menu.SetTitle(info1);
+
+		int iValidCount = 0;
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
 		{
-			char info1[255];
-			Menu menu = CreateMenu(Handler_RemoveFreeDayChoose);
-
-			Format(info1, sizeof(info1), "%T", "warden_removefreeday", client);
-			menu.SetTitle(info1);
-
-			int iValidCount = 0;
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+			if ((GetClientTeam(i) == CS_TEAM_T) && (g_bGetFreeDay[i] || g_bHasFreeDay[i]))
 			{
-				if ((GetClientTeam(i) == CS_TEAM_T) && (g_bGetFreeDay[i] || g_bHasFreeDay[i]))
-				{
-					char userid[11];
-					char username[MAX_NAME_LENGTH];
-					IntToString(GetClientUserId(i), userid, sizeof(userid));
-					if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
-					if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
-					menu.AddItem(userid, username);
-					iValidCount++;
-				}
+				char userid[11];
+				char username[MAX_NAME_LENGTH];
+				IntToString(GetClientUserId(i), userid, sizeof(userid));
+				if (IsPlayerAlive(i))Format(username, sizeof(username), "%N", i);
+				if (!IsPlayerAlive(i))Format(username, sizeof(username), "%N [†]", i);
+				menu.AddItem(userid, username);
+				iValidCount++;
 			}
-
-			if (iValidCount == 0)
-			{
-				Format(info1, sizeof(info1), "%T","warden_noplayer", client);
-				menu.AddItem("", info1, ITEMDRAW_DISABLED);
-			}
-
-			menu.ExitBackButton = true;
-			menu.ExitButton = true;
-			menu.Display(client, MENU_TIME_FOREVER);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+
+		if (iValidCount == 0)
+		{
+			Format(info1, sizeof(info1), "%T","warden_noplayer", client);
+			menu.AddItem("", info1, ITEMDRAW_DISABLED);
+		}
+
+		menu.ExitBackButton = true;
+		menu.ExitButton = true;
+		menu.Display(client, MENU_TIME_FOREVER);
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }
@@ -192,7 +192,7 @@ public void Freedays_Event_RoundStart_Post(Event event, char[] name, bool dontBr
 	{
 		if (g_bGetFreeDay[i] && GetClientTeam(i) == CS_TEAM_T)
 		{
-			CPrintToChatAll("%t %t", "warden_tag", "warden_havefreeday", i);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_havefreeday", i);
 			SetEntityRenderColor(i, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
 			g_bGetFreeDay[i] = false;
 			g_bHasFreeDay[i] = true;
@@ -290,8 +290,8 @@ public int Handler_GiveFreeDayChoose(Menu menu5, MenuAction action, int client, 
 		else
 		{
 			g_bGetFreeDay[user] = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", user);
-			CPrintToChat(user, "%t %t", "warden_tag", "warden_freedayforyou");
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_personalfreeday", user);
+			CPrintToChat(user, "%s %t", g_sPrefix, "warden_freedayforyou");
 			Command_FreeDay(client, 0); // reopen menu
 		}
 	}
@@ -329,8 +329,8 @@ public int Handler_RemoveFreeDayChoose(Menu menu5, MenuAction action, int client
 
 		Command_RemoveFreeDay(client, 0); // reopen menu
 
-		CPrintToChatAll("%t %t", "warden_tag", "warden_removepersonalfreeday", user);
-		CPrintToChat(user, "%t %t", "warden_tag", "warden_removefreedayforyou");
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_removepersonalfreeday", user);
+		CPrintToChat(user, "%s %t", g_sPrefix, "warden_removefreedayforyou");
 
 	}
 	else if (action == MenuAction_Cancel)
@@ -360,14 +360,14 @@ public int Handler_GiveFreeDay(Menu menu6, MenuAction action, int client, int Po
 		if (strcmp(info, "0") == 0) // next round
 		{
 			g_bGetFreeDay[user] = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_personalfreeday", user);
-			CPrintToChat(user, "%t %t", "warden_tag", "warden_freedayforyou");
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_personalfreeday", user);
+			CPrintToChat(user, "%s %t", g_sPrefix, "warden_freedayforyou");
 			Command_FreeDay(client, 0);
 		}
 		else if (strcmp(info, "1") == 0) // thisround
 		{
 			g_bHasFreeDay[user] = true;
-			CPrintToChatAll("%t %t", "warden_tag", "warden_havefreeday", user);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_havefreeday", user);
 			SetEntityRenderColor(user, gc_iFreeDayColorRed.IntValue, gc_iFreeDayColorGreen.IntValue, gc_iFreeDayColorBlue.IntValue, 255);
 			Command_FreeDay(client, 0); // reopen freeday menu
 		}
@@ -408,8 +408,5 @@ public int Native_HasClientFreeday(Handle plugin, int argc)
 	if (!IsClientInGame(client) && !IsClientConnected(client))
 		ThrowNativeError(SP_ERROR_INDEX, "Client index %i is invalid", client);
 
-	if (g_bHasFreeDay[client])
-		return true;
-
-	return false;
+	return g_bHasFreeDay[client];
 }

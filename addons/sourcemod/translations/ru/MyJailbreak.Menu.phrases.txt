@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:00 UTC
+// Date: 2018-05-23 19:27:18 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -233,11 +233,6 @@
 		"ru"		"Меню мутов"
 	}
 
-	"menu_tag"
-	{
-		"ru"		"[{green}MyJB.menu{default}]"
-	}
-
 	"menu_painter"
 	{
 		"ru"		"Меню рисовальщика"
@@ -396,6 +391,16 @@
 	"menu_playerremovefreeday"
 	{
 		"ru"		"Закончить свободный день игроков"
+	}
+
+	"menu_oneinthechamber"
+	{
+		"ru"		"Один в камере"
+	}
+
+	"menu_nolr"
+	{
+		"ru"		"Вкл/Выкл LR"
 	}
 
 	"menu_dealdamage"

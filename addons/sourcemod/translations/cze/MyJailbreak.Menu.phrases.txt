@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:59 UTC
+// Date: 2018-05-23 19:27:18 UTC
 // Language: Czech (cze)
 // 
 // To view other translations for this plugin, please visit:
@@ -231,11 +231,6 @@
 	"menu_mute"
 	{
 		"cze"		"Menu blokovani komunikace"
-	}
-
-	"menu_tag"
-	{
-		"cze"		"[{green}MyJB.menu{default}]"
 	}
 
 	"menu_painter"

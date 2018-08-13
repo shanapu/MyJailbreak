@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:07 UTC
+// Date: 2018-05-23 19:27:06 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"cowboy_tag"
-	{
-		"pl"		"[{green}JB.Cowboy{default}]"
-	}
 
 	"cowboy_need"
 	{

@@ -42,13 +42,23 @@ int OldCvar_tg_cvar_friendlyfire;
 int OldCvar_tg_ct_friendlyfire;
 
 // Info
-public Plugin myinfo = {
+public Plugin myinfo =
+{
 	name = "MyJailbreak - Teamgames - FF toggle", 
 	author = "shanapu", 
 	description = "MyJailbreak - toggle TeamGames friendly fire on MyJailbreak eventdays", 
 	version = MYJB_VERSION, 
 	url = MYJB_URL_LINK
-};
+}
+
+// Start
+public void OnAllPluginsLoaded()
+{
+	if (!FindConVar("tg_ct_friendlyfire"))
+	{
+		SetFailState("To run MyJailbreak with TeamGames you need at least TeamGame version #1.1.0.7 - Problem to compile latest? check TG pull requests!");
+	}
+}
 
 public void MyJailbreak_OnEventDayStart(char[] EventDayName)
 {
@@ -88,7 +98,7 @@ public void MyJailbreak_OnLastGuardRuleStart()
 
 public Action TG_OnPlayerRebel(int client, TG_Team team)
 {
-	if(MyJailbreak_IsEventDayRunning())
+	if (MyJailbreak_IsEventDayRunning())
 	{
 		return Plugin_Handled;
 	}

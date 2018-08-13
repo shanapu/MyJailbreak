@@ -74,8 +74,10 @@ public void Beacon_Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
                    FUNCTIONS
 ******************************************************************************/
 
-public Action Timer_BeaconOn(Handle timer, any client)
+public Action Timer_BeaconOn(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, true, false))
 	{
 		if (!g_bBeaconOn[client]) 
@@ -126,12 +128,18 @@ public void Beacon_OnMapStart()
 // Start
 public void Beacon_OnMapEnd()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bBeaconOn[i] = false;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		g_bBeaconOn[i] = false;
+	}
 }
 
 public void OnAvailableLR(int Announced)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_bBeaconOn[i] = false;
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		g_bBeaconOn[i] = false;
+	}
 }
 
 /******************************************************************************
@@ -147,7 +155,8 @@ public int Native_BeaconOn(Handle plugin, int argc)
 	if (!g_bBeaconOn[client])
 	{
 		g_bBeaconOn[client] = true;
-		CreateTimer (interval, Timer_BeaconOn, client, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
+
+		CreateTimer (interval, Timer_BeaconOn, GetClientUserId(client), TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 

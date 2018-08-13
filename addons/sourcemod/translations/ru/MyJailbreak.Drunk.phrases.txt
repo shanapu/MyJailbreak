@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:14 UTC
+// Date: 2018-05-23 19:26:36 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"drunk_tag"
-	{
-		"ru"		"[{green}JB.Pijak{default}]"
-	}
 
 	"drunk_need"
 	{

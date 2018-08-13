@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Kxnrl
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -61,6 +62,7 @@ int g_iCoolDown;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bTerror;
 ConVar gc_bCTerror;
 ConVar gc_bWarden;
@@ -113,7 +115,6 @@ ConVar g_bOpenDeputy;
 ConVar g_bRandomDeputy;
 ConVar g_bRandom;
 ConVar g_bRequest;
-ConVar g_bWarden;
 ConVar g_bDeputy;
 ConVar g_bDeputySet;
 ConVar g_bDeputyBecome;
@@ -135,10 +136,7 @@ ConVar gc_bOrdersDeputy;
 ConVar gc_bVoteNoMenu;
 
 // Strings
-char g_sAdminFlagBulletSparks[64];
-char g_sAdminFlagLaser[64];
-char g_sAdminFlagPainter[64];
-char g_sAdminFlag[64];
+char g_sPrefix[64];
 
 // Handles
 Handle gH_TopMenu = INVALID_HANDLE;
@@ -188,6 +186,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_menu_version", MYJB_VERSION, "The version of the SourceMod plugin MyJailbreak - Menu", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_menu_enable", "1", "0 - disabled, 1 - enable jailbrek menu", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_menu_prefix", "[{green}MyJB.Menu{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandMenu = AutoExecConfig_CreateConVar("sm_menu_cmds_menu", "panel, menus, m", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandDays = AutoExecConfig_CreateConVar("sm_menu_cmds_days", "days, day, ed", "Set your custom chat command for open menu(!eventdays (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSetDay = AutoExecConfig_CreateConVar("sm_menu_cmds_setday", "sd, setdays", "Set your custom chat command for open menu(!menu (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
@@ -219,16 +218,16 @@ public void OnPluginStart()
 	// Hooks
 	HookEvent("player_spawn", Event_OnPlayerSpawn);
 	HookEvent("round_start", Event_RoundStart);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
-
-	// Find
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -264,9 +263,12 @@ void MyAdminMenuReady(Handle h_TopMenu)
 		{
 			AddToTopMenu(gH_TopMenu, "sm_setday", TopMenuObject_Item, Handler_AdminMenu_SetDay, gM_MyJB, "sm_setday");
 		}
-		AddToTopMenu(gH_TopMenu, "sm_setwarden", TopMenuObject_Item, Handler_AdminMenu_SetWarden, gM_MyJB, "sm_setwarden");
-		AddToTopMenu(gH_TopMenu, "sm_removewarden", TopMenuObject_Item, Handler_AdminMenu_RemoveWarden, gM_MyJB, "sm_removewarden");
-		AddToTopMenu(gH_TopMenu, "sm_removedeputy", TopMenuObject_Item, Handler_AdminMenu_RemoveDeputy, gM_MyJB, "sm_removedeputy");
+		if (gp_bMyJBWarden)
+		{
+			AddToTopMenu(gH_TopMenu, "sm_setwarden", TopMenuObject_Item, Handler_AdminMenu_SetWarden, gM_MyJB, "sm_setwarden");
+			AddToTopMenu(gH_TopMenu, "sm_removewarden", TopMenuObject_Item, Handler_AdminMenu_RemoveWarden, gM_MyJB, "sm_removewarden");
+			AddToTopMenu(gH_TopMenu, "sm_removedeputy", TopMenuObject_Item, Handler_AdminMenu_RemoveDeputy, gM_MyJB, "sm_removedeputy");
+		}
 		AddToTopMenu(gH_TopMenu, "sm_removequeue", TopMenuObject_Item, Handler_AdminMenu_RemoveQueue, gM_MyJB, "sm_removequeue");
 		AddToTopMenu(gH_TopMenu, "sm_clearqueue", TopMenuObject_Item, Handler_AdminMenu_ClearQueue, gM_MyJB, "sm_clearqueue");
 	}
@@ -434,62 +436,75 @@ public void Handler_AdminMenu_ClearQueue(Handle h_TopMenu, TopMenuAction action,
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sAdminFlag)
+	if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 // Check for optional Plugins
 public void OnAllPluginsLoaded()
 {
-	gp_bMyJailShop = LibraryExists("myjailshop");
-	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
-	gp_bMyWeapons = LibraryExists("myweapons");
-	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
+	gp_bMyJailShop = LibraryExists("myjailshop");
+	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "myjailshop"))
-		gp_bMyJailShop = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myweapons"))
-		gp_bMyWeapons = false;
-
-	if (StrEqual(name, "myjbwarden"))
-		gp_bMyJBWarden = false;
-
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailshop"))
+	{
+		gp_bMyJailShop = false;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
+		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "myjailshop"))
-		gp_bMyJailShop = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myweapons"))
-		gp_bMyWeapons = true;
-
-	if (StrEqual(name, "myjbwarden"))
-		gp_bMyJBWarden = true;
-
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailshop"))
+	{
+		gp_bMyJailShop = true;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
+		gp_bMyWeapons = true;
+	}
 }
 
 // FindConVar
 public void OnConfigsExecuted()
 {
-	g_bWarden = FindConVar("sm_warden_enable");
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
 	g_bDeputy = FindConVar("sm_warden_deputy_enable");
 	g_bDeputySet = FindConVar("sm_warden_deputy_set");
 	g_bDeputyBecome = FindConVar("sm_warden_deputy_become");
@@ -535,13 +550,6 @@ public void OnConfigsExecuted()
 	gc_bOrders = FindConVar("sm_warden_orders");
 	gc_bOrdersDeputy = FindConVar("sm_warden_orders_deputy");
 	g_bEndRound = FindConVar("sm_myjb_allow_endround");
-
-	if (gp_bMyJBWarden)
-	{
-		gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
-		gc_sAdminFlagPainter.GetString(g_sAdminFlagPainter, sizeof(g_sAdminFlagPainter));
-		gc_sAdminFlagBulletSparks.GetString(g_sAdminFlagBulletSparks, sizeof(g_sAdminFlagBulletSparks));
-	}
 
 	// Set custom Commands
 	int iCount = 0;
@@ -639,7 +647,7 @@ public void OnClientPutInServer(int client)
 {
 	if (gc_bWelcome.BoolValue)
 	{
-		CreateTimer(35.0, Timer_WelcomeMessage, client);
+		CreateTimer(35.0, Timer_WelcomeMessage, GetClientUserId(client));
 	}
 }
 
@@ -664,7 +672,7 @@ public Action Command_OpenMenu(int client, int args)
 			Menu mainmenu = new Menu(JBMenuHandler);
 			mainmenu.SetTitle(menuinfo);
 
-			if(gc_bCleanMenu.BoolValue)
+			if (gc_bCleanMenu.BoolValue)
 			{
 				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
 				mainmenu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -675,7 +683,7 @@ public Action Command_OpenMenu(int client, int args)
 			Call_PushCell(mainmenu);
 			Call_Finish();
 
-			if ((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bWarden.BoolValue)
+			if (gc_bWarden.BoolValue && gp_bMyJBWarden && warden_iswarden(client))
 			{
 				if (gp_bMyWeapons)
 				{
@@ -785,7 +793,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bSparks != null)
 				{
-					if (g_bSparks.BoolValue && CheckVipFlag(client, g_sAdminFlagBulletSparks))
+					if (g_bSparks.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -794,7 +802,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bPainter != null)
 				{
-					if (g_bPainter.BoolValue && CheckVipFlag(client, g_sAdminFlagPainter))
+					if (g_bPainter.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_painter", client);
 						mainmenu.AddItem("painter", menuinfo);
@@ -803,7 +811,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bLaser != null)
 				{
-					if (g_bLaser.BoolValue && CheckVipFlag(client, g_sAdminFlagLaser))
+					if (g_bLaser.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
@@ -884,7 +892,7 @@ public Action Command_OpenMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_unwarden", client);
 				mainmenu.AddItem("unwarden", menuinfo);
 			}// HERE END THE WARDEN MENU
-			else if (gp_bMyJBWarden && warden_deputy_isdeputy(client) && gc_bDeputy.BoolValue) // HERE STARTS THE DEPUTY MENU)
+			else if (gp_bMyJBWarden && warden_deputy_isdeputy(client) && gc_bDeputy.BoolValue && warden_isenabled()) // HERE STARTS THE DEPUTY MENU)
 			{
 				if (gp_bMyWeapons)
 				{
@@ -973,7 +981,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bSparks != null)
 				{
-					if (g_bSparks.BoolValue && g_bSparksDeputy.BoolValue && CheckVipFlag(client, g_sAdminFlagBulletSparks))
+					if (g_bSparks.BoolValue && g_bSparksDeputy.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_sparks", client);
 						mainmenu.AddItem("sparks", menuinfo);
@@ -982,7 +990,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bPainter != null)
 				{
-					if (g_bPainter.BoolValue && g_bPainterDeputy.BoolValue && CheckVipFlag(client, g_sAdminFlagPainter))
+					if (g_bPainter.BoolValue && g_bPainterDeputy.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_painter", client);
 						mainmenu.AddItem("painter", menuinfo);
@@ -991,7 +999,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (g_bLaser != null)
 				{
-					if (g_bLaser.BoolValue && g_bLaserDeputy.BoolValue && CheckVipFlag(client, g_sAdminFlagLaser))
+					if (g_bLaser.BoolValue && g_bLaserDeputy.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_laser", client);
 						mainmenu.AddItem("laser", menuinfo);
@@ -1075,25 +1083,18 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 
-				if (g_bWarden != null || g_bWarden)
+				if (gp_bMyJBWarden && warden_isenabled())
 				{
 					if (!warden_exist() && IsPlayerAlive(client))
 					{
-						if (g_bWarden.BoolValue)
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_getwarden", client);
-							mainmenu.AddItem("getwarden", menuinfo);
-						}
-						
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_getwarden", client);
+						mainmenu.AddItem("getwarden", menuinfo);
 					}
 
-					if (g_bDeputy != null && g_bDeputyBecome != null)
+					if (warden_exist() && g_bDeputy.BoolValue && g_bDeputyBecome.BoolValue && !warden_deputy_exist())
 					{
-						if (warden_exist() && g_bDeputy.BoolValue && g_bDeputyBecome.BoolValue && !warden_deputy_exist())
-						{
-							Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputybecome", client);
-							mainmenu.AddItem("becomedeputy", menuinfo);
-						}
+						Format(menuinfo, sizeof(menuinfo), "%T", "menu_deputybecome", client);
+						mainmenu.AddItem("becomedeputy", menuinfo);
 					}
 				}
 
@@ -1170,17 +1171,14 @@ public Action Command_OpenMenu(int client, int args)
 					}
 				}
 
-				if (g_bWarden != null)
+				if (gp_bMyJBWarden)
 				{
 					if (warden_exist())
 					{
-						if (g_bWarden.BoolValue)
+						if (g_bVote.BoolValue)
 						{
-							if (g_bVote.BoolValue)
-							{
-								Format(menuinfo, sizeof(menuinfo), "%T", "menu_votewarden", client);
-								mainmenu.AddItem("votewarden", menuinfo);
-							}
+							Format(menuinfo, sizeof(menuinfo), "%T", "menu_votewarden", client);
+							mainmenu.AddItem("votewarden", menuinfo);
 						}
 					}
 				}
@@ -1251,7 +1249,7 @@ public Action Command_OpenMenu(int client, int args)
 				}
 			}
 
-			if (CheckVipFlag(client, g_sAdminFlag))
+			if (MyJailbreak_CheckVIPFlags(client, "sm_menu_flag", gc_sAdminFlag, "sm_menu_flag"))
 			{
 				/* ADMIN PLACEHOLDER
 				Format(menuinfo, sizeof(menuinfo), "%T", "menu_PLACEHOLDER", client);
@@ -1259,10 +1257,7 @@ public Action Command_OpenMenu(int client, int args)
 				*/
 				if (gc_iAdminMenu.IntValue == 1 || gc_iAdminMenu.IntValue == 3)
 				{
-					char EventDay[64];
-					MyJailbreak_GetEventDayName(EventDay);
-					
-					if (StrEqual(EventDay, "none", false)) // is an other event running or set?
+					if (!MyJailbreak_IsEventDayPlanned() && !MyJailbreak_IsEventDayRunning()) // is an other event running or set?
 					{
 						if ((gp_bWarden || gp_bMyJBWarden) && !warden_iswarden(client))
 						{
@@ -1279,9 +1274,9 @@ public Action Command_OpenMenu(int client, int args)
 							}
 						}
 					}
-					if (g_bWarden != null)
+					if (gp_bMyJBWarden)
 					{
-						if (g_bWarden.BoolValue)
+						if (warden_isenabled())
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_setwarden", client);
 							mainmenu.AddItem("setwarden", menuinfo);
@@ -1576,7 +1571,7 @@ public Action Command_VoteEventDays(int client, int args)
 		Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlevote", client);
 		menu.SetTitle(menuinfo);
 
-		if(gc_bCleanMenu.BoolValue)
+		if (gc_bCleanMenu.BoolValue)
 		{
 			menu.AddItem("1", "0", ITEMDRAW_SPACER);
 			menu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1640,7 +1635,7 @@ public int VoteEventMenuHandler(Menu daysmenu, MenuAction action, int client, in
 // Event Days Set Menu
 public Action Command_SetEventDay(int client, int args)
 {
-	if (CheckVipFlag(client, g_sAdminFlag))
+	if (MyJailbreak_CheckVIPFlags(client, "sm_menu_flag", gc_sAdminFlag, "sm_menu_flag"))
 	{
 		Command_SetAdminEventDay(client);
 	}
@@ -1660,7 +1655,7 @@ void Command_SetWardenEventDay(int client)
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlestart", client);
 			menu.SetTitle(menuinfo);
 
-			if(gc_bCleanMenu.BoolValue)
+			if (gc_bCleanMenu.BoolValue)
 			{
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1704,7 +1699,7 @@ void Command_SetAdminEventDay(int client)
 			Format(menuinfo, sizeof(menuinfo), "%T", "menu_event_Titlestart", client);
 			menu.SetTitle(menuinfo);
 
-			if(gc_bCleanMenu.BoolValue)
+			if (gc_bCleanMenu.BoolValue)
 			{
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
 				menu.AddItem("1", "0", ITEMDRAW_SPACER);
@@ -1770,7 +1765,7 @@ public Action Command_VotingMenu(int client, int args)
 {
 	if (gc_bPlugin.BoolValue && gc_bVoting.BoolValue)
 	{
-		if (((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bSetW.BoolValue) || (CheckVipFlag(client, g_sAdminFlag) && gc_bSetA.BoolValue) || client == 0)
+		if (((gp_bWarden || gp_bMyJBWarden) && warden_iswarden(client) && gc_bSetW.BoolValue) || (MyJailbreak_CheckVIPFlags(client, "sm_menu_flag", gc_sAdminFlag, "sm_menu_flag") && gc_bSetA.BoolValue) || client == 0)
 		{
 			if ((GetTeamClientCount(CS_TEAM_CT) > 0) && (GetTeamClientCount(CS_TEAM_T) > 0))
 			{
@@ -1792,13 +1787,13 @@ public Action Command_VotingMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_voting", LANG_SERVER);
 						menu.SetTitle(menuinfo);
 
-						if(gc_bCleanMenu.BoolValue)
+						if (gc_bCleanMenu.BoolValue)
 						{
 							menu.AddItem("1", "0", ITEMDRAW_SPACER);
 							menu.AddItem("1", "0", ITEMDRAW_SPACER);
 						}
 
-						if(gc_bVoteNoMenu.BoolValue)
+						if (gc_bVoteNoMenu.BoolValue)
 						{
 							Format(menuinfo, sizeof(menuinfo), "%T", "menu_noevent", LANG_SERVER);
 							menu.AddItem("No Event", menuinfo);
@@ -1820,24 +1815,32 @@ public Action Command_VotingMenu(int client, int args)
 						for (int i = 0; i < EventDaysArray.Length; i++)
 						{
 							EventDaysArray.GetString(i, sBuffer, sizeof(sBuffer));
-							Format(sBuffer2, sizeof(sBuffer2), "menu_%s", sBuffer, LANG_SERVER);
-							Format(menuinfo, sizeof(menuinfo), "%t", sBuffer2, LANG_SERVER);
-							menu.AddItem(sBuffer, menuinfo);
+
+							Format(sBuffer2, sizeof(sBuffer2), "sm_%s_vote", sBuffer, LANG_SERVER);
+							ConVar cBuffer = FindConVar(sBuffer2);
+
+							if (cBuffer.BoolValue)
+							{
+								Format(sBuffer2, sizeof(sBuffer2), "menu_%s", sBuffer, LANG_SERVER);
+								Format(menuinfo, sizeof(menuinfo), "%t", sBuffer2, LANG_SERVER);
+								menu.AddItem(sBuffer, menuinfo);
+							}
 						}
 
 						menu.ExitButton = true;
 						menu.DisplayVoteToAll(25);
+
 						g_iCoolDown = gc_iCooldownDay.IntValue + 1;
 					}
-					else CReplyToCommand(client, "%t %t", "menu_tag", "menu_wait", g_iCoolDown);
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_wait", g_iCoolDown);
 				}
-				else CReplyToCommand(client, "%t %t", "menu_tag", "menu_progress", EventDay);
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_progress", EventDay);
 			}
-			else CReplyToCommand(client, "%t %t", "menu_tag", "menu_minplayer");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_minplayer");
 		}
-		else CReplyToCommand(client, "%t %t", "menu_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
-	else CReplyToCommand(client, "%t %t", "menu_tag", "menu_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "menu_disabled");
 
 	return Plugin_Handled;
 }
@@ -1863,25 +1866,27 @@ public int VotingResults(Menu menu, int num_votes, int num_clients, const int[][
 		if (num_items > 1 && (item_info[0][VOTEINFO_ITEM_VOTES] == item_info[1][VOTEINFO_ITEM_VOTES]))
 		{
 			winner = GetRandomInt(0, 1);
-			CPrintToChatAll("%t %t", "menu_tag", "menu_votingdraw");
+			CPrintToChatAll("%s %t", g_sPrefix, "menu_votingdraw");
 		}
 		char event[64];
 		menu.GetItem(item_info[winner][VOTEINFO_ITEM_INDEX], event, sizeof(event));
-		CPrintToChatAll("%t %t", "menu_tag", "menu_votingwon", event, num_clients, num_items);
+		CPrintToChatAll("%s %t", g_sPrefix, "menu_votingwon", event, num_clients, num_items);
 
 		if (!StrEqual("No Event",event)) ServerCommand("sm_set%s", event);
 	}
-	else CPrintToChatAll("%t %t", "menu_tag", "menu_votingcancel", EventDay);
+	else CPrintToChatAll("%s %t", g_sPrefix, "menu_votingcancel", EventDay);
 }
 
 /******************************************************************************
                    TIMER
 ******************************************************************************/
 
-public Action Timer_WelcomeMessage(Handle timer, any client)
+public Action Timer_WelcomeMessage(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (gc_bWelcome.BoolValue && IsValidClient(client, false, true))
 	{
-		CPrintToChat(client, "%t %t", "menu_tag", "menu_info");
+		CPrintToChat(client, "%s %t", g_sPrefix, "menu_info");
 	}
 }

@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: olegtsvetkov
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -40,6 +41,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <smartjaildoors>
 #include <CustomPlayerSkins>
 #include <myjailbreak>
@@ -57,6 +59,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
@@ -67,6 +70,7 @@ bool g_bTerrorZombies[MAXPLAYERS+1];
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -99,6 +103,7 @@ ConVar gc_fKnockbackAmount;
 ConVar gc_iRegen;
 ConVar gc_bTerrorZombie;
 ConVar gc_bTerrorInfect;
+ConVar gc_fSpeed;
 
 ConVar gc_bBeginSetA;
 ConVar gc_bBeginSetW;
@@ -117,7 +122,6 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerFreeze;
@@ -127,12 +131,12 @@ Handle g_hTimerRegen;
 float g_fPos[3];
 
 // Strings
+char g_sPrefix[64];
 char g_sModelPathZombie[256];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSkyName[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sModelPathPrevious[MAXPLAYERS+1][256];
 char g_sOverlayStartPath[256];
 
@@ -162,6 +166,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_zombie_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_zombie_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_zombie_prefix", "[{green}MyJB.Zombie{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_zombie_cmds_vote", "zd, zomb, z", "Set your custom chat command for Event voting(!zombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_zombie_cmds_set", "sz, szd, szombie", "Set your custom chat command for set Event(!setzombie (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_zombie_warden", "1", "0 - disabled, 1 - allow warden to set zombie round", _, true, 0.0, true, 1.0);
@@ -185,6 +190,7 @@ public void OnPluginStart()
 	gc_iZombieHPincrease = AutoExecConfig_CreateConVar("sm_zombie_zombie_hp_extra", "1000", "HP the Zombies get additional per extra Human", _, true, 1.0);
 	gc_iHumanHP = AutoExecConfig_CreateConVar("sm_zombie_human_hp", "65", "HP the Humans got on Spawn", _, true, 1.0);
 	gc_iRegen = AutoExecConfig_CreateConVar("sm_zombie_zombie_regen", "5", "0 - disabled, HPs a Zombie regenerates every 5 seconds", _, true, 0.0);
+	gc_fSpeed = AutoExecConfig_CreateConVar("sm_zombie_speed", "1.4", "Movement speed of zombies - 1.0 normal speed", _, true, 1.0);
 	gc_bDark = AutoExecConfig_CreateConVar("sm_zombie_dark", "1", "0 - disabled, 1 - enable Map Darkness", _, true, 0.0, true, 1.0);
 	gc_bGlow = AutoExecConfig_CreateConVar("sm_zombie_glow", "1", "0 - disabled, 1 - enable Glow effect for humans", _, true, 0.0, true, 1.0);
 	gc_iGlowMode = AutoExecConfig_CreateConVar("sm_zombie_glow_mode", "1", "1 - human contours with wallhack for zombies, 2 - human glow effect without wallhack for zombies", _, true, 1.0, true, 2.0);
@@ -213,16 +219,12 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sModelPathZombie, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -253,18 +255,19 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheSoundAnyDownload(g_sSoundStartPath);
 		}
 	}
-	else if (convar == gc_sAdminFlag)
+	else if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
-	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
+	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
 	gp_bMyWeapons = LibraryExists("myweapons");
 }
@@ -272,51 +275,79 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iFreezeTime = gc_iFreezeTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
+
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 
 	// FindConVar
 	if (gp_bHosties)
@@ -356,11 +387,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("zombie");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("zombie");
 }
 
@@ -373,7 +410,7 @@ public Action Command_SetZombie(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_disabled");
 		return Plugin_Handled;
 	}
 
@@ -391,17 +428,17 @@ public Action Command_SetZombie(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Zombie was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_zombie_flag", gc_sAdminFlag, "sm_zombie_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_setbyadmin");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -412,14 +449,14 @@ public Action Command_SetZombie(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -439,19 +476,19 @@ public Action Command_SetZombie(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "zombie_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_setbywarden");
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_minplayer");
 			return Plugin_Handled;
 		}
 
@@ -462,14 +499,14 @@ public Action Command_SetZombie(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -487,7 +524,7 @@ public Action Command_SetZombie(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -498,19 +535,19 @@ public Action Command_VoteZombie(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_voting");
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_minplayer");
 		return Plugin_Handled;
 	}
 
@@ -521,14 +558,14 @@ public Action Command_VoteZombie(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -537,7 +574,7 @@ public Action Command_VoteZombie(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "zombie_tag", "zombie_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_voted");
 		return Plugin_Handled;
 	}
 
@@ -563,7 +600,7 @@ public Action Command_VoteZombie(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -602,7 +639,6 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		return;
 	}
 
-
 	g_bIsZombie = true;
 	g_bStartZombie = false;
 
@@ -614,10 +650,15 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 {
 	if (g_bIsZombie)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			if (!IsValidClient(i, true, true))
+				continue;
+
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
+
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 
 			if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 			{
@@ -633,6 +674,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerFreeze;
 		delete g_hTimerBeacon;
 		delete g_hTimerRegen;
+		g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -656,9 +698,9 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			if (gp_bWarden)
+			if (gp_bMyJBWarden)
 			{
-				SetCvar("sm_warden_enable", 1);
+				warden_enable(true);
 			}
 
 			SetCvarString("sv_skyname", g_sSkyName);
@@ -679,18 +721,21 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_FogOff();
 			}
 			
-			CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "zombie_end");
 		}
 	}
 
 	if (g_bStartZombie)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_next");
 		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
 }
@@ -744,11 +789,13 @@ public Action Event_PlayerDeath(Handle event, char[] name, bool dontBroadcast)
 	
 	g_bTerrorZombies[victim] = true;
 
-	CreateTimer(4.0, Timer_MakeZombie, victim, TIMER_FLAG_NO_MAPCHANGE);
+	CreateTimer(4.0, Timer_MakeZombie, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public Action Timer_MakeZombie(Handle hTimer, any client)
+public Action Timer_MakeZombie(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client, true, true))
 	{
 		ChangeClientTeam(client, CS_TEAM_CT);
@@ -762,6 +809,8 @@ public Action Timer_MakeZombie(Handle hTimer, any client)
 		}
 
 		SetEntityHealth(client, zombieHP);
+
+		SetEntPropFloat(client, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
 
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
@@ -855,9 +904,12 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		if (gp_bCustomPlayerSkins && gc_bGlow.BoolValue)
 		{
@@ -867,6 +919,10 @@ void ResetEventDay()
 		SetEntProp(i, Prop_Send, "m_bNightVisionOn", 0);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
+
+		EnableWeaponFire(i, true);
 
 		StripAllPlayerWeapons(i);
 
@@ -892,6 +948,7 @@ void ResetEventDay()
 	delete g_hTimerFreeze;
 	delete g_hTimerBeacon;
 	delete g_hTimerRegen;
+	g_iFreezeTime = gc_iFreezeTime.IntValue;
 
 	if (g_iRound == g_iMaxRound)
 	{
@@ -911,9 +968,9 @@ void ResetEventDay()
 		SetCvarString("sv_skyname", g_sSkyName);
 		SetCvar("sv_infinite_ammo", 0);
 
-		if (gp_bWarden)
+		if (gp_bMyJBWarden)
 		{
-			SetCvar("sm_warden_enable", 1);
+			warden_enable(true);
 		}
 
 		if (gp_bMyJailbreak)
@@ -925,13 +982,14 @@ void ResetEventDay()
 			MyJailbreak_FogOff();
 		}
 
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_end");
 	}
 }
 
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
 }
 
 // Knife only for Zombies
@@ -942,18 +1000,33 @@ public Action OnWeaponCanUse(int client, int weapon)
 		return Plugin_Continue;
 	}
 
-	if (GetClientTeam(client) != CS_TEAM_CT)
-	{
+	if (!IsValidClient(client, true, false))
 		return Plugin_Continue;
-	}
+
+	if (GetClientTeam(client) != CS_TEAM_CT)
+		return Plugin_Continue;
 
 	char sWeapon[32];
 	GetEdictClassname(weapon, sWeapon, sizeof(sWeapon));
 
-	if (!StrEqual(sWeapon, "weapon_knife") && IsValidClient(client, true, false))
+	if ((StrContains(sWeapon, "knife", false) != -1) || (StrContains(sWeapon, "bayonet", false) != -1))
 	{
-		return Plugin_Handled;
+		return Plugin_Continue;
 	}
+
+	return Plugin_Handled;
+}
+
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+{
+	if (!g_bIsZombie)
+		return Plugin_Continue;
+
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
+
+	if (GetClientTeam(victim) == GetClientTeam(attacker))
+		return Plugin_Handled;
 
 	return Plugin_Continue;
 }
@@ -976,7 +1049,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -985,16 +1058,21 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsZombie = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_now");
 		PrintCenterTextAll("%t", "zombie_now_nc");
 	}
 	else
@@ -1002,7 +1080,7 @@ void StartEventRound(bool thisround)
 		g_bStartZombie = true;
 		g_iCoolDown++;
 		
-		CPrintToChatAll("%t %t", "zombie_tag", "zombie_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "zombie_next");
 		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
 }
@@ -1029,8 +1107,11 @@ void PrepareDay(bool thisround)
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -1041,12 +1122,15 @@ void PrepareDay(bool thisround)
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsClientInGame(i))
+					continue;
+
 				GetClientAbsOrigin(RandomCT, g_fPos);
-				
+
 				g_fPos[2] = g_fPos[2] + 5;
-				
+
 				TeleportEntity(i, g_fPos, NULL_VECTOR, NULL_VECTOR);
 			}
 		}
@@ -1059,11 +1143,16 @@ void PrepareDay(bool thisround)
 		zombieHP = zombieHP + (gc_iZombieHPincrease.IntValue * difference);
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		if (!IsClientInGame(i))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		EnableWeaponFire(i, false);
 
 		SetEntityMoveType(i, MOVETYPE_NONE);
 
@@ -1102,9 +1191,9 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -1143,7 +1232,7 @@ void PrepareDay(bool thisround)
 
 	g_hTimerFreeze = CreateTimer(1.0, Timer_StartEvent, _, TIMER_REPEAT);
 
-	CPrintToChatAll("%t %t", "zombie_tag", "zombie_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "zombie_rounds", g_iRound, g_iMaxRound);
 }
 
 // Perpare client for glow
@@ -1193,8 +1282,11 @@ public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
 		return Plugin_Handled;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		if (!CPS_HasSkin(i))
 		{
 			continue;
@@ -1297,28 +1389,34 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iFreezeTime--;
+
 	if (g_iFreezeTime > 0)
 	{
-		g_iFreezeTime--;
-		
-		if (g_iFreezeTime == gc_iFreezeTime.IntValue-3)
+		if (g_iFreezeTime <= gc_iFreezeTime.IntValue - 3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				if (GetClientTeam(i) == CS_TEAM_T)
 				{
 					SetEntityMoveType(i, MOVETYPE_WALK);
 				}
 			}
 		}
-		
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, false, true))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				PrintCenterText(i, "%t", "zombie_timetounfreeze_nc", g_iFreezeTime);
 			}
-			else if (GetClientTeam(i) == CS_TEAM_T)
+			else
 			{
 				PrintCenterText(i, "%t", "zombie_timeuntilzombie_nc", g_iFreezeTime);
 			}
@@ -1327,15 +1425,14 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	g_iFreezeTime = gc_iFreezeTime.IntValue;
-
-
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
-			SetEntityMoveType(i, MOVETYPE_WALK);
-			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
+			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", gc_fSpeed.FloatValue);
 			DarkenScreen(i, false);
 
 			if (gc_bVision.BoolValue)
@@ -1350,6 +1447,10 @@ public Action Timer_StartEvent(Handle timer)
 		}
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
 		{
@@ -1374,7 +1475,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "zombie_start_nc");
 
-	CPrintToChatAll("%t %t", "zombie_tag", "zombie_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "zombie_start");
 
 	g_hTimerFreeze = null;
 
@@ -1393,8 +1494,11 @@ public Action Timer_SetModel(Handle timer, int client)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 
@@ -1403,8 +1507,11 @@ public Action Timer_BeaconOn(Handle timer)
 
 public Action Timer_ReGenHealth(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
 			SetEntityHealth(i, GetClientHealth(i)+gc_iRegen.IntValue);

@@ -46,6 +46,9 @@ ConVar gc_sGroupWarden;
 char g_sGroupRatio[12];
 char g_sGroupWarden[12];
 
+char g_sPrefixW[64];
+char g_sPrefixR[64];
+
 // Bools
 bool g_bIsLateLoad = false;
 bool IsMemberRatio[MAXPLAYERS+1] = {false, ...};
@@ -97,8 +100,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPostAdminCheck(i);
 		}
 
@@ -118,10 +124,26 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sGroupRatio)
 	{
 		strcopy(g_sGroupRatio, sizeof(g_sGroupRatio), newValue);
+
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (!IsClientInGame(i))
+				continue;
+
+			SteamWorks_GetUserGroupStatus(i, StringToInt(g_sGroupRatio));
+		}
 	}
 	else if (convar == gc_sGroupWarden)
 	{
 		strcopy(g_sGroupWarden, sizeof(g_sGroupWarden), newValue);
+
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			if (!IsClientInGame(i))
+				continue;
+
+			SteamWorks_GetUserGroupStatus(i, StringToInt(g_sGroupWarden));
+		}
 	}
 }
 
@@ -133,11 +155,20 @@ public void OnAllPluginsLoaded()
 	}
 }
 
+public void OnConfigsExecuted()
+{
+	ConVar cBuffer = FindConVar("sm_ratio_prefix");
+	cBuffer.GetString(g_sPrefixR, sizeof(g_sPrefixR));
+
+	cBuffer = FindConVar("sm_warden_prefix");
+	cBuffer.GetString(g_sPrefixW, sizeof(g_sPrefixW));
+}
+
 public Action warden_OnWardenCreate(int client, int caller)
 {
 	if (!IsMemberWarden[client] && gc_sGroupWarden.IntValue != 0)
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_steamgroup");
+		CPrintToChat(client, "%s %t", g_sPrefixW, "warden_steamgroup");
 		return Plugin_Handled;
 	}
 
@@ -148,7 +179,7 @@ public Action MyJailbreak_OnJoinGuardQueue(int client)
 {
 	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamgroup");
 		return Plugin_Handled;
 	}
 
@@ -169,13 +200,25 @@ public int SteamWorks_OnClientGroupStatus(int authid, int groupAccountID, bool i
 
 	if (isMember)
 	{
-		if (groupAccountID == StringToInt(g_sGroupRatio)) IsMemberRatio[client] = true;
-		if (groupAccountID == StringToInt(g_sGroupWarden)) IsMemberWarden[client] = true;
+		if (groupAccountID == StringToInt(g_sGroupRatio))
+		{
+			IsMemberRatio[client] = true;
+		}
+		else if (groupAccountID == StringToInt(g_sGroupWarden))
+		{
+			IsMemberWarden[client] = true;
+		}
 	}
 	else
 	{
-		IsMemberWarden[client] = false;
-		IsMemberRatio[client] = false;
+		if (groupAccountID == StringToInt(g_sGroupRatio))
+		{
+			IsMemberRatio[client] = false;
+		}
+		else if (groupAccountID == StringToInt(g_sGroupWarden))
+		{
+			IsMemberWarden[client] = false;
+		}
 	}
 }
 
@@ -183,13 +226,16 @@ int GetUserAuthID(int authid)
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!IsValidClient(i)) return -1;
-		
+		if (!IsValidClient(i))
+			continue;
+
 		char[] charauth = new char[64];
 		char[] authchar = new char[64];
 		GetClientAuthId(i, AuthId_Steam3, charauth, 64);
 		IntToString(authid, authchar, 64);
-		if (StrContains(charauth, authchar) != -1) return i;
+
+		if (StrContains(charauth, authchar) != -1)
+			return i;
 	}
 
 	return -1;
@@ -201,7 +247,7 @@ public void OnClientDisconnect(int client)
 	IsMemberWarden[client] = false;
 }
 
-public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast) 
+public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
@@ -216,26 +262,28 @@ public Action Event_OnPlayerSpawn(Event event, const char[] name, bool bDontBroa
 
 	if (!IsMemberRatio[client] && gc_sGroupRatio.IntValue != 0)
 	{
-		CPrintToChat(client, "%t %t", "ratio_tag", "ratio_steamgroup");
+		CPrintToChat(client, "%s %t", g_sPrefixR, "ratio_steamgroup");
 		CreateTimer(5.0, Timer_SlayPlayer, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
-		return Plugin_Continue;
 	}
 
 	return Plugin_Continue;
 }
 
 
-public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
+public Action Timer_SlayPlayer(Handle timer, int userid)
 {
-	int client = GetClientOfUserId(iUserId);
+	int client = GetClientOfUserId(userid);
 
-	if ((IsValidClient(client, false, false)) && (GetClientTeam(client) == CS_TEAM_CT))
-	{
-		ForcePlayerSuicide(client);
-		ChangeClientTeam(client, CS_TEAM_T);
-		CS_RespawnPlayer(client);
-		MinusDeath(client);
-	}
+	if (!IsValidClient(client, false, false))
+		return Plugin_Stop;
+
+	if (GetClientTeam(client) != CS_TEAM_CT)
+		return Plugin_Stop;
+
+	ForcePlayerSuicide(client);
+	ChangeClientTeam(client, CS_TEAM_T);
+	CS_RespawnPlayer(client);
+	MinusDeath(client);
 
 	return Plugin_Stop;
 }
@@ -243,11 +291,12 @@ public Action Timer_SlayPlayer(Handle hTimer, any iUserId)
 
 void MinusDeath(int client)
 {
-	if (IsValidClient(client, true, true))
-	{
-		int frags = GetEntProp(client, Prop_Data, "m_iFrags");
-		int deaths = GetEntProp(client, Prop_Data, "m_iDeaths");
-		SetEntProp(client, Prop_Data, "m_iFrags", (frags+1));
-		SetEntProp(client, Prop_Data, "m_iDeaths", (deaths-1));
-	}
+	if (!IsValidClient(client, true, true))
+		return;
+
+	int frags = GetEntProp(client, Prop_Data, "m_iFrags");
+	int deaths = GetEntProp(client, Prop_Data, "m_iDeaths");
+	SetEntProp(client, Prop_Data, "m_iFrags", (frags+1));
+	SetEntProp(client, Prop_Data, "m_iDeaths", (deaths-1));
 }
+

@@ -1,0 +1,26 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:27 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"playertags_incognito_on"
+	{
+		"zho"		" 隱身模式在{green}{1}秒內{purple}有效!"
+	}
+
+	"playertags_incognito_on_perm"
+	{
+		"zho"		"隱身模式 {purple}以永久開啟! {default}輸入 /incognito 來關閉"
+	}
+
+	"playertags_incognito_off"
+	{
+		"zho"		"隱身模式 {purple}已關閉!"
+	}
+
+}

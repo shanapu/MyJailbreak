@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:59 UTC
+// Date: 2018-05-23 19:27:18 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -228,11 +228,6 @@
 		"pl"		"Mute Menu"
 	}
 
-	"menu_tag"
-	{
-		"pl"		"[{green}MyJB.menu{default}]"
-	}
-
 	"menu_painter"
 	{
 		"pl"		"Menu Painter"
@@ -241,6 +236,16 @@
 	"menu_wait"
 	{
 		"pl"		"Musisz odczekać {purple}{1}{default} rundy, aby zacząć Event Day Voting!"
+	}
+
+	"menu_disabled"
+	{
+		"pl"		"Glosowanie na event jest {purple}wylaczone!"
+	}
+
+	"menu_playerfreeday"
+	{
+		"pl"		"Daj graczowi FreeDay"
 	}
 
 	"menu_count"
@@ -253,6 +258,11 @@
 		"pl"		"Otworz Sklep"
 	}
 
+	"menu_orders"
+	{
+		"pl"		"Zamowienia"
+	}
+
 	"menu_endround"
 	{
 		"pl"		"Zakoncz runde"
@@ -261,6 +271,11 @@
 	"menu_joinspec"
 	{
 		"pl"		"Przejdź do obserwatorów"
+	}
+
+	"menu_gangs"
+	{
+		"pl"		"Menu Gangu"
 	}
 
 	"menu_freeday"

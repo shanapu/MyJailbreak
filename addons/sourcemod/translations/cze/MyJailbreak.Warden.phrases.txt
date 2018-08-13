@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:55 UTC
+// Date: 2018-08-13 17:29:19 UTC
 // Language: Czech (cze)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"warden_tag"
-	{
-		"cze"		"[{green}MyJB.warden{default}]"
-	}
 
 	"warden_new"
 	{

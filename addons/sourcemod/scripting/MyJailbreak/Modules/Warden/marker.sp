@@ -158,9 +158,12 @@ public void Marker_Event_ItemEquip(Event event, const char[] name, bool dontBroa
 
 public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bMarker.BoolValue)
+		return Plugin_Continue;
+
 	if (buttons & IN_ATTACK2 || g_bCanMarker[client])
 	{
-		if (gc_bMarker.BoolValue && !g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (g_iWrongWeapon[client] != 9) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+		if (!g_bCanZoom[client] && !g_bHasSilencer[client] && (g_iWrongWeapon[client] != 0) && (g_iWrongWeapon[client] != 8) && (g_iWrongWeapon[client] != 9) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bMarkerDeputy.BoolValue)))
 		{
 			if (!g_bMarkerSetup[client])
 				GetClientAimTargetPos(client, g_fMarkerSetupStartOrigin);
@@ -188,6 +191,8 @@ public Action Marker_OnPlayerRunCmd(int client, int &buttons, int &impulse, floa
 		MarkerMenu(client);
 		g_bMarkerSetup[client] = false;
 	}
+
+	return Plugin_Continue;
 }
 
 public void Marker_OnWardenRemoved()
@@ -214,11 +219,11 @@ public void Marker_OnMapStart()
                    MENUS
 ******************************************************************************/
 
-stock void MarkerMenu(int client)
+void MarkerMenu(int client)
 {
 	if (!IsValidClient(client, false, false) || (!IsClientWarden(client) && !IsClientDeputy(client)))
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
 		return;
 	}
 
@@ -226,7 +231,7 @@ stock void MarkerMenu(int client)
 	if (marker != -1)
 	{
 		RemoveMarker(marker);
-		CPrintToChatAll("%t %t", "warden_tag", "warden_marker_remove", g_sColorNames[marker]);
+		CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_remove", g_sColorNames[marker]);
 		return;
 	}
 
@@ -234,7 +239,7 @@ stock void MarkerMenu(int client)
 	if (radius <= 0.0)
 	{
 		RemoveMarker(marker);
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_wrong");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_wrong");
 		return;
 	}
 
@@ -244,7 +249,7 @@ stock void MarkerMenu(int client)
 	float range = GetVectorDistance(g_fPos, g_fMarkerSetupStartOrigin);
 	if (range > g_fMarkerRangeMax)
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_range");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_range");
 		return;
 	}
 
@@ -284,7 +289,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 
 	if (!IsClientWarden(client) && !IsClientDeputy(client))
 	{
-		CPrintToChat(client, "%t %t", "warden_tag", "warden_notwarden");
+		CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
 		return;
 	}
 
@@ -297,7 +302,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 		if (found)
 		{
 			SetupMarker(marker);
-			CPrintToChatAll("%t %t", "warden_tag", "warden_marker_set", g_sColorNames[marker]);
+			CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_set", g_sColorNames[marker]);
 		}
 	}
 }
@@ -306,7 +311,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
                    TIMER
 ******************************************************************************/
 
-public Action Timer_DrawMakers(Handle timer, any data)
+public Action Timer_DrawMakers(Handle timer)
 {
 	Draw_Markers();
 
@@ -333,7 +338,7 @@ void Draw_Markers()
 
 		if (GetVectorDistance(fWardenOrigin, g_fMarkerOrigin[j]) > g_fMarkerRangeMax)
 		{
-			CPrintToChat(g_iWarden, "%t %t", "warden_tag", "warden_marker_faraway", g_sColorNames[j]);
+			CPrintToChat(g_iWarden, "%s %t", g_sPrefix, "warden_marker_faraway", g_sColorNames[j]);
 			RemoveMarker(j);
 			continue;
 		}
@@ -423,7 +428,7 @@ int IsMarkerInRange(float g_fPos[3])
 	return -1;
 }
 
-public bool TraceFilterAllEntities(int entity, int contentsMask, any client)
+public bool TraceFilterAllEntities(int entity, int contentsMask, int client)
 {
 	if (entity == client)
 		return false;

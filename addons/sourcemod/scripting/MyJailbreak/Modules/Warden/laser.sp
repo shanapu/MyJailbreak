@@ -46,15 +46,12 @@ ConVar gc_sAdminFlagLaser;
 ConVar gc_sCustomCommandLaser;
 
 // Boolean
-bool g_bLaserUse[MAXPLAYERS+1];
+//bool g_bLaserUse[MAXPLAYERS+1];
 bool g_bLaser[MAXPLAYERS+1] = true;
 bool g_bLaserColorRainbow[MAXPLAYERS+1] = true;
 
 // Integers
 int g_iLaserColor[MAXPLAYERS+1];
-
-// Strings
-char g_sAdminFlagLaser[64];
 
 // Start
 public void Laser_OnPluginStart()
@@ -67,20 +64,6 @@ public void Laser_OnPluginStart()
 	gc_bLaserDeputy = AutoExecConfig_CreateConVar("sm_warden_laser_deputy", "1", "0 - disabled, 1 - enable Laser Pointer for Deputy, too", _, true, 0.0, true, 1.0);
 	gc_sAdminFlagLaser = AutoExecConfig_CreateConVar("sm_warden_laser_flag", "", "Set flag for admin/vip to get warden laser pointer. No flag = feature is available for all players!");
 	gc_sCustomCommandLaser = AutoExecConfig_CreateConVar("sm_warden_cmds_laser", "what, rep, again", "Set your custom chat command for Laser Pointer.(!laser (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
-
-	// Hooks
-	HookConVarChange(gc_sAdminFlagLaser, Laser_OnSettingChanged);
-
-	// FindConVar
-	gc_sAdminFlagLaser.GetString(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser));
-}
-
-public void Laser_OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
-{
-	if (convar == gc_sAdminFlagLaser)
-	{
-		strcopy(g_sAdminFlagLaser, sizeof(g_sAdminFlagLaser), newValue);
-	}
 }
 
 /******************************************************************************
@@ -93,7 +76,7 @@ public Action Command_LaserMenu(int client, int args)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue))
 		{
-			if (CheckVipFlag(client, g_sAdminFlagLaser))
+			if (MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 			{
 				char menuinfo[255];
 				Menu menu = new Menu(Handler_LaserMenu);
@@ -101,24 +84,36 @@ public Action Command_LaserMenu(int client, int args)
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_title", client);
 				menu.SetTitle(menuinfo);
 
-				Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
-				if (g_bLaser[client]) menu.AddItem("off", menuinfo);
+				if (g_bLaser[client])
+				{
+					Format(menuinfo, sizeof(menuinfo), "%T", "warden_laser_off", client);
+					menu.AddItem("off", menuinfo);
+				}
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_rainbow", client);
 				menu.AddItem("rainbow", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_white", client);
 				menu.AddItem("white", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_red", client);
 				menu.AddItem("red", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_green", client);
 				menu.AddItem("green", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_blue", client);
 				menu.AddItem("blue", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_yellow", client);
 				menu.AddItem("yellow", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_cyan", client);
 				menu.AddItem("cyan", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_magenta", client);
 				menu.AddItem("magenta", menuinfo);
+
 				Format(menuinfo, sizeof(menuinfo), "%T", "warden_orange", client);
 				menu.AddItem("orange", menuinfo);
 
@@ -126,9 +121,9 @@ public Action Command_LaserMenu(int client, int args)
 				menu.ExitButton = true;
 				menu.Display(client, 20);
 			}
-			else CReplyToCommand(client, "%t %t", "warden_tag", "warden_vipfeature");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_vipfeature");
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -140,33 +135,42 @@ public Action Command_LaserMenu(int client, int args)
 
 public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon)
 {
-	if ((buttons & IN_USE) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue)) && gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bLaser.BoolValue)
+		return Plugin_Continue;
+
+	if ((buttons & IN_USE) && (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue)))
 	{
-		if (gc_bLaser.BoolValue && CheckVipFlag(client, g_sAdminFlagLaser))
+		if (!g_bLaser[client])
+			return Plugin_Continue;
+
+		if (!IsValidClient(client, true, true))
+			return Plugin_Continue;
+
+		if (!MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
+			return Plugin_Continue;
+
+//		g_bLaserUse[client] = true;
+
+		float m_fOrigin[3], m_fImpact[3];
+
+		if (g_bLaserColorRainbow[client])
 		{
-			if (g_bLaser[client])
-			{
-				g_bLaserUse[client] = true;
-				if (IsClientInGame(client) && g_bLaserUse[client])
-				{
-					float m_fOrigin[3], m_fImpact[3];
-
-					if (g_bLaserColorRainbow[client]) g_iLaserColor[client] = GetRandomInt(0, 6);
-
-					GetClientEyePosition(client, m_fOrigin);
-					GetClientSightEnd(client, m_fImpact);
-					TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
-					TE_SendToAll();
-					TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iColors[1][3] /*g_iHaloSpritecolor[3] */);
-					TE_SendToAll();
-				}
-			}
+			g_iLaserColor[client] = GetRandomInt(0, 6);
 		}
+
+		GetClientEyePosition(client, m_fOrigin);
+		GetClientSightEnd(client, m_fImpact);
+		TE_SetupBeamPoints(m_fOrigin, m_fImpact, g_iBeamSprite, 0, 0, 0, 0.1, 0.12, 0.0, 1, 0.0, g_iColors[g_iLaserColor[client]], 0);
+		TE_SendToAll();
+		TE_SetupGlowSprite(m_fImpact, g_iHaloSprite, 0.1, 0.25, g_iColors[1][3] /*g_iHaloSpritecolor[3] */);
+		TE_SendToAll();
 	}
-	else if (!(buttons & IN_USE))
-	{
-		g_bLaserUse[client] = false;
-	}
+//	else if (!(buttons & IN_USE))
+//	{
+//		g_bLaserUse[client] = false;
+//	}
+
+	return Plugin_Continue;
 }
 
 public void Laser_OnConfigsExecuted()
@@ -184,21 +188,26 @@ public void Laser_OnConfigsExecuted()
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
 			RegConsoleCmd(sCommand, Command_LaserMenu, "Allows Warden to toggle on/off the wardens Laser pointer");
+		}
 	}
 }
 
 public void Laser_OnMapStart()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		g_bLaser[i] = true;
 	}
 }
 
 public void Laser_OnClientPutInServer(int client)
 {
-	g_bLaserUse[client] = false;
+//	g_bLaserUse[client] = false;
 	g_bLaserColorRainbow[client] = true;
 }
 
@@ -226,78 +235,114 @@ public int Handler_LaserMenu(Menu menu, MenuAction action, int client, int selec
 		if (strcmp(info, "off") == 0)
 		{
 			g_bLaser[client] = false;
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laseroff");
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseroff");
 		}
 		else if (strcmp(info, "rainbow") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesRainbow);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = true;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesRainbow);
 		}
 		else if (strcmp(info, "white") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesWhite);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 0;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesWhite);
 		}
 		else if (strcmp(info, "red") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesRed);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 1;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesRed);
 		}
 		else if (strcmp(info, "green") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesGreen);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 2;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesGreen);
 		}
 		else if (strcmp(info, "blue") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesBlue);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 3;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesBlue);
 		}
 		else if (strcmp(info, "yellow") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesYellow);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 4;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesYellow);
 		}
 		else if (strcmp(info, "cyan") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesCyan);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 5;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesCyan);
 		}
 		else if (strcmp(info, "magenta") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesMagenta);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 6;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesMagenta);
 		}
 		else if (strcmp(info, "orange") == 0)
 		{
-			if (!g_bLaser[client]) CPrintToChat(client, "%t %t", "warden_tag", "warden_laseron");
-			CPrintToChat(client, "%t %t", "warden_tag", "warden_laser", g_sColorNamesOrange);
 			g_bLaser[client] = true;
 			g_bLaserColorRainbow[client] = false;
 			g_iLaserColor[client] = 7;
+
+			if (!g_bLaser[client])
+			{
+				CPrintToChat(client, "%s %t", g_sPrefix, "warden_laseron");
+			}
+			CPrintToChat(client, "%s %t", g_sPrefix, "warden_laser", g_sColorNamesOrange);
 		}
 		if (g_bMenuClose != null)
 		{
@@ -333,10 +378,12 @@ void GetClientSightEnd(int client, float out[3])
 	GetClientEyeAngles(client, m_fAngles);
 	TR_TraceRayFilter(m_fEyes, m_fAngles, MASK_PLAYERSOLID, RayType_Infinite, TraceRayDontHitPlayers);
 	if (TR_DidHit())
+	{
 		TR_GetEndPosition(out);
+	}
 }
 
-public bool TraceRayDontHitPlayers(int entity, int mask, any data)
+public bool TraceRayDontHitPlayers(int entity, int mask, int data)
 {
 	if (0 < entity <= MaxClients)
 		return false;

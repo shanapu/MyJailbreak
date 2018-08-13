@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -47,6 +48,9 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+//Integers
+int g_iMenuUsages[MAXPLAYERS+1];
+
 // Booleans
 bool g_bIsLateLoad = false;
 bool g_bWeaponsSelected[MAXPLAYERS+1] = {false, ...};
@@ -74,6 +78,7 @@ Handle g_hWeapons2 = null;
 // Console Variables
 ConVar gc_bSpawn;
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bTAWarden;
 ConVar gc_bTADeputy;
 ConVar gc_bEventDay;
@@ -88,12 +93,14 @@ ConVar gc_bKevlar;
 ConVar gc_bKevlarDays;
 ConVar gc_sCustomCommandWeapon;
 ConVar gc_bCleanMenu;
+ConVar gc_iMenuMaxUsages;
 
 // Extern Convars
 ConVar g_bTaserWarden;
 ConVar g_bTaserDeputy;
 
 // Strings
+char g_sPrefix[64];
 char primaryWeapon[MAXPLAYERS + 1][24];
 char secondaryWeapon[MAXPLAYERS + 1][24];
 
@@ -170,6 +177,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_weapons_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_weapons_enable", "1", "0 - disabled, 1 - enable weapons menu", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_weapons_prefix", "[{green}MyJB.Weapons{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandWeapon = AutoExecConfig_CreateConVar("sm_weapons_cmds", "gun, guns, weapons, gunmenu, weaponmenu, giveweapon, arms", "Set your custom chat command for weapon menu(!weapon (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSpawn = AutoExecConfig_CreateConVar("sm_weapons_spawnmenu", "1", "0 - disabled, 1 -  enable autoopen weapon menu on spawn", _, true, 0.0, true, 1.0);
 	gc_bEventDay = AutoExecConfig_CreateConVar("sm_weapons_noeventday", "1", "0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)", _, true, 0.0, true, 1.0);
@@ -185,12 +193,14 @@ public void OnPluginStart()
 	gc_bKevlarDays = AutoExecConfig_CreateConVar("sm_weapons_kevlar_eventdays", "1", "0 - remove all armor on eventdays, 1 - give all player armor on eventdays", _, true, 0.0, true, 1.0);
 	gc_bJBmenu = AutoExecConfig_CreateConVar("sm_weapons_jbmenu", "1", "0 - disabled, 1 - enable autoopen the MyJailbreak !menu after weapon given.", _, true, 0.0, true, 1.0);
 	gc_bCleanMenu = AutoExecConfig_CreateConVar("sm_weapons_cleanmenu", "1", "remove 1. & 2. on first page, to avoid conflict with weapon switch", _, true, 0.0, true, 1.0);
+	gc_iMenuMaxUsages = AutoExecConfig_CreateConVar("sm_weapons_max_usages", "0", "0 - unlimited, max usages of !guns command allowed", _, true, 0.0);
 
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
 	// Hooks
 	HookEvent("player_spawn", Event_PlayerSpawn);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// Cookies
 	g_hWeapons1 = RegClientCookie("Primary Weapons", "", CookieAccess_Private);
@@ -199,8 +209,11 @@ public void OnPluginStart()
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 			OnClientCookiesCached(i);
 		}
@@ -209,34 +222,53 @@ public void OnPluginStart()
 	}
 }
 
+// ConVarChange for Strings
+public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
+{
+	if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+	}
+}
+
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "hosties"))
+	}
+	else if (StrEqual(name, "hosties"))
+	{
 		gp_bHosties = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "myjbwarden"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
 		gp_bMyJBWarden = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "hosties"))
+	}
+	else if (StrEqual(name, "hosties"))
+	{
 		gp_bHosties = true;
+	}
 }
 
 public void OnAllPluginsLoaded()
@@ -254,6 +286,8 @@ public void OnAllPluginsLoaded()
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
 	g_aPrimary = CreateArray(128);
 	g_aSecondary = CreateArray(128);
 	ListWeapons();
@@ -298,6 +332,12 @@ public Action Command_Weapons(int client, int args)
 					return Plugin_Handled;
 			}
 
+			if (gc_iMenuMaxUsages.IntValue <= g_iMenuUsages[client] && gc_iMenuMaxUsages.IntValue != 0)
+			{
+				CReplyToCommand(client, "%s %t", g_sPrefix, "weapon_menu_max_usages");
+				return Plugin_Handled;
+			}
+
 			g_bRememberChoice[client] = false;
 			DisplayOptionsMenu(client);
 
@@ -306,7 +346,7 @@ public Action Command_Weapons(int client, int args)
 
 		return Plugin_Continue;
 	}
-	else CReplyToCommand(client, "%t %t", "weapons_tag", "weapons_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "weapons_disabled");
 
 	return Plugin_Continue;
 }
@@ -322,12 +362,13 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	KillAllTimer(client);
 
+	g_iMenuUsages[client] = 0;
 	g_bHealth[client] = false;
 	g_bTA[client] = false;
 
 	if (gc_bSpawn.BoolValue)
 	{
-		g_hTimers[client] = CreateTimer(1.0, Timer_GetWeapons, client);
+		g_hTimers[client] = CreateTimer(1.0, Timer_GetWeapons, GetClientUserId(client));
 	}
 
 	if (gc_bKevlar.BoolValue && (GetClientTeam(client) == CS_TEAM_CT))
@@ -360,8 +401,11 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 public void MyJailbreak_OnEventDayStart(char [] EventDayName)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (gc_bKevlarDays.BoolValue)
 		{
 			SetEntProp(i, Prop_Send, "m_ArmorValue", 100);
@@ -428,12 +472,15 @@ void SetBuyZones(const char[] status)
 
 	for (int i = MaxClients + 1; i < maxEntities; i++)
 	{
-		if (IsValidEdict(i))
+		if (!IsValidEdict(i))
+			continue;
+
+		GetEdictClassname(i, class, sizeof(class));
+		if (StrEqual(class, "func_buyzone"))
 		{
-			GetEdictClassname(i, class, sizeof(class));
-			if (StrEqual(class, "func_buyzone"))
-				AcceptEntityInput(i, status);
+			AcceptEntityInput(i, status);
 		}
+
 	}
 }
 
@@ -444,6 +491,8 @@ void GiveSavedWeapons(int client)
 
 	if (((g_bAllowT && GetClientTeam(client) == CS_TEAM_T) || (g_bAllowCT && GetClientTeam(client) == CS_TEAM_CT)) && IsPlayerAlive(client))
 	{
+		g_iMenuUsages[client]++;
+		
 		StripAllPlayerWeapons(client);
 		GivePlayerItem(client, "weapon_knife");
 
@@ -454,14 +503,14 @@ void GiveSavedWeapons(int client)
 				if (gc_bHealthWarden.BoolValue && !g_bTA[client])
 				{
 					GivePlayerItem(client, "weapon_healthshot");
-					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+					CPrintToChat(client, "%s %t", g_sPrefix, "weapons_health");
 					g_bTA[client] = true;
 				}
 
 				if (gc_bTAWarden.BoolValue && !g_bHealth[client])
 				{
 					GivePlayerItem(client, "weapon_tagrenade");
-					CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+					CPrintToChat(client, "%s %t", g_sPrefix, "weapons_ta");
 					g_bHealth[client] = true;
 				}
 
@@ -479,14 +528,14 @@ void GiveSavedWeapons(int client)
 					if (gc_bHealthDeputy.BoolValue && !g_bTA[client])
 					{
 						GivePlayerItem(client, "weapon_healthshot");
-						CPrintToChat(client, "%t %t", "weapons_tag", "weapons_health");
+						CPrintToChat(client, "%s %t", g_sPrefix, "weapons_health");
 						g_bTA[client] = true;
 					}
 
 					if (gc_bTADeputy.BoolValue && !g_bHealth[client])
 					{
 						GivePlayerItem(client, "weapon_tagrenade");
-						CPrintToChat(client, "%t %t", "weapons_tag", "weapons_ta");
+						CPrintToChat(client, "%s %t", g_sPrefix, "weapons_ta");
 						g_bHealth[client] = true;
 					}
 
@@ -523,7 +572,7 @@ void GiveSavedWeapons(int client)
 			FakeClientCommand(client, "sm_menu");
 		}
 
-		g_hTimers[client] = CreateTimer(6.0, Timer_Fix, client);
+		g_hTimers[client] = CreateTimer(6.0, Timer_Fix, GetClientUserId(client));
 	}
 }
 
@@ -781,24 +830,24 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 		else if (StrEqual(info, "Same 1"))
 		{
 			g_bWeaponsSelected[client] = true;
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_same");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_same");
 			
 			GiveSavedWeapons(client);
 			g_bRememberChoice[client] = false;
 		}
 		else if (StrEqual(info, "Same All"))
 		{
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_sameall");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_sameall");
 			GiveSavedWeapons(client);
 			g_bRememberChoice[client] = true;
 		}
 		else if (StrEqual(info, "Random 1"))
 		{
 			g_bWeaponsSelected[client] = true;
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_random");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_random");
 			
 			primaryWeapon[client] = "random";
 			secondaryWeapon[client] = "random";
@@ -807,8 +856,8 @@ public int Handler_BuildOptionsMenu(Menu menu, MenuAction action, int client, in
 		}
 		else if (StrEqual(info, "Random All"))
 		{
-			if (!IsPlayerAlive(client)) CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
-			else CPrintToChat(client, "%t %t", "weapons_tag", "weapons_randomall");
+			if (!IsPlayerAlive(client)) CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
+			else CPrintToChat(client, "%s %t", g_sPrefix, "weapons_randomall");
 			primaryWeapon[client] = "random";
 			secondaryWeapon[client] = "random";
 			GiveSavedWeapons(client);
@@ -876,7 +925,7 @@ public int Menu_Secondary(Menu menu, MenuAction action, int client, int param2)
 		secondaryWeapon[client] = info;
 		GiveSavedWeapons(client);
 		if (!IsPlayerAlive(client))
-			CPrintToChat(client, "%t %t", "weapons_tag", "weapons_next");
+			CPrintToChat(client, "%s %t", g_sPrefix, "weapons_next");
 	}
 }
 
@@ -903,8 +952,10 @@ void DisplayOptionsMenu(int client)
 ******************************************************************************/
 
 // Give choosed weapon timer
-public Action Timer_GetWeapons(Handle timer, any client)
+public Action Timer_GetWeapons(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimers[client] = null;
 
 	if (!gc_bEventDay.BoolValue && !MyJailbreak_IsEventDayRunning())
@@ -941,8 +992,10 @@ public Action Timer_GetWeapons(Handle timer, any client)
 	}
 }
 
-public Action Timer_Fix(Handle timer, any client)
+public Action Timer_Fix(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	g_hTimers[client] = null;
 
 	if (IsClientInGame(client))

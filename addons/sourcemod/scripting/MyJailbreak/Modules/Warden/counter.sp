@@ -69,68 +69,68 @@ public void Counter_OnPluginStart()
 					COMMANDS
 ******************************************************************************/
 
-public Action Command_Counter(int client, any args)
+public Action Command_Counter(int client, int args)
 {
-	if (gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
+		return Plugin_Handled;
+
+	if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bCounterDeputy.BoolValue)) && gc_bCounter.BoolValue)
 	{
-		if ((IsClientWarden(client) || (IsClientDeputy(client) && gc_bCounterDeputy.BoolValue)) && gc_bCounter.BoolValue)
+		float wardenOrigin[3];
+		GetClientAbsOrigin(client, wardenOrigin);
+		int counter = 0;
+
+		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
 		{
-			float wardenOrigin[3];
-			GetClientAbsOrigin(client, wardenOrigin);
-			int counter = 0;
-
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			if (GetClientTeam(i) == CS_TEAM_T)
 			{
-				if (GetClientTeam(i) == CS_TEAM_T)
+				g_bCounted[i] = false;
+				g_fDistance[i] = 0.0;
+				
+				float clientOrigin[3];
+				GetClientAbsOrigin(i, clientOrigin);
+				
+				float distance = GetVectorDistance(clientOrigin, wardenOrigin, false);
+				
+				if (ClientViews(client, i))
 				{
-					g_bCounted[i] = false;
-					g_fDistance[i] = 0.0;
-					
-					float clientOrigin[3];
-					GetClientAbsOrigin(i, clientOrigin);
-					
-					float distance = GetVectorDistance(clientOrigin, wardenOrigin, false);
-					
-					if (ClientViews(client, i))
-					{
-						counter++;
-						g_bCounted[i] = true;
-						g_fDistance[i] = distance;
-					}
+					counter++;
+					g_bCounted[i] = true;
+					g_fDistance[i] = distance;
 				}
-			}
-
-			if ((gc_iCounterMode.IntValue == 1)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 7)) CReplyToCommand(client, "%t %t", "warden_tag", "warden_counter", counter);
-			if ((gc_iCounterMode.IntValue == 2)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7)) PrintCenterText(client, "%t", "warden_counter", counter);
-			if ((gc_iCounterMode.IntValue == 4)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7))
-			{
-				char info1[255];
-				Panel InfoPanel = new Panel();
-				Format(info1, sizeof(info1), "%T", "warden_info_counter", client);
-				InfoPanel.SetTitle(info1);
-				InfoPanel.DrawText("-----------------------------------");
-				InfoPanel.DrawText("                                   ");
-				for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
-				{
-					if (g_bCounted[i])
-					{
-						int userdistance = RoundToNearest(g_fDistance[i] * 0.01905);  // 0.01905 GAMEUNITS_TO_METERS
-						char userid[11];
-						char username[MAX_NAME_LENGTH];
-						IntToString(GetClientUserId(i), userid, sizeof(userid));
-						Format(username, sizeof(username), "%N (%im)", i, userdistance);
-						InfoPanel.DrawText(username);
-					}
-				}
-				InfoPanel.DrawText("                                   ");
-				InfoPanel.DrawText("-----------------------------------");
-				Format(info1, sizeof(info1), "%T", "warden_close", client);
-				InfoPanel.DrawItem(info1);
-				InfoPanel.Send(client, Handler_NullCancel, 23);
 			}
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+
+		if ((gc_iCounterMode.IntValue == 1)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 7)) CReplyToCommand(client, "%s %t", g_sPrefix, "warden_counter", counter);
+		if ((gc_iCounterMode.IntValue == 2)|| (gc_iCounterMode.IntValue == 3)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7)) PrintCenterText(client, "%t", "warden_counter", counter);
+		if ((gc_iCounterMode.IntValue == 4)|| (gc_iCounterMode.IntValue == 5)|| (gc_iCounterMode.IntValue == 6)|| (gc_iCounterMode.IntValue == 7))
+		{
+			char info1[255];
+			Panel InfoPanel = new Panel();
+			Format(info1, sizeof(info1), "%T", "warden_info_counter", client);
+			InfoPanel.SetTitle(info1);
+			InfoPanel.DrawText("-----------------------------------");
+			InfoPanel.DrawText("                                   ");
+			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			{
+				if (g_bCounted[i])
+				{
+					int userdistance = RoundToNearest(g_fDistance[i] * 0.01905);  // 0.01905 GAMEUNITS_TO_METERS
+					char userid[11];
+					char username[MAX_NAME_LENGTH];
+					IntToString(GetClientUserId(i), userid, sizeof(userid));
+					Format(username, sizeof(username), "%N (%im)", i, userdistance);
+					InfoPanel.DrawText(username);
+				}
+			}
+			InfoPanel.DrawText("                                   ");
+			InfoPanel.DrawText("-----------------------------------");
+			Format(info1, sizeof(info1), "%T", "warden_close", client);
+			InfoPanel.DrawItem(info1);
+			InfoPanel.Send(client, Handler_NullCancel, 23);
+		}
 	}
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 
 	return Plugin_Handled;
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:11 UTC
+// Date: 2018-08-13 17:29:27 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ffa_tag"
-	{
-		"pl"		"[{green}JB.FFA{default}]"
-	}
 
 	"ffa_need"
 	{
@@ -93,6 +88,11 @@
 		"pl"		"FFA jest tymczasowo {purple}wylaczony."
 	}
 
+	"ffa_damage_nc"
+	{
+		"pl"		"{1} sekunda do wlączenia obrażeń"
+	}
+
 	"ffa_info_title"
 	{
 		"pl"		"Free for All Deathmatch jest aktywny"
@@ -136,6 +136,21 @@
 	"ffa_wait"
 	{
 		"pl"		"Musisz poczekac  {1} rund"
+	}
+
+	"ffa_name"
+	{
+		"pl"		"Wszyscy na Wszystkich!"
+	}
+
+	"ffa_now_nc"
+	{
+		"pl"		"Rozpoczęła się runda FFA."
+	}
+
+	"ffa_now"
+	{
+		"pl"		"Teraz rozpoczyna się ffa  {purple}  {default}"
 	}
 
 }

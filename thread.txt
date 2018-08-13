@@ -1,4 +1,4 @@
-[URL="https://github.com/shanapu/MyJailbreak/stargazers"][IMG]https://img.shields.io/github/stars/shanapu/MyJailbreak.svg?style=flat-square[/IMG][/url]
+[URL="https://github.com/shanapu/MyJailbreak/stargazers"][IMG]https://img.shields.io/github/stars/shanapu/MyJailbreak.svg?style=flat-square[/IMG][/url]  [URL="https://github.com/shanapu/MyJailbreak/network/members"][IMG]https://img.shields.io/github/forks/shanapu/MyJailbreak.svg?style=flat-square[/IMG][/url]  [URL="https://github.com/shanapu/MyJailbreak/subscription"][IMG]https://img.shields.io/github/followers/shanapu/MyJailbreak.svg?style=flat-square[/IMG][/url]
 
 [URL="https://forums.alliedmods.net/showthread.php?p=2422609&nojs=1#goto_threadrating"]Rate Thread		 [IMG]https://forums.alliedmods.net/images/misc/menu_open.svg?style=flat-square[/IMG][IMG]https://forums.alliedmods.net/images/rating/rating_5.svg[/IMG][/URL]
 
@@ -72,6 +72,7 @@ MyJailbreak is a redux rewrite of [URL="https://github.com/Franc1sco/Franug-Jail
 	"price" "800"
 	"type" "paperclips"
 }
+and more
 [/code]
 [/list]
 
@@ -1229,6 +1230,95 @@ sm_warden_cmds_withheld_lr "nolr, noLR"
 // -
 // Default: "lr,lastrequest"
 sm_warden_cmds_lr "lr,lastrequest"
+
+// 0 - disabled, 1 - enable warden glowed
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_glow_enable "1"
+
+// 0 - disabled, 1 - enable warden rainbow glowed
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_glow_random "1"
+
+// What glow to turn the warden into (set R, G and B values to 255 to disable) (Rgb): x - red value
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "255.000000"
+sm_warden_glow_red "0"
+
+// What glow to turn the warden into (rGb): x - green value
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "255.000000"
+sm_warden_glow_green "0"
+
+// What glow to turn the warden into (rgB): x - blue value
+// -
+// Default: "255"
+// Minimum: "0.000000"
+// Maximum: "255.000000"
+sm_warden_glow_blue "255"
+
+// What glow to turn the deputy into (set R, G and B values to 255 to disable) (Rgb): x - red value
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "255.000000"
+sm_warden_glow_red_deputy "0"
+
+// What glow to turn the deputy into (rGb): x - green value
+// -
+// Default: "155"
+// Minimum: "0.000000"
+// Maximum: "255.000000"
+sm_warden_glow_green_deputy "155"
+
+// What glow to turn the deputy into (rgB): x - blue value
+// -
+// Default: "255"
+// Minimum: "0.000000"
+// Maximum: "255.000000"
+sm_warden_glow_blue_deputy "255"
+
+// 0 - disabled, 1 - enable player choose their warden - ignores cooldowns
+// -
+// Default: "0"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_choice "1"
+
+// 0 - only Prisoner, 1 - Prisoner & guards can choose their warden
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "1.000000"
+sm_warden_choice_team "1"
+
+// How many seconds after roundstart guards can applicate for warden
+// -
+// Default: "10"
+// Minimum: "1.000000"
+sm_warden_choice_application_time "10"
+
+// 0 - disabled, rounds in a row a player can be warden
+// -
+// Default: "5"
+// Minimum: "0.000000"
+sm_warden_choice_vote_time "5"
+
+// 0 - remove all applicans after vote, 1 - remove just the voted warden after vote, 2 - players stay on applicans list until !uw
+// -
+// Default: "1"
+// Minimum: "0.000000"
+// Maximum: "2.000000"
+sm_warden_choice_list "1"
 [/CODE]
 [/SPOILER]
 [b]Default order config as example[/b]
@@ -1316,9 +1406,9 @@ sm_warden_cmds_lr "lr,lastrequest"
 }
 [/php]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/warden2.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/warden2.jpg[/IMG]
 
-[IMG]http://shanapu.de/myjb/sparks.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/sparks.jpg[/IMG]
 
 [youtube]tp6k_Q6K37c[/youtube]
 
@@ -2004,7 +2094,7 @@ Check the config file for custom menu items [i]configs/MyJailbreak/menu_custom.c
 [/CODE]
 [/SPOILER]
 
-[b]Menu Structure[/b]
+[b]Menu Structure[/b] - not uptodate
 [SPOILER]
 
 [U][B]WardenMenu[/B][/U]
@@ -2433,7 +2523,7 @@ sm_weapons_jbmenu "1"
 sm_weapons_cleanmenu "1"
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/weapons.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/weapons.jpg[/IMG]
 
 
 
@@ -2846,7 +2936,7 @@ sm_warden_icons_freeday "decals/MyJailbreak/freeday"
 [/CODE]
 [/SPOILER]
 
-[IMG]http://shanapu.de/myjb/icons-overview.png[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/icons-overview.png[/IMG]
 
 [U][B]MyJailbreak core[/B][/U]
 This plugins is the "interface" between Eventdays. Need for cooldowns and disable other days on running Eventday. Handle config & natives for some modules
@@ -3508,6 +3598,12 @@ sm_zombie_human_hp "65"
 // Minimum: "0.000000"
 sm_zombie_zombie_regen "5"
 
+// Movement speed of zombies - 1.0 normal speed
+// -
+// Default: "1.4"
+// Minimum: "1.000000"
+sm_zombie_speed "1.4"
+
 // 0 - disabled, 1 - enable Map Darkness
 // -
 // Default: "1"
@@ -3614,7 +3710,7 @@ sm_zombie_allow_lr "0"
 [/CODE]
 recomment for sm_zombie_glow "1", put sv_force_transmit_players "1" to your .cfg
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/zombie-2.jpg[/IMG][IMG]http://shanapu.de/myjb/zombie-1.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/zombie-2.jpg[/IMG][IMG]https://shanapu.de/MyJailbreak/images/zombie-1.jpg[/IMG]
 
 
 
@@ -4198,6 +4294,11 @@ sm_catch_stayoverlay "1"
 // Minimum: "0.000000"
 sm_catch_freezetime "15"
 
+// path to the ice model
+// -
+// Default: "models/spree/spree.mdl"
+sm_catch_model "models/spree/spree.mdl"
+
 // 0 - disabled, 1 - enable sounds 
 // -
 // Default: "1"
@@ -4267,7 +4368,7 @@ sm_catch_allow_lr "0"
 sm_catch_kill_loser "0"
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/catch.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/catch.jpg[/IMG]
 
 
 
@@ -4775,6 +4876,13 @@ sm_suicidebomber_teleport_spawn "0"
 // Maximum: "999.000000"
 sm_suicidebomber_bomb_radius "200.0"
 
+// Radius for bomb damage on prisoners (reduce when you have problems with teamkill trolls) - 0 disable teamdamage at all
+// -
+// Default: "200.0"
+// Minimum: "0.000000"
+// Maximum: "999.000000"
+sm_suicidebomber_bomb_radius_t "200.0"
+
 // Time to hide for CTs
 // -
 // Default: "20"
@@ -5113,7 +5221,7 @@ sm_dealdamage_overlays_blue "overlays/MyJailbreak/blue"
 sm_dealdamage_overlays_red "overlays/MyJailbreak/red"
 [/CODE]
 [/SPOILER]
-[IMG]http://shanapu.de/myjb/deal.jpg[/IMG]
+[IMG]https://shanapu.de/MyJailbreak/images/deal.jpg[/IMG]
 
 
 [U][B]Zeus[/B][/U]
@@ -6559,6 +6667,19 @@ forward void MyJailbreak_MenuEnd(int client, Menu menu);
 forward void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum);
 
 
+
+/*********************************************************
+ * Called on native MyJailbreak_CheckVIPFlags ONLY when
+ * CheckCommandAccess return false. 
+ * Feature name refers to plugin VIP Convar.
+ *
+ * @param client		client index
+ * @param feature		vip feature to check
+ * @Return 				true for VIP / false for no VIP
+ *********************************************************/
+forward bool MyJailbreak_OnCheckVIP(int client, char[] feature);
+
+
 /*********************************************************
  * Add a Event Day to myjailbreak core
  *
@@ -6701,6 +6822,22 @@ native void MyJailbreak_BeaconOn(int client, float interval);
  * @noreturn
  *********************************************************/
 native void MyJailbreak_BeaconOff(int client);
+
+
+/*********************************************************
+ * Check bool if player is VIP -> this native calls the
+ * forward MyJailbreak_CheckVIP
+ *
+ * @param client		client index to check
+ * @param command		overwrite command name
+ * @param flags			flag string if the command or 
+ *						override is not found.
+ * @param feature		feature name to check with 
+ *						MyJailbreak_OnCheckVIPFlags when 
+ *						CheckCommandAccess return false
+ * @Return			true on allow, false if not
+ *********************************************************/
+native bool MyJailbreak_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature);
 [/php]
 warden.inc
 [php]
@@ -6975,7 +7112,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [/SPOILER]
 
 
-[U][b]Include files needed for [url=https://github.com/shanapu/MyJailbreak/wiki/Compile-MyJailbreak]compile[/url][/U][/b]
+[U][b]Include files needed for [url=https://github.com/shanapu/MyJailbreak/wiki/Compile-MyJailbreak]compile[/url] core plugins[/U][/b]
 [SPOILER]
 [LIST]
 [*]autoexecconfig.inc - [url]https://github.com/Impact123/AutoExecConfig/blob/development/autoexecconfig.inc[/url]
@@ -6994,6 +7131,7 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*]voiceannounce_ex.inc - [url]https://github.com/shanapu/MyJailbreak/blob/master/addons/sourcemod/scripting/include/voiceannounce_ex.inc [/url] (myjailbreak version)
 [*]smartdm.inc - [url]https://forums.alliedmods.net/showthread.php?p=2364585#post2364585[/url]
 [/LIST]
+"Support Add-on plugins" include files not listed here. [U]All .inc files included in build-package & repo on github.[/U]
 [/SPOILER]
 
 
@@ -7027,431 +7165,12 @@ native MyIcons_BlockClientIcon(int client, bool status);
 [*][url=https://forums.alliedmods.net/showthread.php?p=2411490][ANY] Player Reputations[/url] - support for ratio & warden (min reputation points to join ct & warden)
 [*][url=https://forums.alliedmods.net/showthread.php?p=1338942]Stamm 2.28 Final by Popoklopsi[/url] - support for ratio & warden (min stamm point to join ct & warden)
 [*][url=https://forums.alliedmods.net/showthread.php?t=276677][ANY] Store by Zephyrus [1.1 - 03.01.2016][/url] - support for wardens paperclips feature & win credits through EventDays
+[*][url=https://forums.alliedmods.net/showthread.php?t=255418]Sourcemod Store[/url] - win credits through EventDays
+[*][url=https://forums.alliedmods.net/showthread.php?p=2533148][CS:GO / ?] Simple Stats MySQL[/url] - support for ratio & warden (min time to join ct & warden)
+[*][url=https://forums.alliedmods.net/showthread.php?p=1751973][ANY] Most Active (play time rank system)[/url] - support for ratio & warden (min time to join ct & warden)
+[*][url=https://forums.alliedmods.net/showthread.php?p=2495755][CS:GO/CS:S] Jailbreak Gangs[/url] - disable gang perks on event days
+[*][url=https://forums.alliedmods.net/showthread.php?t=224839][Any] Dev Zones (with natives for developers) - restrict areas on map while eventday running.
 [/LIST]
-
-
-[B][u]Latest Changes[/u][/B]
-[QUOTE]
-[Spoiler]
-
-[b][u]Added[/b][/u]
-[LIST]
-[*]New Eventday: Teleport War - A FreeForAll Deathmatch where attacker & victim switch positions on hit.
-[/LIST]
-[INDENT][LIST]
-    [*]new plugin - teleport.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
-[/LIST]
-[INDENT][LIST]
-        [*]new command - sm_setteleport - Allows the Admin or Warden to set Teleport War
-        [*]new command - sm_teleport - Allows players to vote for a Teleport War
-        [*]new cvar - sm_teleport_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
-        [*]new cvar - sm_teleport_cmds_vote - Set your custom chat command for Event voting(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_teleport_cmds_set - Set your custom chat command for set Event(!teleport (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_teleport_warden - 0 - disabled, 1 - allow warden to set teleport round
-        [*]new cvar - sm_teleport_admin - 0 - disabled, 1 - allow admin/vip to set teleport round
-        [*]new cvar - sm_teleport_flag - Set flag for admin/vip to set this Event Day
-        [*]new cvar - sm_teleport_vote - 0 - disabled, 1 - allow player to vote for teleport
-        [*]new cvar - sm_teleport_begin_admin - When admin set event (!setteleport) = 0 - start event next round, 1 - start event current round - Default 1
-        [*]new cvar - sm_teleport_begin_warden - When warden set event (!setteleport) = 0 - start event next round, 1 - start event current round - Default 1
-        [*]new cvar - sm_teleport_begin_vote - When users vote for event (!teleport) = 0 - start event next round, 1 - start event current round - Default 0
-        [*]new cvar - sm_teleport_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
-        [*]new cvar - sm_teleport_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
-        [*]new cvar - sm_teleport_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
-        [*]new cvar - sm_teleport_rounds - Rounds to play in a row
-        [*]new cvar - sm_teleport_aim - 0 - Keep your aim angle on switch, 1 - Use attacker/victims aim angle
-        [*]new cvar - sm_teleport_roundtime - Round time in minutes for a single teleport round
-        [*]new cvar - sm_teleport_beacon_time - Time in seconds until the beacon turned on (set to 0 to disable)
-        [*]new cvar - sm_teleport_trucetime - Time in seconds players can't deal damage
-        [*]new cvar - sm_teleport_cooldown_day - Rounds cooldown after a event until event can be start again
-        [*]new cvar - sm_teleport_cooldown_start - Rounds until event can be start after mapchange
-        [*]new cvar - sm_teleport_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set teleport round
-        [*]new cvar - sm_teleport_sounds_enable - 0 - disabled, 1 - enable sounds
-        [*]new cvar - sm_teleport_sounds_start - Path to the soundfile which should be played for a start
-        [*]new cvar - sm_teleport_overlays_enable - 0 - disabled, 1 - enable overlays
-        [*]new cvar - sm_teleport_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-        [*]new cvar - sm_teleport_allow_lr - 0 - disabled, 1 - enable LR for last round and end eventday
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]New Eventday: Arms Race - A FreeForAll Deathmatch like original arms race
-[/LIST]
-[INDENT][LIST]
-    [*]new plugin - armsrace.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/277
-[/LIST]
-[INDENT][LIST]
-        [*]new config file - addons/sourcemod/configs/MyJailbreak/armsrace.ini - define weapons & order
-        [*]new command - sm_setarmsrace - Allows the Admin or Warden to set Arms Race
-        [*]new command - sm_armsrace - Allows players to vote for a Arms Race
-        [*]new cvar - sm_armsrace_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
-        [*]new cvar - sm_armsrace_cmds_vote - Set your custom chat command for Event voting(!armsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_armsrace_cmds_set - Set your custom chat command for set Event(!setarmsrace (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_armsrace_warden - 0 - disabled, 1 - allow warden to set armsrace round
-        [*]new cvar - sm_armsrace_admin - 0 - disabled, 1 - allow admin/vip to set armsrace round
-        [*]new cvar - sm_armsrace_flag - Set flag for admin/vip to set this Event Day
-        [*]new cvar - sm_armsrace_vote - 0 - disabled, 1 - allow player to vote for armsrace
-        [*]new cvar - sm_armsrace_kill_loser - 0 - disabled, 1 - Kill loser on event end
-        [*]new cvar - sm_armsrace_begin_admin - When admin set event (!setarmsrace) = 0 - start event next round, 1 - start event current round - Default 1
-        [*]new cvar - sm_armsrace_begin_warden - When warden set event (!setarmsrace) = 0 - start event next round, 1 - start event current round - Default 1
-        [*]new cvar - sm_armsrace_begin_vote - When users vote for event (!armsrace) = 0 - start event next round, 1 - start event current round - Default 0
-        [*]new cvar - sm_armsrace_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
-        [*]new cvar - sm_armsrace_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
-        [*]new cvar - sm_armsrace_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
-        [*]new cvar - sm_armsrace_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_armsrace_spawn 1)
-        [*]new cvar - sm_armsrace_rounds - Rounds to play in a row
-        [*]new cvar - sm_armsrace_roundtime - Round time in minutes for a single armsrace round
-        [*]new cvar - sm_armsrace_trucetime - Time in seconds players can't deal damage
-        [*]new cvar - sm_armsrace_cooldown_day - Rounds cooldown after a event until event can be start again
-        [*]new cvar - sm_armsrace_cooldown_start - Rounds until event can be start after mapchange
-        [*]new cvar - sm_armsrace_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set armsrace round
-        [*]new cvar - sm_armsrace_sounds_enable - 0 - disabled, 1 - enable sounds
-        [*]new cvar - sm_armsrace_sounds_start - Path to the soundfile which should be played for a start
-        [*]new cvar - sm_armsrace_overlays_enable - 0 - disabled, 1 - enable overlays
-        [*]new cvar - sm_armsrace_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]New Eventday: One in the Chamber - A FreeForAll Deathmatch like CODs One in the Chamber - Thx @hexah!
-[/LIST]
-[INDENT][LIST]
-    [*]new plugin - oneinthechamber.smx - please help translate http://translator.mitchdempsey.com/sourcemod_plugins/282
-[/LIST]
-[INDENT][LIST]
-        [*]new command - sm_setoneinthechamber - Allows the Admin or Warden to set One in the Chamber
-        [*]new command - sm_oneinthechamber - Allows players to vote for a One in the Chamber
-        [*]new cvar - sm_oneinthechamber_enable - 0 - disabled, 1 - enable this MyJailbreak SourceMod plugin
-        [*]new cvar - sm_oneinthechamber_cmds_vote - Set your custom chat command for Event voting(!oneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_oneinthechamber_cmds_set - Set your custom chat command for set Event(!setoneinthechamber (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))
-        [*]new cvar - sm_oneinthechamber_warden - 0 - disabled, 1 - allow warden to set oneinthechamber round
-        [*]new cvar - sm_oneinthechamber_admin - 0 - disabled, 1 - allow admin/vip to set oneinthechamber round
-        [*]new cvar - sm_oneinthechamber_flag - Set flag for admin/vip to set this Event Day
-        [*]new cvar - sm_oneinthechamber_vote - 0 - disabled, 1 - allow player to vote for oneinthechamber
-        [*]new cvar - sm_oneinthechamber_begin_admin - When admin set event (!setoneinthechamber) = 0 - start event next round, 1 - start event current round - Default 1
-        [*]new cvar - sm_oneinthechamber_begin_warden - When warden set event (!setoneinthechamber) = 0 - start event next round, 1 - start event current round - Default 1
-        [*]new cvar - sm_oneinthechamber_begin_vote - When users vote for event (!oneinthechamber) = 0 - start event next round, 1 - start event current round - Default 0
-        [*]new cvar - sm_oneinthechamber_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
-        [*]new cvar - sm_oneinthechamber_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
-        [*]new cvar - sm_oneinthechamber_spawn - 0 - T teleport to CT spawn, 1 - cell doors auto open
-        [*]new cvar - sm_oneinthechamber_randomspawn - 0 - disabled, 1 - use random spawns on map (sm_oneinthechamber_spawn 1)
-        [*]new cvar - sm_oneinthechamber_rounds - Rounds to play in a row
-        [*]new cvar - sm_oneinthechamber_roundtime - Round time in minutes for a single oneinthechamber round
-        [*]new cvar - sm_oneinthechamber_trucetime - Time in seconds players can't deal damage
-        [*]new cvar - sm_oneinthechamber_cooldown_day - Rounds cooldown after a event until event can be start again
-        [*]new cvar - sm_oneinthechamber_cooldown_start - Rounds until event can be start after mapchange
-        [*]new cvar - sm_oneinthechamber_cooldown_admin - 0 - disabled, 1 - ignore the cooldown when admin/vip set oneinthechamber round
-        [*]new cvar - sm_oneinthechamber_sounds_enable - 0 - disabled, 1 - enable sounds
-        [*]new cvar - sm_oneinthechamber_sounds_start - Path to the soundfile which should be played for a start
-        [*]new cvar - sm_oneinthechamber_overlays_enable - 0 - disabled, 1 - enable overlays
-        [*]new cvar - sm_oneinthechamber_overlays_start - Path to the start Overlay DONT TYPE .vmt or .vft
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]Add-On: Support for frans1cos Most Active
-[/LIST]
-[INDENT][LIST]
-    [*]new plugin - disabled/myjailbreak_mostactive.smx
-[/LIST]
-[INDENT][LIST]
-        [*]new cvar - sm_ratio_mostactive - 0 - disabled, how many seconds a player need to join ct? (only if MostActive is available)
-        [*]new cvar - sm_ratio_mostactive_team - 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
-        [*]new cvar - sm_warden_mostactive - 0 - disabled, how many seconds a player need to become warden? (only if MostActive is available)
-        [*]new cvar - sm_warden_mostactive_team - 0 - playtime as Counter-Terror / 1 - playtime as Terror / 2 - playtime in Total (CT,T&Spec)
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]Add-On: Support for Healines gangs - disable gang perks on event days
-[/LIST]
-[LIST]
-    [*]new plugin - disabled/myjailbreak_gangs.smx
-[/LIST]
-[LIST]
-[*]PlayerTags: Two new Tags SuperAdmin & CoOwner Thx @ ichiballs
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_playertag_coownerflag - Set the flag for CoOwner. Default 'r'
-    [*]new cvar - sm_playertag_superadminflag - Set the flag for Super Admin. Default 's'
-[/LIST][/INDENT]
-[LIST]
-[*]Icons: ConVar to disable Icons on all eventdays
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_icon_eventday - 0 - use the icons, 1 - disable icons on EventDays
-[/LIST][/INDENT]
-[LIST]
-[*]Weapons: ConVar to disable weapons for CTs on not eventday rounds. (use armory)
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_weapons_noeventday - 0 - disabled, 1 - enable the weapon menu on non-EventDays round (normal/simon rounds)
-[/LIST][/INDENT]
-[LIST]
-[*]Menu: added !removefreeday for warden,deputy/guard to menu
-[*]Menu Add-On: Add your own menu items to top/botton of wardens/deputys/guards/prisoners jailmenu with .cfg
-[/LIST]
-[INDENT][LIST]
-    [*]new plugin - disabled/menu_custom.smx
-    [*]new config file - addons/sourcemod/configs/MyJailbreak/menu_custom.ini
-[/LIST][/INDENT]
-[LIST]
-[*]MyJailbreak: Automatic random eventday every x round
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_myjb_random_round - 0 - disabled / Every x round could be an event day
-    [*]new cvar - sm_myjb_random_chance - Chance that the choosen round would be an event day/voting
-    [*]new cvar - sm_myjb_random_type - 0 - Start an eventday voting / 1 - start an random eventday
-    [*]new cvar - sm_myjb_random_mapstart_delay - Wait after mapchange x rounds before try first event day
-[/LIST][/INDENT]
-[LIST]
-[*]Add-On: Support for nhnkl159s Simple Stats
-[/LIST]
-[INDENT][LIST]
-    [*]new plugin - disabled/myjailbreak_simplestats.smx
-[/LIST]
-[INDENT][LIST]
-        [*]new cvar - sm_ratio_simplestats - 0 - disabled, how many seconds a player need to join ct? (only if simplestats is available)
-        [*]new cvar - sm_warden_simplestats - 0 - disabled, how many seconds a player need to become warden? (only if simplestats is available)
-[/LIST][/INDENT][/INDENT]
-[LIST]
-[*]Catch: ConVar to kill loser team
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_catch_kill_loser - 0 - disabled, 1 - Kill loserteam on event end / not for sm_catch_allow_lr '1'
-[/LIST][/INDENT]
-[LIST]
-[*]DealDamage: ConVar to kill loser team
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_dealdamage_kill_loser - 0 - disabled, 1 - Kill loserteam on event end
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - Mathquiz: resume support for simplechatprocessor. Now support both scp or chat-processor.
-[*]PlayerTags: resume support for simplechatprocessor. Now support both scp or chat-processor.
-[*]Warden: Withheld (forbid) last request command (need sm_hosties_lr_autodisplay "0") ThX Hexah
-[/LIST]
-[INDENT][LIST]
-    [*]new command - sm_nolastrequest - toggle withheld/release the last request
-    [*]new cvar - sm_warden_withheld_lr_enable - 0 - disabled, 1 - warden can witheld prisoners Last request commands
-    [*]new cvar - sm_warden_withheld_lr_deputy - 0 - disabled, 1 - deputy can witheld prisoners Last request commands
-    [*]new cvar - sm_warden_cmds_withheld_lr - Set your custom chat commands for witheld Last request(!nolastrequest (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
-    [*]new cvar - sm_warden_cmds_lr - Set your last request commands (add custom !lr cmds)(no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands)
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - Math quiz: force using chat trigger as input for answers instead of using an installed chat processor
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_math_input - 0 - use chat trigger to receive chat input e.g. answer = '!math 526'. This is forced when no chat-processor is installed / 1 - use a chat-processor to recieve chat input e.g. answer = '526' / use '0' when chat input of will not recognized cause conflics with chat manipulation plugins like 'CCC'
-[/LIST][/INDENT]
-[LIST]
-[*]Warden frienldy fire - toggle also cts ff - Thx @hexah!*
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_ff_ct_enable - 0 - disabled, 1 - enable ff for cts also
-[/LIST][/INDENT]
-[LIST]
-[*]MyJailbreak: you can sort the order of event days in menus with config file
-[/LIST]
-[INDENT][LIST]
-    [*]new config file - addons/sourcemod/configs/MyJailbreak/config/sorting-eventdays.ini
-[/LIST][/INDENT]
-[LIST]
-[*]Menu: Suffle the eventdays in menu on a event day voting 
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_menu_shuffle - 0 - use 'sorting-eventdays.ini' on event day voting / 1 - Shuffle EventDays on voting
-[/LIST][/INDENT]
-[LIST]
-[*]Zeus: Dis/Allow droping Zeus
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_zeus_drop - 0 - disabled, 1 - allow player to drop their zeus - Thx @hexah!*
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - Disarm: Dis/Allow disarm knife on shoting hands
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_disarm_knife - 0 - negate the knife disarm, 1 - disarm all weapon - Thx @hexah!*
-[/LIST][/INDENT]
-[LIST]
-[*]MyJailbreak: the possibility to end a planned or running event
-[/LIST]
-[INDENT][LIST]
-    [*]new command - sm_resetevent - End all running or planned event days
-[/LIST][/INDENT]
-  
-[b][u]Changed[/b][/u]
-[LIST]
-[*]All Event Days: Possibility to start an event during the current round, instead wait for next round
-[/LIST]
-[INDENT][LIST]
-    [*]new cvars - sm_EVENTNAME_begin_admin - When admin set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
-    [*]new cvars - sm_EVENTNAME_begin_warden - When warden set event (!setEVENTNAME) = 0 - start event next round, 1 - start event current round - Default 1
-    [*]new cvars - sm_EVENTNAME_begin_vote - When users vote for event (!EVENTNAME) = 0 - start event next round, 1 - start event current round - Default 0
-    [*]new cvars - sm_EVENTNAME_begin_daysvote - When warden/admin start eventday voting (!sm_voteday) and event wins = 0 - start event next round, 1 - start event current round - Default 0
-    [*]new cvars - sm_EVENTNAME_teleport_spawn - 0 - start event in current round from current player positions, 1 - teleport players to spawn
-[/LIST][/INDENT]
-[LIST]
-[*]Freeday: Allow warden on freeday event day
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_freeday_allow_warden - 0 - warden disabled, 1 - allow player to become warden
-[/LIST][/INDENT]
-[LIST]
-[*]Menu: Moved menu items 1. & 2. backwords so menu start on 3.
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_menu_clean - remove 1. & 2. on first page, to avoid conflict with weapon switch
-[/LIST][/INDENT]
-[LIST]
-[*]Weapons: Moved menu items 1. & 2. backwords so menu start on 3.
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_weapons_cleanmenu - remove 1. & 2. on first page, to avoid conflict with weapon switch
-[/LIST][/INDENT]
-[LIST]
-[*]Ratio: Moved menu items 1. & 2. (Yes / No)to 3. & 4. to avoid conflict with weapon switch
-[*]DealDamage: Changed from T vs CT to even teams Blue vs Red (model,glow,colorize) - Thx skyprah for great idea!
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_dealdamage_color - 0 - disabled, 1 - color the model of the players
-    [*]new cvar - sm_dealdamage_model_blue - Path to the model for team blue.
-    [*]new cvar - sm_dealdamage_model_red - Path to the model for team red.
-    [*]new cvar - sm_dealdamage_overlays_blue - Path to the blue Overlay DONT TYPE .vmt or .vft
-    [*]new cvar - sm_dealdamage_overlays_red - Path to the red Overlay DONT TYPE .vmt or .vft
-[/LIST][/INDENT]
-[LIST]
-[*]Hide/War/Zombie: Darken screen while in freeze
-[*]Ratio: When last guard move to prisoners, a prisoner from queue or random will be moved to guard - THX @mrkos9i4ok
-[*]Flags: all ConVars to set admin/vip flag has been extended to support mutliple flags ex. "r,s,t" use comma
-[*]renamed plugin - ratio_ctbans_fantom to ratio_ctbans_r1ko on authors request
-[*]PlayerTags: removed dependencies of chat-processor(optional now)
-[*]Warden: no warden/deputy on Last Request
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_warden_remove_lr - 0 - disabled, 1 - enable warden will be removed on last request
-    [*]new cvar - sm_warden_deputy_remove_lr - 0 - disabled, 1 - enable deputy will be removed on last request
-[/LIST][/INDENT]
-[LIST]
-[*]HUD: disbale hud for dead player
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_hud_alive - 0 - show hud only to alive player, 1 - show hud to dead & alive player
-[/LIST][/INDENT]
-[LIST]
-[*]MyJailbreak: disable hosties announcements on event days
-[*]Warden - Marker: remove on Last request.
-[*]Ratio CTbans: updated for databombs CTbans v2. You must update to CTbans v2! - Thx @databomb!
-[*]Ratio: Swap Spectators to T when joining guard queue - Thx @hexah!
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_ratio_swap_spec_queue - 0 - Don't do anything if a Spec join in queue / 1 - Swap to T the Spectators who join in queue
-[/LIST][/INDENT]
-[LIST]
-[*]Warden - Mute/Talkover: disable Warden/Deputy TalkOver after LR Announced - Thx @hexah!*
-[*]Warden - Mute/Talkover: disable Spectators also.
-[*]HUD - disable HUD on TeamGames game.
-[*]Menu: Allow player to vote for no event.
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_menu_vote_noevent - 0 - disabled, 1 - allow player vote for 'no Event Day' on eventday voting
-[/LIST][/INDENT]
-[LIST]
-[*]MyJailbreak: disable Medic room / heal stations while eventday
-[/LIST]
-[INDENT][LIST]
-    [*]new cvar - sm_myjb_medic - 0 - disabled, 1 - disable medic room when event day running
-[/LIST][/INDENT]
-  
-  
-[b][u]Fixed[/b][/u]
-[LIST]
-[*]Menu: fixed setdays for warden (don't show restricted/disabled days)
-[*]Ratio: fixed custom VIP/Admin flags
-[*]Warden - mute: fixed confict with sourcecomms
-[*]Warden - bulletspark: fixed
-[*]PlayerTags: fixed custom VIP/Admin flags
-[*]PlayerTags: fixed tags in chat on foreign national players
-[*]Zombie: respawn with ratio restriction
-[*]Freeday: fixed roundtime when only one team has player
-[*]Freeday: NoBlock (no player collision)
-[*]Request - Killreason: fixed display all reasons
-[*]Duckhunt & KnifeFight: fix gravity ladderfix
-[*]Store Credits & paperclips: fix chat colors
-[*]Zombie: Respawn with restiction addon
-[*]Weapons: add/remove kevlar/helmet on eventday
-[*]Zeus: disable dropping taser - Thx @hexah!
-[*]Many minor fixes -> study commits ;D
-[/LIST]
-  
-  
-[b][u]Removed[/b][/u]
-[LIST]
-[*]removed dependencies of 'File/Folder Downloader and Precacher'-plugin. No need of downloads.txt or such plugins
-[/LIST]
-[INDENT][LIST]
-    [*]files will be downloaded automaticly. smartdm awesomeshit @zephyrus
-[/LIST][/INDENT]
-[LIST]
-[*]removed cvars - sm_weapons_ct - obsolete cvars. **Please remove them from your configs!**
-[/LIST]
-[LIST]
-[*]removed cvars - sm_weapons_t - obsolete cvars. **Please remove them from your configs!**
-[/LIST]
-  
-  
-[b][u]Developer stuff[/b][/u]
-[LIST]
-[*]Register EventDays plugins to myjb core and recieve them
-[/LIST]
-[INDENT][LIST]
-    [*]new native - MyJailbreak_AddEventDay(char[] name) - Register a eventday to myjailbreak core
-    [*]new native - MyJailbreak_RemoveEventDay(char[] name) - Remove a eventday to myjailbreak core
-    [*]new native - MyJailbreak_GetEventDays(char[] name) - Get a array with all event day name
-[/LIST][/INDENT]
-[LIST]
-[*]New Forward for end and running or planned event day
-[/LIST]
-[INDENT][LIST]
-    [*]new forward - MyJailbreak_ResetEventDay()
-[/LIST][/INDENT]
-[LIST]
-[*]Changed the way how weapons access is handled. natives insetad of switch ConVars
-[/LIST]
-[INDENT][LIST]
-    [*]new native - MyWeapons_AllowTeam(int client, bool status) - Allow a team to pick weapons from weapons menu 
-    [*]new native - MyWeapons_GetTeamStatus(int iTeam) - Get team status if weapons are allowed
-[/LIST][/INDENT]
-[LIST]
-[*]Extented parameter of a warden forwards & native - new caller clientid - 0 on random
-[/LIST]
-[INDENT][LIST]
-    [*]changed forward - warden_OnWardenCreate(int client, int caller) - The client who called the set or become warden command
-    [*]changed native - warden_set(int client, int caller) -  The client who set the new warden
-[/LIST][/INDENT]
-[LIST]
-[*]New Forwards for add items to menu - see template_custom_menu.sp
-[/LIST]
-[INDENT][LIST]
-    [*]new forward - MyJailbreak_MenuStart(int client, Menu menu)
-    [*]new forward - MyJailbreak_MenuEnd(int client, Menu menu)
-    [*]new forward - MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
-[/LIST][/INDENT]
-[LIST]
-[*]Removed smlib
-[/LIST]
-
-
-[/Spoiler]
-[U][B]Full Change Log:[/B][/U]
-[url=https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md]CHANGELOG.md[/url]
-[/QUOTE]
-
-
-
-[B][u]Known [url=https://github.com/shanapu/MyJailbreak/issues]Issues[/URL]/Bugs[/u][/B]
-[QUOTE]
-[LIST]
-[*]Custom models: player can't see their hands. the weapon is floating  
-temp fix https://forums.alliedmods.net/showpost.php?p=2525507&postcount=6
-[*]Warden: Player in handcuffs can be drag into walls [i]- need help[/i]
-[*]Duckhunt & HE Battle: player gets new grenade but [u]sometimes rarly[/u] can't throw anymore[i] - need help![/i]
-[*]RU translation - Not shown completly in rules menu cause cyrillic letters.[i] - need help![/i]
-[/LIST]
-[i]you found a bug? tell me please![/i]
-[/QUOTE]
 
 
 [B][U]Credits:[/U][/B]
@@ -7552,16 +7271,16 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
 [/QUOTE]
 
 
-[SIZE="3"][B]The DEV (developers) branch is thought for developers & experienced server operators. Expect errors, crashes & unfinished features. Only use it, when you know what you are doing. [/B][/SIZE]
+[SIZE="2"][B]The DEV (developers) branch is thought for developers & experienced server operators. Expect errors, crashes & unfinished features. Only use it, when you know what you are doing. [/B][/SIZE]
 
 
-[url=https://github.com/shanapu/MyJailbreak/blob/master/license.txt][img]https://img.shields.io/badge/license-AGPL-blue.svg?style=flat-square[/img][/url]
+[url=https://github.com/shanapu/MyJailbreak/blob/master/license.txt][img]https://img.shields.io/badge/license-AGPL-blue.svg?style=flat-square[/img][/url]  
+Master: [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square[/IMG][/url]  
+Developer: [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square[/IMG][/URL]  
 
-[URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/master.svg?style=flat-square[/IMG][/url]   [URL="https://travis-ci.org/shanapu/MyJailbreak/branches"][IMG]https://img.shields.io/travis/shanapu/MyJailbreak/dev.svg?style=flat-square[/IMG][/URL]
-
-[SIZE="3"]
-[B][U]Download release pack[/U][/B]
-[url]https://shanapu.de/MyJailbreak/[/url][/SIZE]
+[SIZE="5"]
+[B][U]Download release pack[/U]
+[url]https://shanapu.de/MyJailbreak/[/url][/B][/SIZE]
 
 [B][U]Sourcecode & miscellaneous at github[/U][/B]
 [url]https://github.com/shanapu/MyJailbreak/[/url]
@@ -7584,11 +7303,11 @@ Drixevel, devu4, good_live, olegtsvetkov, headline, Weeeishy, kiko, Got Sw4g? te
 [url]https://github.com/shanapu/MyJailbreak/commits/dev[/url]
 
 [U][B]Changelogs:[/B][/U]
-[url]https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md[/url]
-[url]https://github.com/shanapu/MyJailbreak/blob/dev/CHANGELOG.md[/url]
+[url]https://github.com/shanapu/MyJailbreak/blob/master/CHANGELOG.md[/url] - master
+[url]https://github.com/shanapu/MyJailbreak/blob/dev/CHANGELOG.md[/url] - dev
 
 
-coded with [IMG]http://shanapu.de/githearth-small.png[/IMG] free software
+coded with [IMG]http://shanapu.de/images/githearth-small.png[/IMG] free software
 
 Main Developers: [URL="https://github.com/shanapu/"]shanapu[/url] & [URL="https://github.com/Hexer10/"]papero[/url]
 
@@ -7597,4 +7316,4 @@ Main Developers: [URL="https://github.com/shanapu/"]shanapu[/url] & [URL="https:
 If you own a feature or extension for jail or have an idea that would fit in, I would be happy when you [U]share it with us[/U].
 
 
-[SIZE="1"]you can donate when you like my work for the community...[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]https://www.paypalobjects.com/webstatic/en_US/i/btn/png/silver-rect-paypal-26px.png[/IMG][/URL]
+[SIZE="1"]when you like my work for the community, keep me motivated. buy me a beer[/SIZE] [URL="https://www.paypal.me/shanapu"] [IMG]https://img.shields.io/badge/donate-paypal-blue.svg?style=flat-square[/IMG][/URL]

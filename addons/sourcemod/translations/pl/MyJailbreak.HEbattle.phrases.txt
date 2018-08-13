@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:16 UTC
+// Date: 2018-08-13 17:29:30 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -16,6 +16,11 @@
 	"hebattle_rounds"
 	{
 		"pl"		"Runda {purple}{1}{default} z {purple}{2}"
+	}
+
+	"hebattle_minplayer"
+	{
+		"pl"		"Do HE Battle potrzebujesz przynajmniej {purple}jednego CT"
 	}
 
 	"hebattle_twin_nc"
@@ -131,6 +136,11 @@
 	"hebattle_wait"
 	{
 		"pl"		"Musisz poczekac  {1} rund"
+	}
+
+	"hebattle_name"
+	{
+		"pl"		"Bitwa na granaty"
 	}
 
 }

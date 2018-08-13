@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:35:05 UTC
+// Date: 2018-05-23 19:42:34 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"ratio_tag"
-	{
-		"en"		"[{green}MyJB.ratio{default}]"
-	}
 
 	"ratio_auto"
 	{
@@ -132,136 +127,6 @@
 	"ratio_notaccept"
 	{
 		"en"		"No, I don't want to become a guard."
-	}
-
-	"ratio_question_title"
-	{
-		"en"		"Please answer the following questions to become a Guard."
-	}
-
-	"ratio_question1_line1"
-	{
-		"en"		"The Cell Doors are closed, the prisoners are inside!"
-	}
-
-	"ratio_question1_line2"
-	{
-		"en"		"What will you do?"
-	}
-
-	"ratio_question1_wrong1"
-	{
-		"en"		"I wait until cells open, and kill'em all!"
-	}
-
-	"ratio_question1_wrong2"
-	{
-		"en"		"Kill'em one by one until Last Request."
-	}
-
-	"ratio_question1_right"
-	{
-		"en"		"I wait for the warden first announcement."
-	}
-
-	"ratio_question2_line1"
-	{
-		"en"		"The warden sucks & this round is boring as shit."
-	}
-
-	"ratio_question2_line2"
-	{
-		"en"		"Drop your gun and give it to an prisoner to accelerate the round!"
-	}
-
-	"ratio_question2_wrong1"
-	{
-		"en"		"This is a good idea."
-	}
-
-	"ratio_question2_wrong2"
-	{
-		"en"		"Never! Just when the prisoner is my mate!"
-	}
-
-	"ratio_question2_right"
-	{
-		"en"		"Never! Dropping a gun (Gun Planting) is forbidden!"
-	}
-
-	"ratio_question3_line1"
-	{
-		"en"		"Have you read the server rules?"
-	}
-
-	"ratio_question3_line2"
-	{
-		"en"		"Do you understand the server rules?"
-	}
-
-	"ratio_question3_wrong1"
-	{
-		"en"		"Yeah, I read them. I'm not going to follow them."
-	}
-
-	"ratio_question3_wrong2"
-	{
-		"en"		"Reading? I'm here to play lol!"
-	}
-
-	"ratio_question3_right"
-	{
-		"en"		"Yeah, I read them. I know how to play on this server."
-	}
-
-	"ratio_question4_line1"
-	{
-		"en"		"Do you have a working microphone?"
-	}
-
-	"ratio_question4_line2"
-	{
-		"en"		"Do you speak the server language?"
-	}
-
-	"ratio_question4_wrong1"
-	{
-		"en"		"Sorry what?"
-	}
-
-	"ratio_question4_wrong2"
-	{
-		"en"		"My microphone is broken, I will type the commands."
-	}
-
-	"ratio_question4_right"
-	{
-		"en"		"I have a working, decent quality microphone."
-	}
-
-	"ratio_question5_line1"
-	{
-		"en"		"The Warden has been killed, and you are one of the last guards."
-	}
-
-	"ratio_question5_line2"
-	{
-		"en"		"Would you play as Warden?"
-	}
-
-	"ratio_question5_wrong1"
-	{
-		"en"		"Better start a freeday..."
-	}
-
-	"ratio_question5_wrong2"
-	{
-		"en"		"Kill every prisoner one by one until Last Request."
-	}
-
-	"ratio_question5_right"
-	{
-		"en"		"As guard, of course I will have to play as the new Warden."
 	}
 
 	"ratio_cooldown"
@@ -404,6 +269,16 @@
 	"ratio_swap_spec"
 	{
 		"en"		"You was swapped to T Team, since you joined in the guard queue"
+	}
+
+	"ratio_fullguards"
+	{
+		"en"		"The guards are currently full. Please try again later."
+	}
+
+	"ratio_voice"
+	{
+		"en"		"You have not used your mic before, you cannot join guards without voice. Use your mic and try again."
 	}
 
 }

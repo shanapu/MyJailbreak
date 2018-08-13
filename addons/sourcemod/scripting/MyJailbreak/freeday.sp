@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Headline
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -39,6 +40,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <myjailbreak>
 #include <myweapons>
 #include <smartjaildoors>
@@ -58,6 +60,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
@@ -65,6 +68,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bFirst;
 ConVar gc_bAuto;
@@ -86,22 +90,15 @@ ConVar gc_bBeginSetW;
 ConVar gc_bBeginSetV;
 ConVar gc_bBeginSetVW;
 
-// Extern Convars
-//ConVar g_iMPRoundTime;
 
 // Integers
-//int g_iOldRoundTime;
 int g_iCoolDown;
 int g_iVoteCount;
-int g_iCollision_Offset;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
-
-// Floats
-float g_fPos[3];
 
 // Info
 public Plugin myinfo =
@@ -130,6 +127,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_freeday_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_freeday_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_freeday_prefix", "[{green}MyJB.FreeDay{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_freeday_cmds_vote", "fd, free", "Set your custom chat command for Event voting(!freeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_freeday_cmds_set", "sfreeday, sfd", "Set your custom chat command for set Event(!setfreeday (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_freeday_warden", "1", "0 - disabled, 1 - allow warden to set freeday round", _, true, 0.0, true, 1.0);
@@ -159,15 +157,10 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("player_death", Event_PlayerDeath);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
-//	g_iMPRoundTime = FindConVar("mp_roundtime");
 	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -176,15 +169,16 @@ public void OnPluginStart()
 // ConVarChange for Strings
 public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] newValue)
 {
-	if (convar == gc_sAdminFlag)
+	if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
@@ -194,42 +188,65 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 // Initialize Event
 public void OnConfigsExecuted()
 {
+	g_iCoolDown = gc_iCooldownDay.IntValue + 1;
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
@@ -262,11 +279,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("freeday");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("freeday");
 }
 
@@ -281,7 +304,7 @@ public Action Command_SetFreeday(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_disabled");
 		return Plugin_Handled;
 	}
 
@@ -299,11 +322,11 @@ public Action Command_SetFreeday(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Freeday was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_freeday_flag", gc_sAdminFlag, "sm_freeday_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_setbyadmin");
 			return Plugin_Handled;
 		}
 
@@ -314,14 +337,14 @@ public Action Command_SetFreeday(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -341,13 +364,13 @@ public Action Command_SetFreeday(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
 
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "freeday_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_setbywarden");
 			return Plugin_Handled;
 		}
 
@@ -358,14 +381,14 @@ public Action Command_SetFreeday(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_progress", EventDay);
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_wait", g_iCoolDown);
 			return Plugin_Handled;
 		}
 
@@ -383,7 +406,7 @@ public Action Command_SetFreeday(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -394,13 +417,13 @@ public Action Command_VoteFreeday(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_disabled");
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_voting");
 		return Plugin_Handled;
 	}
 
@@ -411,14 +434,14 @@ public Action Command_VoteFreeday(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_progress", EventDay);
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_wait", g_iCoolDown);
 		return Plugin_Handled;
 	}
 
@@ -427,7 +450,7 @@ public Action Command_VoteFreeday(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "freeday_tag", "freeday_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "freeday_voted");
 		return Plugin_Handled;
 	}
 
@@ -453,7 +476,7 @@ public Action Command_VoteFreeday(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -529,7 +552,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		}
 
 		g_bIsFreeday = false;
@@ -543,9 +566,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 		}
 
-		if (gp_bWarden)
+		if (gp_bMyJBWarden)
 		{
-			SetCvar("sm_warden_enable", 1);
+			warden_enable(true);
 		}
 
 		if (gp_bMyWeapons)
@@ -564,17 +587,20 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 //		g_iMPRoundTime.IntValue = g_iOldRoundTime;
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_end");
 	}
 
 	if (g_bStartFreeday)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_next");
 		PrintCenterTextAll("%t", "freeday_next_nc");
 	}
 }
@@ -664,7 +690,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -673,8 +699,11 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsFreeday = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
@@ -682,7 +711,7 @@ void StartEventRound(bool thisround)
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_now");
 		PrintCenterTextAll("%t", "freeday_now_nc");
 	}
 	else
@@ -690,7 +719,7 @@ void StartEventRound(bool thisround)
 		g_bStartFreeday = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "freeday_tag", "freeday_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "freeday_next");
 		PrintCenterTextAll("%t", "freeday_next_nc");
 	}
 }
@@ -707,11 +736,15 @@ void PrepareDay()
 		SJD_OpenDoors();
 	}
 
+/*
 	if (!gp_bSmartJailDoors || (gp_bSmartJailDoors && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
+		float g_fPos[3];
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-		{
+		for (int i = 1; i <= MaxClients; i++)		{
+			if (!IsClientInGame(i))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				RandomCT = i;
@@ -721,9 +754,7 @@ void PrepareDay()
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
-			{
-				GetClientAbsOrigin(RandomCT, g_fPos);
+			for (int i = 1; i <= MaxClients; i++)GetClientAbsOrigin(RandomCT, g_fPos);
 				
 				g_fPos[2] = g_fPos[2] + 5;
 				
@@ -731,12 +762,15 @@ void PrepareDay()
 			}
 		}
 	}
-
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+*/
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		CreateInfoPanel(i);
 
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		if (!gc_bdamage.BoolValue && IsValidClient(i))
 		{
@@ -752,9 +786,9 @@ void PrepareDay()
 		MyJailbreak_SetEventDayRunning(true, 0);
 	}
 
-	if (gp_bWarden && !gc_bWarden.BoolValue)
+	if (gp_bMyJBWarden && !gc_bWarden.BoolValue)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -788,7 +822,7 @@ void PrepareDay()
 	CreateTimer (gc_iRespawnTime.FloatValue, Timer_StopRespawn);
 
 	PrintCenterTextAll("%t", "freeday_start_nc");
-	CPrintToChatAll("%t %t", "freeday_tag", "freeday_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "freeday_start");
 }
 
 /******************************************************************************

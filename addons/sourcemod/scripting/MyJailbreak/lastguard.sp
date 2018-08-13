@@ -38,6 +38,7 @@
 #undef REQUIRE_PLUGIN
 #include <myjailbreak>
 #include <myweapons>
+#include <myjbwarden>
 #include <hosties>
 #include <lastrequest>
 #include <CustomPlayerSkins>
@@ -59,9 +60,11 @@ bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyWeapons;
+bool gp_bMyJBWarden;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetCT;
 ConVar gc_bVote;
 ConVar gc_bAutomatic;
@@ -83,7 +86,6 @@ ConVar gc_sCustomCommandLGR;
 // Integers
 int g_iTruceTime;
 int g_iVoteCount;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
@@ -91,6 +93,7 @@ Handle g_hTimerBeacon;
 Handle gF_OnLastGuardStart;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSoundLastCTPath[256];
@@ -121,6 +124,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_lastguard_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_lastguard_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_lastguard_prefix", "[{green}MyJB.LastGuardRule{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandLGR = AutoExecConfig_CreateConVar("sm_lastguard_cmds", "lg, lgr, lastguardrule", "Set your custom chat command for Last Guard Rule(!lastguard (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetCT = AutoExecConfig_CreateConVar("sm_lastguard_ct", "1", "0 - disabled, 1 - allow last CT to set Last Guard Rule", _, true, 0.0, true, 1.0);
 	gc_bVote = AutoExecConfig_CreateConVar("sm_lastguard_vote", "1", "0 - disabled, 1 - allow alive player to vote for Last Guard Rule", _, true, 0.0, true, 1.0);
@@ -150,6 +154,7 @@ public void OnPluginStart()
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundLastCTPath, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	//Forward
 	gF_OnLastGuardStart = CreateGlobalForward("MyJailbreak_OnLastGuardRuleStart", ET_Ignore);
@@ -159,9 +164,6 @@ public void OnPluginStart()
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sMyJBLogFile, "MyJB", "MyJailbreak");
@@ -174,63 +176,128 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 	if (convar == gc_sOverlayStartPath)
 	{
 		strcopy(g_sOverlayStartPath, sizeof(g_sOverlayStartPath), newValue);
-		if (gc_bOverlays.BoolValue) PrecacheDecalAnyDownload(g_sOverlayStartPath);
+
+		if (gc_bOverlays.BoolValue)
+		{
+			PrecacheDecalAnyDownload(g_sOverlayStartPath);
+		}
 	}
 	else if (convar == gc_sSoundStartPath)
 	{
 		strcopy(g_sSoundStartPath, sizeof(g_sSoundStartPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundStartPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundStartPath);
+		}
 	}
 	else if (convar == gc_sSoundLastCTPath)
 	{
 		strcopy(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundLastCTPath);
+
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundLastCTPath);
+		}
+	}
+	else if (convar == gc_sPrefix)
+	{
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bMyJailBreak = LibraryExists("myjailbreak");
-	gp_bHosties = LibraryExists("hosties");
+	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyWeapons = LibraryExists("myweapons");
 }
 
+
 public void OnLibraryRemoved(const char[] name)
 {
-	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailBreak = false;
-
-	if (StrEqual(name, "hosties"))
+	if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = false;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailBreak = false;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
-	if (StrEqual(name, "myjailbreak"))
-		gp_bMyJailBreak = true;
-
-	if (StrEqual(name, "hosties"))
+	if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
-		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "CustomPlayerSkins"))
+	}
+	else if (StrEqual(name, "CustomPlayerSkins"))
+	{
 		gp_bCustomPlayerSkins = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
+		gp_bSmartJailDoors = true;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailBreak = true;
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
+}
+
+public void OnConfigsExecuted()
+{
+	// FindConVar
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundLastCTPath.GetString(g_sSoundLastCTPath, sizeof(g_sSoundLastCTPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+
+	// Set custom Commands
+	int iCount = 0;
+	char sCommands[128], sCommandsL[12][32], sCommand[32];
+
+	// Last guard rule
+	gc_sCustomCommandLGR.GetString(sCommands, sizeof(sCommands));
+	ReplaceString(sCommands, sizeof(sCommands), " ", "");
+	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
+
+	for (int i = 0; i < iCount; i++)
+	{
+		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
+		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		{
+			RegConsoleCmd(sCommand, Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
+		}
+	}
 }
 
 /******************************************************************************
@@ -256,7 +323,7 @@ public Action Command_VoteLastGuard(int client, int args)
 						char EventDay[64];
 						MyJailbreak_GetEventDayName(EventDay);
 						
-						CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_progress", EventDay);
+						CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_progress", EventDay);
 						return Plugin_Handled;
 					}
 				}
@@ -276,15 +343,15 @@ public Action Command_VoteLastGuard(int client, int args)
 								StartLastGuard();
 								if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by voting");
 							}
-							else CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_need", Missing, client);
+							else CPrintToChatAll("%s %t", g_sPrefix, "lastguard_need", Missing, client);
 						}
-						else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_voted");
+						else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_voted");
 					}
-					else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_lr");
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_lr");
 				}
-				else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_running");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_running");
 			}
-			else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_minplayer");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_minplayer");
 		}
 		else if (gc_bSetCT.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && IsPlayerAlive(client))
 		{
@@ -297,7 +364,7 @@ public Action Command_VoteLastGuard(int client, int args)
 						char EventDay[64];
 						MyJailbreak_GetEventDayName(EventDay);
 						
-						CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_progress", EventDay);
+						CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_progress", EventDay);
 						return Plugin_Handled;
 					}
 				}
@@ -308,15 +375,15 @@ public Action Command_VoteLastGuard(int client, int args)
 						StartLastGuard();
 						if (gp_bMyJailBreak) if (MyJailbreak_ActiveLogging()) LogToFileEx(g_sMyJBLogFile, "Last Guard Rule was started by last CT %L", client);
 					}
-					else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_lr");
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_lr");
 				}
-				else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_running");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_running");
 			}
-			else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_minplayer");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_minplayer");
 		}
-		else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_notalive");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_notalive");
 	}
-	else CReplyToCommand(client, "%t %t", "lastguard_tag", "lastguard_disabled");
+	else CReplyToCommand(client, "%s %t", g_sPrefix, "lastguard_disabled");
 
 	return Plugin_Handled;
 }
@@ -348,9 +415,14 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 	if (g_bIsLastGuard)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			if (!IsClientInGame(i))
+				continue;
+
+			EnableWeaponFire(i, true);
+
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			if (gc_bWallhack.BoolValue && gp_bCustomPlayerSkins)
 			{
@@ -387,9 +459,12 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetCvar("sm_hosties_lr", 1);
 		}
 
-		SetCvar("sm_warden_enable", 1);
+		if (gp_bMyJBWarden)
+		{
+			warden_enable(true);
+		}
 
-		CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "lastguard_end");
 	}
 
 	Format(g_sHasVoted, sizeof(g_sHasVoted), "");
@@ -449,7 +524,10 @@ void StartLastGuard()
 			MyWeapons_AllowTeam(CS_TEAM_CT, true);
 		}
 
-		SetCvar("sm_warden_enable", 0);
+		if (gp_bMyJBWarden)
+		{
+			warden_enable(false);
+		}
 
 		int Tcount = (GetAlivePlayersCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
 		if (gc_iTime.IntValue != 0)
@@ -492,8 +570,11 @@ void StartLastGuard()
 
 		int HPCT = RoundToCeil(HPterrors * (gc_iHPmultipler.FloatValue / 100.0));
 
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			char info[64];
 
 			Panel InfoPanel = new Panel();
@@ -524,8 +605,10 @@ void StartLastGuard()
 
 			InfoPanel.Send(i, Handler_NullCancel, 20);
 
-			SetEntData(i, FindSendPropInfo("CBaseEntity", "m_CollisionGroup"), 2, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			if (gc_bFreeze.BoolValue)
 			{
@@ -536,14 +619,14 @@ void StartLastGuard()
 			if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
 				SetEntityHealth(i, HPCT);
-				CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_hp", GetAlivePlayersCount(CS_TEAM_T), HPterrors, i, HPCT);
+				CPrintToChatAll("%s %t", g_sPrefix, "lastguard_hp", GetAlivePlayersCount(CS_TEAM_T), HPterrors, i, HPCT);
 			}
 		}
 
 		g_iTruceTime--;
 		g_hTimerTruce = CreateTimer(1.0, Timer_TruceUntilStart, _, TIMER_REPEAT);
 
-		CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_startnow");
+		CPrintToChatAll("%s %t", g_sPrefix, "lastguard_startnow");
 		PrintCenterTextAll("%t", "lastguard_startnow_nc");
 	}
 }
@@ -553,7 +636,7 @@ void CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !g_bIsLR && !g_bIsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1) && !g_bIsLastGuard && !g_bIsLR && g_bMinCT)
+		if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1) && g_bMinCT)
 		{
 			if (gp_bMyJailBreak) if (MyJailbreak_IsEventDayRunning())
 			return;
@@ -585,39 +668,12 @@ public void OnMapStart()
 	if (gc_bSounds.BoolValue)
 	{
 		PrecacheSoundAnyDownload(g_sSoundStartPath);   // Add sound to download and precache table
-	}
-
-	if (gc_bSounds.BoolValue)
-	{
 		PrecacheSoundAnyDownload(g_sSoundLastCTPath);   // Add sound to download and precache table
 	}
 
 	if (gc_bOverlays.BoolValue)
 	{
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);   // Add overlay to download and precache table
-	}
-}
-
-public void OnConfigsExecuted()
-{
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
-	// Set custom Commands
-	int iCount = 0;
-	char sCommands[128], sCommandsL[12][32], sCommand[32];
-
-	// Last guard rule
-	gc_sCustomCommandLGR.GetString(sCommands, sizeof(sCommands));
-	ReplaceString(sCommands, sizeof(sCommands), " ", "");
-	iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-
-	for (int i = 0; i < iCount; i++)
-	{
-		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
-		{
-			RegConsoleCmd(sCommand, Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
-		}
 	}
 }
 
@@ -670,7 +726,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 				SetEntityMoveType(i, MOVETYPE_WALK);
 				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 				PrintCenterText(i, "%t", "lastguard_movenow_nc", g_iTruceTime);
-				CPrintToChat(i, "%t %t", "lastguard_tag", "lastguard_movenow");
+				CPrintToChat(i, "%s %t", g_sPrefix, "lastguard_movenow");
 			}
 
 			PrintCenterTextAll("%t", "lastguard_timeuntilstart_nc", g_iTruceTime);
@@ -681,9 +737,14 @@ public Action Timer_TruceUntilStart(Handle timer)
 
 	g_iTruceTime = gc_iTruceTime.IntValue;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) if (IsPlayerAlive(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
 
 		if (gc_bOverlays.BoolValue)
 		{
@@ -701,7 +762,7 @@ public Action Timer_TruceUntilStart(Handle timer)
 	g_hTimerTruce = null;
 
 	PrintCenterTextAll("%t", "lastguard_start_nc");
-	CPrintToChatAll("%t %t", "lastguard_tag", "lastguard_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "lastguard_start");
 
 	return Plugin_Stop;
 }
@@ -718,8 +779,11 @@ public Action Timer_LastGuardBeginn(Handle timer)
 
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 
@@ -736,9 +800,7 @@ void Setup_WallhackSkin(int client)
 
 	int iSkin = CPS_SetSkin(client, sModel, CPS_RENDER);
 	if (iSkin == -1)
-	{
 		return;
-	}
 
 	if (SDKHookEx(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack))
 	{
@@ -773,21 +835,18 @@ void Setup_Wallhack(int iSkin)
 public Action OnSetTransmit_Wallhack(int iSkin, int client)
 {
 	if (!IsPlayerAlive(client) || GetClientTeam(client) != CS_TEAM_CT)
-	{
 		return Plugin_Handled;
-	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (!CPS_HasSkin(i))
-		{
+		if (!IsClientInGame(i))
 			continue;
-		}
+
+		if (!CPS_HasSkin(i))
+			continue;
 
 		if (EntRefToEntIndex(CPS_GetSkin(i)) != iSkin)
-		{
 			continue;
-		}
 
 		return Plugin_Continue;
 	}

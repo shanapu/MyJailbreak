@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2017-11-20 02:34:58 UTC
+// Date: 2018-05-23 19:26:19 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,11 +7,6 @@
 //
 "Phrases"
 {
-
-	"war_tag"
-	{
-		"en"		"[{green}MyJB.war{default}]"
-	}
 
 	"war_need"
 	{

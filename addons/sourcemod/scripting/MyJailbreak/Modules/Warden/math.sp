@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -145,9 +146,9 @@ public Action Command_MathQuestion(int client, int args)
 		{
 			if (!g_bIsMathQuiz)
 			{
-				CreateTimer(4.0, Timer_CreateMathQuestion, client);
+				CreateTimer(4.0, Timer_CreateMathQuestion, GetClientUserId(client));
 				
-				CPrintToChatAll("%t %t", "warden_tag", "warden_startmathquiz");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_startmathquiz");
 				
 				if (gc_bBetterNotes.BoolValue)
 				{
@@ -155,6 +156,7 @@ public Action Command_MathQuestion(int client, int args)
 				}
 				
 				g_bIsMathQuiz = true;
+
 				return Plugin_Handled;
 			}
 		}
@@ -162,7 +164,8 @@ public Action Command_MathQuestion(int client, int args)
 		{
 			if (args != 1) // Not enough parameters
 			{
-				ReplyToCommand(client, "%t Use: sm_math <number>","warden_tag");
+				CReplyToCommand(client, "%s Use: sm_math <number>", g_sPrefix);
+
 				return Plugin_Handled;
 			}
 			
@@ -174,7 +177,7 @@ public Action Command_MathQuestion(int client, int args)
 			if (ProcessSolution(client, StringToInt(strAnswer)))
 			SendEndMathQuestion(client);
 		}
-		else CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -234,7 +237,7 @@ public Action OnChatMessage(int &author, Handle recipients, char [] name, char [
 		if (!IsPlayerAlive(author))
 			return Plugin_Continue;
 
-		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+		if (!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
 			return Plugin_Continue;
 
 		char bit[1][5];
@@ -256,7 +259,7 @@ public Action CP_OnChatMessage(int& author, ArrayList recipients, char[] flagstr
 		if (!IsPlayerAlive(author))
 			return Plugin_Continue;
 
-		if(!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
+		if (!gc_bAllowCT.BoolValue && GetClientTeam(author) != CS_TEAM_T)
 			return Plugin_Continue;
 
 		char bit[2][5];
@@ -300,11 +303,11 @@ public void SendEndMathQuestion(int client)
 
 	if (client != -1)
 	{
-		Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_correct", client, g_iMathResult);
-		CreateTimer(5.0, Timer_RemoveColor, client);
+		Format(answer, sizeof(answer), "%s %t", g_sPrefix, "warden_math_correct", client, g_iMathResult);
+		CreateTimer(5.0, Timer_RemoveColor, GetClientUserId(client));
 		SetEntityRenderColor(client, 0, 255, 0, 255);
 	}
-	else Format(answer, sizeof(answer), "%t %t", "warden_tag", "warden_math_time", g_iMathResult);
+	else Format(answer, sizeof(answer), "%s %t", g_sPrefix, "warden_math_time", g_iMathResult);
 
 	if (gc_bMathOverlays.BoolValue)
 	{
@@ -327,8 +330,10 @@ public void SendEndMathQuestion(int client)
                    TIMER
 ******************************************************************************/
 
-public Action Timer_CreateMathQuestion(Handle timer, any client)
+public Action Timer_CreateMathQuestion(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (gc_bMath.BoolValue)
 	{
 		int NumOne = GetRandomInt(g_iMathMin, g_iMathMax);
@@ -367,7 +372,7 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 			g_iMathResult = NumOne * NumTwo;
 		}
 
-		CPrintToChatAll("%t %N: %i %s %i = ?? ", "warden_tag", client, NumOne, g_sOp, NumTwo);
+		CPrintToChatAll("%s %N: %i %s %i = ?? ", g_sPrefix, client, NumOne, g_sOp, NumTwo);
 
 		if (gc_bBetterNotes.BoolValue)
 		{
@@ -376,7 +381,7 @@ public Action Timer_CreateMathQuestion(Handle timer, any client)
 
 		if (!gp_bChatProcessor && !gp_bSimpleChatProcessor)
 		{
-			CPrintToChatAll("%t Use: sm_math <number>", "warden_tag");
+			CPrintToChatAll("%s Use: sm_math <number>", g_sPrefix);
 		}
 
 		g_bCanAnswer = true;

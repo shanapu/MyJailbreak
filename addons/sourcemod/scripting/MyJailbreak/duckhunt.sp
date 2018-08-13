@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: olegtsvetkov
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -39,6 +40,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <myjailbreak>
 #include <myweapons>
 #include <smartjaildoors>
@@ -57,6 +59,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
@@ -64,6 +67,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -104,18 +108,17 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-int g_iCollision_Offset;
 
 // Handles
 Handle g_hTimerTruce;
 Handle g_hTimerBeacon;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sHunterModel[256] = "models/player/custom_player/legacy/tm_phoenix_heavy.mdl";
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sModelPathCTPrevious[MAXPLAYERS+1][256];
 char g_sModelPathTPrevious[MAXPLAYERS+1][256];
 char g_sOverlayStartPath[256];
@@ -154,6 +157,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_duckhunt_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_duckhunt_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_duckhunt_prefix", "[{green}MyJB.DuckHunt{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_duckhunt_cmds_vote", "duck, hunt", "Set your custom chat command for Event voting(!duckhunt (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_duckhunt_cmds_set", "sduck, shunt, sduckhunt", "Set your custom chat command for set Event(!setduckhunt (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_duckhunt_warden", "1", "0 - disabled, 1 - allow warden to set duckhunt round", _, true, 0.0, true, 1.0);
@@ -196,29 +200,28 @@ public void OnPluginStart()
 	HookEvent("hegrenade_detonate", Event_HE_Detonate);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
-	// FindConVar
 	g_bAllowTP = FindConVar("sv_allow_thirdperson");
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	if (g_bAllowTP == INVALID_HANDLE)
 	{
 		SetFailState("sv_allow_thirdperson not found!");
 	}
-	
+
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
 
 	// Late loading
 	if (g_bIsLateLoad)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			OnClientPutInServer(i);
 		}
 
@@ -245,15 +248,16 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheSoundAnyDownload(g_sSoundStartPath);
 		}
 	}
-	else if (convar == gc_sAdminFlag)
+	else if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
@@ -263,47 +267,71 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 
-	// FindConVar
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+
 	if (gp_bHosties)
 	{
 		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
@@ -341,11 +369,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("duckhunt");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("duckhunt");
 }
 
@@ -359,7 +393,8 @@ public Action Command_SetDuckHunt(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -368,26 +403,26 @@ public Action Command_SetDuckHunt(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event duckhunt was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_duckhunt_flag", gc_sAdminFlag, "sm_duckhunt_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -398,23 +433,23 @@ public Action Command_SetDuckHunt(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -425,19 +460,22 @@ public Action Command_SetDuckHunt(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "duckhunt_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -448,23 +486,23 @@ public Action Command_SetDuckHunt(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -473,7 +511,7 @@ public Action Command_SetDuckHunt(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -484,19 +522,22 @@ public Action Command_VoteDuckHunt(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -507,14 +548,16 @@ public Action Command_VoteDuckHunt(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -523,7 +566,8 @@ public Action Command_VoteDuckHunt(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "duckhunt_tag", "duckhunt_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "duckhunt_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -538,9 +582,7 @@ public Action Command_VoteDuckHunt(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -549,7 +591,7 @@ public Action Command_VoteDuckHunt(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -557,6 +599,9 @@ public Action Command_VoteDuckHunt(int client, int args)
 
 public Action Command_ToggleFly(int client, int args)
 {
+	if (!IsValidClient(client, true, false))
+		return Plugin_Continue;
+
 	if (g_bIsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && gc_bFlyMode.BoolValue)
 	{
 		MoveType movetype = GetEntityMoveType(client);
@@ -626,7 +671,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 			SetEntityGravity(i, 1.0);
 
@@ -637,6 +682,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 
 		delete g_hTimerBeacon;
 		delete g_hTimerTruce;
+		g_iTruceTime = gc_iTruceTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -660,9 +706,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			if (gp_bWarden)
+			if (gp_bMyJBWarden)
 			{
-				SetCvar("sm_warden_enable", 1);
+				warden_enable(true);
 			}
 
 			if (gp_bMyWeapons)
@@ -681,18 +727,21 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none"); // tell myjailbreak event is ended
 			}
 
-			CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_end");
 		}
 	}
 
 	if (g_bStartDuckHunt)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_next");
 		PrintCenterTextAll("%t", "duckhunt_next_nc");
 	}
 }
@@ -789,8 +838,11 @@ public void OnMapEnd()
 	g_iRound = 0;
 	g_sHasVoted[0] = '\0';
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		FirstPerson(i);
 		SetEntityMoveType(i, MOVETYPE_WALK);
 	}
@@ -818,13 +870,16 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsClientInGame(i))
+			continue;
+
 		StripAllPlayerWeapons(i);
 
 		if (IsValidClient(i, false, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntityGravity(i, 1.0);
 			FirstPerson(i);
 
@@ -843,11 +898,13 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
 	}
 
 	delete g_hTimerBeacon;
-
-	if (g_hTimerTruce != null) KillTimer(g_hTimerTruce);
+	delete g_hTimerTruce;
+	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	if (g_iRound == g_iMaxRound)
 	{
@@ -866,9 +923,9 @@ void ResetEventDay()
 
 		SetConVarInt(g_bAllowTP, 0);
 
-		if (gp_bWarden)
+		if (gp_bMyJBWarden)
 		{
-			SetCvar("sm_warden_enable", 1);
+			warden_enable(true);
 		}
 		if (gp_bMyJailbreak)
 		{
@@ -878,7 +935,7 @@ void ResetEventDay()
 			MyJailbreak_SetEventDayRunning(false, 0);
 		}
 
-		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_end");
 	}
 }
 
@@ -887,6 +944,26 @@ void ResetEventDay()
 public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
+	SDKHook(client, SDKHook_PreThink, OnPreThinkWeapon);
+}
+
+public Action OnPreThinkWeapon(int client)
+{
+	if (!g_bIsDuckHunt)
+		return Plugin_Continue;
+
+	if (GetClientTeam(client) != CS_TEAM_T)
+		return Plugin_Continue;
+
+	int weapon = GetEntPropEnt(client, Prop_Send, "m_hActiveWeapon");
+
+	if (weapon < 0 || !IsValidEdict(weapon) || !IsValidEntity(weapon))
+		return Plugin_Continue;
+
+	SetEntPropFloat(weapon, Prop_Send, "m_flNextPrimaryAttack", GetGameTime() + 0.25);
+
+	return Plugin_Continue;
 }
 
 // Nova & Grenade only
@@ -911,16 +988,26 @@ public Action OnWeaponCanUse(int client, int weapon)
 	return Plugin_Continue;
 }
 
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup)
+{
+	if (!g_bIsDuckHunt)
+		return Plugin_Continue;
+
+	if (!IsValidClient(victim, true, false) || attacker == victim || !IsValidClient(attacker, true, false))
+		return Plugin_Continue;
+
+	if (GetClientTeam(victim) == GetClientTeam(attacker))
+		return Plugin_Handled;
+
+	return Plugin_Continue;
+}
+
 // Only right click attack for chicken
 public Action OnPlayerRunCmd(int client, int &buttons, int &impulse, float vel[3], float angles[3], int &weapon) 
 {
 	if (g_bIsDuckHunt && (GetClientTeam(client) == CS_TEAM_T) && IsClientInGame(client) && IsPlayerAlive(client))
 	{
-		if (buttons & IN_ATTACK)
-		{
-			return Plugin_Handled;
-		}
-		if(!gc_bFlyMode.BoolValue)
+		if (!gc_bFlyMode.BoolValue)
 		{
 			if (GetEntityMoveType(client) == MOVETYPE_LADDER)
 			{
@@ -976,7 +1063,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -985,16 +1072,21 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsDuckHunt = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_now");
 		PrintCenterTextAll("%t", "duckhunt_now_nc");
 	}
 	else
@@ -1003,7 +1095,7 @@ void StartEventRound(bool thisround)
 		g_bStartDuckHunt = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_next");
 		PrintCenterTextAll("%t", "duckhunt_next_nc");
 	}
 }
@@ -1027,8 +1119,11 @@ void PrepareDay(bool thisround)
 		int RandomCT = 0;
 		int RandomT = 0;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -1054,8 +1149,11 @@ void PrepareDay(bool thisround)
 			g_fPosT[2] = g_fPosT[2] + 5;
 			g_fPosCT[2] = g_fPosCT[2] + 5;
 
-			for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsClientInGame(i))
+					continue;
+
 				if (!gp_bSmartJailDoors || (SJD_IsCurrentMapConfigured() != true))
 				{
 					TeleportEntity(i, g_fPosCT, NULL_VECTOR, NULL_VECTOR);
@@ -1072,11 +1170,16 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		if (!IsClientInGame(i))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		EnableWeaponFire(i, false);
 
 		CreateInfoPanel(i);
 
@@ -1086,9 +1189,12 @@ void PrepareDay(bool thisround)
 		{
 			int HunterHP = gc_iHunterHP.IntValue;
 			int difference = (GetAlivePlayersCount(CS_TEAM_T) - GetAlivePlayersCount(CS_TEAM_CT));
-			
-			if (difference > 0) HunterHP = HunterHP + (gc_iHunterHPincrease.IntValue * difference);
-			
+
+			if (difference > 0)
+			{
+				HunterHP += (gc_iHunterHPincrease.IntValue * difference);
+			}
+
 			SetEntityHealth(i, HunterHP);
 			GivePlayerItem(i, "weapon_nova");
 		}
@@ -1123,9 +1229,9 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -1153,7 +1259,7 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -1209,14 +1315,17 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iTruceTime--;
+
 	if (g_iTruceTime > 0)
 	{
-		g_iTruceTime--;
-
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				if (GetClientTeam(i) == CS_TEAM_CT)
 				{
 					SetEntityMoveType(i, MOVETYPE_WALK);
@@ -1229,11 +1338,16 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (GetClientTeam(i) == CS_TEAM_T)
 		{
@@ -1253,7 +1367,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "duckhunt_start_nc");
 
-	CPrintToChatAll("%t %t", "duckhunt_tag", "duckhunt_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "duckhunt_start");
 
 	g_hTimerTruce = null;
 
@@ -1268,8 +1382,11 @@ public Action Timer_StartEvent(Handle timer)
 // Delay Set model for sm_skinchooser
 public Action Timer_SetModel(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		if (GetClientTeam(i) == CS_TEAM_CT)
 		{
 			GetEntPropString(i, Prop_Data, "m_ModelName", g_sModelPathCTPrevious[i], sizeof(g_sModelPathCTPrevious[]));
@@ -1286,8 +1403,11 @@ public Action Timer_SetModel(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) 
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 

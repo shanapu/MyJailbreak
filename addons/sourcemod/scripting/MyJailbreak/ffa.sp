@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: olegtsvetkov
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -39,6 +40,7 @@
 #include <hosties>
 #include <lastrequest>
 #include <warden>
+#include <myjbwarden>
 #include <myjailbreak>
 #include <myweapons>
 #include <smartjaildoors>
@@ -55,6 +57,7 @@ bool g_bIsRoundEnd = true;
 
 // Plugin bools
 bool gp_bWarden;
+bool gp_bMyJBWarden;
 bool gp_bHosties;
 bool gp_bSmartJailDoors;
 bool gp_bMyJailbreak;
@@ -62,6 +65,7 @@ bool gp_bMyWeapons;
 
 // Console Variables
 ConVar gc_bPlugin;
+ConVar gc_sPrefix;
 ConVar gc_bSetW;
 ConVar gc_bSetA;
 ConVar gc_bSetABypassCooldown;
@@ -98,7 +102,6 @@ int g_iVoteCount;
 int g_iRound;
 int g_iMaxRound;
 int g_iTsLR;
-int g_iCollision_Offset;
 
 // Floats
 float g_fPos[3];
@@ -108,10 +111,10 @@ Handle g_hTimerTruce;
 Handle g_hTimerBeacon;
 
 // Strings
+char g_sPrefix[64];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sEventsLogFile[PLATFORM_MAX_PATH];
-char g_sAdminFlag[64];
 char g_sOverlayStartPath[256];
 
 // Info
@@ -141,6 +144,7 @@ public void OnPluginStart()
 
 	AutoExecConfig_CreateConVar("sm_ffa_version", MYJB_VERSION, "The version of this MyJailbreak SourceMod plugin", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	gc_bPlugin = AutoExecConfig_CreateConVar("sm_ffa_enable", "1", "0 - disabled, 1 - enable this MyJailbreak SourceMod plugin", _, true, 0.0, true, 1.0);
+	gc_sPrefix = AutoExecConfig_CreateConVar("sm_ffa_prefix", "[{green}MyJB.FFA{default}]", "Set your chat prefix for this plugin.");
 	gc_sCustomCommandVote = AutoExecConfig_CreateConVar("sm_ffa_cmds_vote", "freeforall, dm, deathmatch", "Set your custom chat command for Event voting(!ffa (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_sCustomCommandSet = AutoExecConfig_CreateConVar("sm_ffa_cmds_set", "sffa, sfreeforall, sdm", "Set your custom chat command for set Event(!ffa (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 	gc_bSetW = AutoExecConfig_CreateConVar("sm_ffa_warden", "1", "0 - disabled, 1 - allow warden to set ffa round", _, true, 0.0, true, 1.0);
@@ -176,15 +180,11 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
-	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
+	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
 	// FindConVar
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
-	gc_sAdminFlag.GetString(g_sAdminFlag, sizeof(g_sAdminFlag));
-
-	// Offsets
-	g_iCollision_Offset = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
 	// Logs
 	SetLogFile(g_sEventsLogFile, "Events", "MyJailbreak");
@@ -210,15 +210,16 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			PrecacheSoundAnyDownload(g_sSoundStartPath);
 		}
 	}
-	else if (convar == gc_sAdminFlag)
+	else if (convar == gc_sPrefix)
 	{
-		strcopy(g_sAdminFlag, sizeof(g_sAdminFlag), newValue);
+		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
 	}
 }
 
 public void OnAllPluginsLoaded()
 {
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
@@ -228,47 +229,71 @@ public void OnAllPluginsLoaded()
 public void OnLibraryRemoved(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = false;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = false;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = false;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = false;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = false;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
 {
 	if (StrEqual(name, "warden"))
+	{
 		gp_bWarden = true;
-
-	if (StrEqual(name, "lastrequest"))
+	}
+	else if (StrEqual(name, "myjbwarden"))
+	{
+		gp_bMyJBWarden = true;
+	}
+	else if (StrEqual(name, "lastrequest"))
+	{
 		gp_bHosties = true;
-
-	if (StrEqual(name, "smartjaildoors"))
+	}
+	else if (StrEqual(name, "smartjaildoors"))
+	{
 		gp_bSmartJailDoors = true;
-
-	if (StrEqual(name, "myjailbreak"))
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
 		gp_bMyJailbreak = true;
-
-	if (StrEqual(name, "myweapons"))
+	}
+	else if (StrEqual(name, "myweapons"))
+	{
 		gp_bMyWeapons = true;
+	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
+	// FindConVar
 	g_iTruceTime = gc_iTruceTime.IntValue;
 	g_iCoolDown = gc_iCooldownStart.IntValue + 1;
 	g_iMaxRound = gc_iRounds.IntValue;
 
-	// FindConVar
+	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
+	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
+
 	if (gp_bHosties)
 	{
 		g_iTerrorForLR = FindConVar("sm_hosties_lr_ts_max");
@@ -306,11 +331,17 @@ public void OnConfigsExecuted()
 		}
 	}
 
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_AddEventDay("ffa");
 }
 
 public void OnPluginEnd()
 {
+	if (!gp_bMyJailbreak)
+		return;
+
 	MyJailbreak_RemoveEventDay("ffa");
 }
 
@@ -325,7 +356,8 @@ public Action Command_Setffa(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_disabled");
+
 		return Plugin_Handled;
 	}
 
@@ -334,26 +366,26 @@ public Action Command_Setffa(int client, int args)
 		StartEventRound(gc_bBeginSetVW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
 			LogToFileEx(g_sEventsLogFile, "Event ffa was started by groupvoting");
 		}
 	}
-	else if (CheckVipFlag(client, g_sAdminFlag)) // Called by admin/VIP
+	else if (MyJailbreak_CheckVIPFlags(client, "sm_ffa_flag", gc_sAdminFlag, "sm_ffa_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_setbyadmin");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_setbyadmin");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -364,23 +396,23 @@ public Action Command_Setffa(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0 && !gc_bSetABypassCooldown.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetA.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -391,19 +423,22 @@ public Action Command_Setffa(int client, int args)
 	{
 		if (!warden_iswarden(client))
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
+
 			return Plugin_Handled;
 		}
 		
 		if (!gc_bSetW.BoolValue)
 		{
-			CReplyToCommand(client, "%t %t", "warden_tag", "ffa_setbywarden");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_setbywarden");
+
 			return Plugin_Handled;
 		}
 
 		if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 		{
-			CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_minplayer");
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_minplayer");
+
 			return Plugin_Handled;
 		}
 
@@ -414,23 +449,23 @@ public Action Command_Setffa(int client, int args)
 
 			if (!StrEqual(EventDay, "none", false))
 			{
-				CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_progress", EventDay);
+				CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_progress", EventDay);
+
 				return Plugin_Handled;
 			}
 		}
 
 		if (g_iCoolDown > 0)
 		{
-			CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_wait", g_iCoolDown);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_wait", g_iCoolDown);
+
 			return Plugin_Handled;
 		}
 
 		StartEventRound(gc_bBeginSetW.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -439,7 +474,7 @@ public Action Command_Setffa(int client, int args)
 	}
 	else
 	{
-		CReplyToCommand(client, "%t %t", "warden_tag", "warden_notwarden");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 	}
 
 	return Plugin_Handled;
@@ -450,19 +485,22 @@ public Action Command_VoteFFA(int client, int args)
 {
 	if (!gc_bPlugin.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_disabled");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_disabled");
+
 		return Plugin_Handled;
 	}
 
 	if (!gc_bVote.BoolValue)
 	{
-		CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_voting");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_voting");
+
 		return Plugin_Handled;
 	}
 
 	if (GetTeamClientCount(CS_TEAM_CT) == 0 || GetTeamClientCount(CS_TEAM_T) == 0)
 	{
-		CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_minplayer");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_minplayer");
+
 		return Plugin_Handled;
 	}
 
@@ -473,14 +511,16 @@ public Action Command_VoteFFA(int client, int args)
 
 		if (!StrEqual(EventDay, "none", false))
 		{
-			CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_progress", EventDay);
+			CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_progress", EventDay);
+
 			return Plugin_Handled;
 		}
 	}
 
 	if (g_iCoolDown > 0)
 	{
-		CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_wait", g_iCoolDown);
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_wait", g_iCoolDown);
+
 		return Plugin_Handled;
 	}
 
@@ -489,7 +529,8 @@ public Action Command_VoteFFA(int client, int args)
 
 	if (StrContains(g_sHasVoted, steamid, true) != -1)
 	{
-		CReplyToCommand(client, "%t %t", "ffa_tag", "ffa_voted");
+		CReplyToCommand(client, "%s %t", g_sPrefix, "ffa_voted");
+
 		return Plugin_Handled;
 	}
 
@@ -504,9 +545,7 @@ public Action Command_VoteFFA(int client, int args)
 		StartEventRound(gc_bBeginSetV.BoolValue);
 
 		if (!gp_bMyJailbreak)
-		{
 			return Plugin_Handled;
-		}
 
 		if (MyJailbreak_ActiveLogging())
 		{
@@ -515,7 +554,7 @@ public Action Command_VoteFFA(int client, int args)
 	}
 	else
 	{
-		CPrintToChatAll("%t %t", "ffa_tag", "ffa_need", Missing, client);
+		CPrintToChatAll("%s %t", g_sPrefix, "ffa_need", Missing, client);
 	}
 
 	return Plugin_Handled;
@@ -569,11 +608,12 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 	{
 		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
 		{
-			SetEntData(i, g_iCollision_Offset, 0, 4, true);
+			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		}
 
 		delete g_hTimerTruce;
 		delete g_hTimerBeacon;
+		g_iTruceTime = gc_iTruceTime.IntValue;
 
 		int winner = event.GetInt("winner");
 		if (winner == 2)
@@ -599,9 +639,9 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				SetCvar("sm_hosties_lr", 1);
 			}
 
-			if (gp_bWarden)
+			if (gp_bMyJBWarden)
 			{
-				SetCvar("sm_warden_enable", 1);
+				warden_enable(true);
 			}
 
 			if (gp_bMyWeapons)
@@ -618,17 +658,20 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 			}
 
-			CPrintToChatAll("%t %t", "ffa_tag", "ffa_end");
+			CPrintToChatAll("%s %t", g_sPrefix, "ffa_end");
 		}
 	}
 	if (g_bStartFFA)
 	{
-		for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsClientInGame(i))
+				continue;
+
 			CreateInfoPanel(i);
 		}
 
-		CPrintToChatAll("%t %t", "ffa_tag", "ffa_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "ffa_next");
 		PrintCenterTextAll("%t", "ffa_next_nc");
 	}
 }
@@ -695,9 +738,12 @@ public void OnAvailableLR(int Announced)
 
 void ResetEventDay()
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 0, 4, true);
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 
 		StripAllPlayerWeapons(i);
 
@@ -711,10 +757,13 @@ void ResetEventDay()
 		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
 	}
 
 	delete g_hTimerBeacon;
 	delete g_hTimerTruce;
+	g_iTruceTime = gc_iTruceTime.IntValue;
 
 	if (g_iRound == g_iMaxRound)
 	{
@@ -732,9 +781,9 @@ void ResetEventDay()
 			MyWeapons_AllowTeam(CS_TEAM_CT, true);
 		}
 
-		if (gp_bWarden)
+		if (gp_bMyJBWarden)
 		{
-			SetCvar("sm_warden_enable", 1);
+			warden_enable(true);
 		}
 
 		if (gp_bMyJailbreak)
@@ -745,7 +794,7 @@ void ResetEventDay()
 			MyJailbreak_SetEventDayRunning(false, 0);
 		}
 
-		CPrintToChatAll("%t %t", "ffa_tag", "ffa_end");
+		CPrintToChatAll("%s %t", g_sPrefix, "ffa_end");
 	}
 }
 
@@ -768,7 +817,7 @@ void StartEventRound(bool thisround)
 		MyJailbreak_SetEventDayPlanned(true);
 	}
 
-	if(thisround && g_bIsRoundEnd)
+	if (thisround && g_bIsRoundEnd)
 	{
 		thisround = false;
 	}
@@ -777,16 +826,21 @@ void StartEventRound(bool thisround)
 	{
 		g_bIsFFA = true;
 
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, true))
+				continue;
+
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+			EnableWeaponFire(i, false);
 
 			SetEntityMoveType(i, MOVETYPE_NONE);
 		}
 
 		CreateTimer(3.0, Timer_PrepareEvent);
 
-		CPrintToChatAll("%t %t", "ffa_tag", "ffa_now");
+		CPrintToChatAll("%s %t", g_sPrefix, "ffa_now");
 		PrintCenterTextAll("%t", "ffa_now_nc");
 	}
 	else
@@ -794,7 +848,7 @@ void StartEventRound(bool thisround)
 		g_bStartFFA = true;
 		g_iCoolDown++;
 
-		CPrintToChatAll("%t %t", "ffa_tag", "ffa_next");
+		CPrintToChatAll("%s %t", g_sPrefix, "ffa_next");
 		PrintCenterTextAll("%t", "ffa_next_nc");
 	}
 }
@@ -821,8 +875,11 @@ void PrepareDay(bool thisround)
 	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
 	{
 		int RandomCT = 0;
-		for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+		for (int i = 1; i <= MaxClients; i++)
 		{
+			if (!IsValidClient(i, true, false))
+				continue;
+
 			if (GetClientTeam(i) == CS_TEAM_CT)
 			{
 				CS_RespawnPlayer(i);
@@ -833,8 +890,11 @@ void PrepareDay(bool thisround)
 
 		if (RandomCT)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				GetClientAbsOrigin(RandomCT, g_fPos);
 				
 				g_fPos[2] = g_fPos[2] + 5;
@@ -844,11 +904,16 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		SetEntData(i, g_iCollision_Offset, 2, 4, true);
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 
 		SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+
+		EnableWeaponFire(i, false);
 
 		SetEntityMoveType(i, MOVETYPE_NONE);
 
@@ -870,9 +935,9 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	if (gp_bWarden)
+	if (gp_bMyJBWarden)
 	{
-		SetCvar("sm_warden_enable", 0);
+		warden_enable(false);
 	}
 
 	if (gp_bHosties)
@@ -900,7 +965,7 @@ void PrepareDay(bool thisround)
 		}
 	}
 
-	CPrintToChatAll("%t %t", "ffa_tag", "ffa_rounds", g_iRound, g_iMaxRound);
+	CPrintToChatAll("%s %t", g_sPrefix, "ffa_rounds", g_iRound, g_iMaxRound);
 
 	GameRules_SetProp("m_iRoundTime", gc_iRoundTime.IntValue*60, 4, 0, true);
 
@@ -955,14 +1020,17 @@ void CreateInfoPanel(int client)
 // Start Timer
 public Action Timer_StartEvent(Handle timer)
 {
+	g_iTruceTime--;
+
 	if (g_iTruceTime > 0)
 	{
-		g_iTruceTime--;
-
 		if (g_iTruceTime == gc_iTruceTime.IntValue-3)
 		{
-			for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+			for (int i = 1; i <= MaxClients; i++)
 			{
+				if (!IsValidClient(i, true, false))
+					continue;
+
 				SetEntityMoveType(i, MOVETYPE_WALK);
 			}
 		}
@@ -972,11 +1040,16 @@ public Action Timer_StartEvent(Handle timer)
 		return Plugin_Continue;
 	}
 
-	g_iTruceTime = gc_iTruceTime.IntValue;
-
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		SetEntProp(i, Prop_Data, "m_takedamage", 2, 1);
+
+		EnableWeaponFire(i, true);
+
+		SetEntityMoveType(i, MOVETYPE_WALK);
 
 		if (gc_bOverlays.BoolValue)
 		{
@@ -996,7 +1069,7 @@ public Action Timer_StartEvent(Handle timer)
 
 	PrintCenterTextAll("%t", "ffa_start_nc");
 
-	CPrintToChatAll("%t %t", "ffa_tag", "ffa_start");
+	CPrintToChatAll("%s %t", g_sPrefix, "ffa_start");
 
 	g_hTimerTruce = null;
 
@@ -1006,8 +1079,11 @@ public Action Timer_StartEvent(Handle timer)
 // Beacon Timer
 public Action Timer_BeaconOn(Handle timer)
 {
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, false)) 
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, false))
+			continue;
+
 		MyJailbreak_BeaconOn(i, 2.0);
 	}
 

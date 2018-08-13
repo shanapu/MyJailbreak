@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: Hexer10
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -90,7 +91,7 @@ public Action Command_FriendlyFire(int client, int args)
 			{
 				SetCvar("mp_teammates_are_enemies", 0);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
-				CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_ffisoff");
 
 				if (Cvar_tg_team_none_attack != null)
 				{
@@ -100,7 +101,7 @@ public Action Command_FriendlyFire(int client, int args)
 					Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
 				}
 			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffison");
+			else CPrintToChatAll("%s %t", g_sPrefix, "warden_ffison");
 		}
 		else
 		{
@@ -108,7 +109,7 @@ public Action Command_FriendlyFire(int client, int args)
 			{
 				SetCvar("mp_teammates_are_enemies", 1);
 				g_bFF = FindConVar("mp_teammates_are_enemies");
-				CPrintToChatAll("%t %t", "warden_tag", "warden_ffison");
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_ffison");
 
 				if (Cvar_tg_team_none_attack != null)
 				{
@@ -117,7 +118,7 @@ public Action Command_FriendlyFire(int client, int args)
 					Cvar_tg_ct_friendlyfire.IntValue = 1;
 				}
 			}
-			else CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+			else CPrintToChatAll("%s %t", g_sPrefix, "warden_ffisoff");
 		}
 	}
 
@@ -131,7 +132,7 @@ public Action Command_FriendlyFire(int client, int args)
 
 public void FriendlyFire_Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast)
 {
-	if (!gc_bPlugin.BoolValue)
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
 		return;
 
 	if (!g_bFF.BoolValue)
@@ -146,22 +147,22 @@ public void FriendlyFire_Event_PlayerDeath(Event event, const char[] name, bool 
 
 public void FriendlyFire_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
-	if (gc_bPlugin.BoolValue)
-	{
-		if (g_bFF.BoolValue)
-		{
-			SetCvar("mp_teammates_are_enemies", 0);
-			g_bFF = FindConVar("mp_teammates_are_enemies");
-			CPrintToChatAll("%t %t", "warden_tag", "warden_ffisoff");
+	if (!gc_bPlugin.BoolValue || !g_bEnabled)
+		return;
 
-			if (Cvar_tg_team_none_attack != null)
-			{
-				// Replace the Cvar Value with old value
-				Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
-				Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
-				Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
-			}
-		}
+	if (!g_bFF.BoolValue)
+		return;
+
+	SetCvar("mp_teammates_are_enemies", 0);
+	g_bFF = FindConVar("mp_teammates_are_enemies");
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_ffisoff");
+
+	if (Cvar_tg_team_none_attack != null)
+	{
+		// Replace the Cvar Value with old value
+		Cvar_tg_team_none_attack.IntValue = OldCvar_tg_team_none_attack;
+		Cvar_tg_cvar_friendlyfire.IntValue = OldCvar_tg_cvar_friendlyfire;
+		Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
 	}
 }
 

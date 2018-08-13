@@ -99,7 +99,10 @@ public void Capitulation_OnSettingChanged(Handle convar, const char[] oldValue, 
 	if (convar == gc_sSoundCapitulationPath)
 	{
 		strcopy(g_sSoundCapitulationPath, sizeof(g_sSoundCapitulationPath), newValue);
-		if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+		if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+		}
 	}
 }
 
@@ -126,29 +129,29 @@ public Action Command_Capitulation(int client, int args)
 							g_bIsRequest = true;
 							g_hTimerRequest = CreateTimer (gc_fCapitulationTime.FloatValue, Timer_IsRequest);
 							g_bCapitulated[client] = true;
-							CPrintToChatAll("%t %t", "request_tag", "request_capitulation", client);
+							CPrintToChatAll("%s %t", g_sPrefix, "request_capitulation", client);
 							
 							float DoubleTime = (gc_fRebelTime.FloatValue * 2);
-							g_hTimerRebel[client] = CreateTimer(DoubleTime, Timer_RebelNoAction, client);
+							g_hTimerRebel[client] = CreateTimer(DoubleTime, Timer_RebelNoAction, GetClientUserId(client));
 						// 	StripAllPlayerWeapons(client);
 							for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) Menu_CapitulationMenu(i);
 							if (gc_bSounds.BoolValue)EmitSoundToAllAny(g_sSoundCapitulationPath);
 						}
-						else CReplyToCommand(client, "%t %t", "request_tag", "request_processing");
+						else CReplyToCommand(client, "%s %t", g_sPrefix, "request_processing");
 					}
 					else if (!gc_bCapitulationAccept.BoolValue)
 					{
 						StripAllPlayerWeapons(client);
 						SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
-						g_hTimerCapitulation[client] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, client);
-						CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", client);
+						g_hTimerCapitulation[client] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, GetClientUserId(client));
+						CPrintToChatAll("%s %t", g_sPrefix, "request_capitulated", client);
 						ChangeRebelStatus(client, false);
 					}
-					else CReplyToCommand(client, "%t %t", "request_tag", "warden_noexist");
+					else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_noexist");
 				}
-				else CReplyToCommand(client, "%t %t", "request_tag", "request_alreadycapitulated");
+				else CReplyToCommand(client, "%s %t", g_sPrefix, "request_alreadycapitulated");
 			}
-			else CReplyToCommand(client, "%t %t", "request_tag", "request_notalivect");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "request_notalivect");
 		}
 	}
 	return Plugin_Handled;
@@ -176,7 +179,10 @@ public void Capitulation_Event_RoundStart(Event event, char[] name, bool dontBro
 
 public void Capitulation_OnMapStart()
 {
-	if (gc_bSounds.BoolValue) PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+	if (gc_bSounds.BoolValue)
+		{
+			PrecacheSoundAnyDownload(g_sSoundCapitulationPath);
+		}
 }
 
 public void Capitulation_OnConfigsExecuted()
@@ -238,7 +244,7 @@ public Action Capitulation_OnTakedamage(int victim, int &attacker, int &inflicto
 	{
 		if ((g_bCapitulated[attacker] || g_bHasCapitulated[attacker]) && gc_bCapitulationDamage.BoolValue && !IsClientInLastRequest(attacker))
 		{
-			CPrintToChat(attacker, "%t %t", "request_tag", "request_nodamage");
+			CPrintToChat(attacker, "%s %t", g_sPrefix, "request_nodamage");
 			
 			return Plugin_Handled;
 		}
@@ -298,8 +304,8 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				g_hTimerRebel[i] = null;
 				StripAllPlayerWeapons(i);
 				SetEntityRenderColor(client, gc_iCapitulationColorRed.IntValue, gc_iCapitulationColorGreen.IntValue, gc_iCapitulationColorBlue.IntValue, 255);
-				g_hTimerCapitulation[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, i);
-				CPrintToChatAll("%t %t", "warden_tag", "request_capitulated", i, client);
+				g_hTimerCapitulation[i] = CreateTimer(gc_fCapitulationTime.FloatValue, Timer_GiveKnifeCapitulated, GetClientUserId(i));
+				CPrintToChatAll("%s %t", g_sPrefix, "request_capitulated", i, client);
 				ChangeRebelStatus(i, false);
 			}
 		}
@@ -316,7 +322,7 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 				if (g_hTimerRebel[i] != null)
 					KillTimer(g_hTimerRebel[i]);
 				g_hTimerRebel[i] = null;
-				CPrintToChatAll("%t %t", "warden_tag", "request_noaccepted", i, client);
+				CPrintToChatAll("%s %t", g_sPrefix, "request_noaccepted", i, client);
 				ChangeRebelStatus(i, true);
 			}
 		}
@@ -327,20 +333,24 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
                    TIMER
 ******************************************************************************/
 
-public Action Timer_GiveKnifeCapitulated(Handle timer, any client)
+public Action Timer_GiveKnifeCapitulated(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client,true,false))
 	{
 		GivePlayerItem(client, "weapon_knife");
-		CPrintToChat(client, "%t %t", "request_tag", "request_knifeback");
+		CPrintToChat(client, "%s %t", g_sPrefix, "request_knifeback");
 		SetEntityRenderColor(client, 255, 255, 255, 255);
 	}
 
 	g_hTimerCapitulation[client] = null;
 }
 
-public Action Timer_RebelNoAction(Handle timer, any client)
+public Action Timer_RebelNoAction(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+
 	if (IsValidClient(client,true,false))
 	{
 		SetEntityRenderColor(client, 255, 0, 0, 255);
