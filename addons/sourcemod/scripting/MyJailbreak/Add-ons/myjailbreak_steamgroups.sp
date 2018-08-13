@@ -130,7 +130,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			if (!IsClientInGame(i))
 				continue;
 
-			SteamWorks_GetUserGroupStatus(client, StringToInt(g_sGroupRatio));
+			SteamWorks_GetUserGroupStatus(i, StringToInt(g_sGroupRatio));
 		}
 	}
 	else if (convar == gc_sGroupWarden)
@@ -142,7 +142,7 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 			if (!IsClientInGame(i))
 				continue;
 
-			SteamWorks_GetUserGroupStatus(client, StringToInt(g_sGroupWarden));
+			SteamWorks_GetUserGroupStatus(i, StringToInt(g_sGroupWarden));
 		}
 	}
 }
