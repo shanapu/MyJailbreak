@@ -3,14 +3,8 @@ echo.
 echo MyJailbreak compile script
 echo.
 echo.
-echo.
-echo.
-echo.
 echo. Check if 'plugins/MyJailbreak/' folder exist.
 if not exist "../plugins/MyJailbreak/" mkdir "../plugins/MyJailbreak/"
-echo.
-echo.
-echo.
 echo.
 echo.
 echo Compile: MyJailbreak Core
@@ -42,9 +36,6 @@ spcomp MyJailbreak/ratio.sp -o../plugins/MyJailbreak/ratio.smx
 echo.
 echo Compile: MyJailbreak Icons
 spcomp MyJailbreak/icons.sp -o../plugins/MyJailbreak/icons.smx 
-echo.
-echo.
-echo.
 echo.
 echo.
 echo Compile: MyJailbreak Event Days
@@ -111,14 +102,8 @@ echo Compile: MyJailbreak Event Day One in the chamber
 spcomp MyJailbreak/oneinthechamber.sp -o../plugins/MyJailbreak/oneinthechamber.smx 
 echo.
 echo.
-echo.
-echo.
-echo.
 echo. Check if 'plugins/MyJailbreak/disabled' folder exist.
 if not exist "../plugins/MyJailbreak/disabled" mkdir "../plugins/MyJailbreak/disabled"
-echo.
-echo.
-echo.
 echo.
 echo.
 echo Compile: MyJailbreak  Add-ons
@@ -138,6 +123,9 @@ spcomp MyJailbreak/Add-ons/ratio_teambans.sp -o../plugins/MyJailbreak/disabled/r
 echo.
 echo Compile: MyJailbreak Add-on Support Steamrep
 spcomp MyJailbreak/Add-ons/ratio_steamrep.sp -o../plugins/MyJailbreak/disabled/ratio_steamrep.smx  
+echo.
+echo Compile: MyJailbreak Add-on Support hl gangs
+spcomp MyJailbreak/Add-ons/myjailbreak_gangs.sp -o../plugins/MyJailbreak/disabled/myjailbreak_gangs.smx  
 echo.
 echo Compile: MyJailbreak Add-on Support VIP core
 spcomp MyJailbreak/Add-ons/ratio_vipcore.sp -o../plugins/MyJailbreak/disabled/ratio_vipcore.smx  
@@ -180,4 +168,14 @@ spcomp MyJailbreak/Add-ons/warden_zephstore_paperclips.sp -o../plugins/MyJailbre
 echo.
 echo Compile: MyJailbreak Add-on Support Zeph store freeday
 spcomp MyJailbreak/Add-ons/warden_zephstore_freeday.sp -o../plugins/MyJailbreak/disabled/warden_zephstore_freeday.smx
+echo.
+echo Compile: MyJailbreak Add-on add custom menu item
+spcomp MyJailbreak/Add-ons/menu_custom.sp -o../plugins/MyJailbreak/disabled/menu_custom.smx
+echo.
+echo Compile: MyJailbreak Add-on toggles for event days
+spcomp MyJailbreak/Add-ons/eventday_toggle.sp -o../plugins/MyJailbreak/disabled/eventday_toggle.smx
+echo.
+echo Compile: MyJailbreak Add-on Support Voiceannouce_ex
+spcomp MyJailbreak/Add-ons/ratio_voiceannounce_ex.sp -o../plugins/MyJailbreak/disabled/ratio_voiceannounce_ex.smx
+echo.
 pause
