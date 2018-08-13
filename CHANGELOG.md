@@ -105,7 +105,7 @@
     *  new template plugin - Add-ons/template_vip_forward.sp - example to grand vip for different features through different "Vip"-types
 *  stock CheckVipFlag has been replaced with new native MyJailbreak_CheckVIPFlags
 *  Added Code contribution guidelines - read before do a pull request
-*  many code style adjustments - check https://github.com/shanapu/MyJailbreak/blob/dev/Code_Contribution_Guidelines.md
+*  many code style adjustments - check https://github.com/shanapu/MyJailbreak/blob/dev/CONTRIBUTING.md
   
   
   
