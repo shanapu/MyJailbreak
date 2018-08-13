@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:19 UTC
+// Date: 2018-08-13 17:29:22 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -123,6 +123,11 @@
 		"pl"		"Nie ma ostatniego zyczenia!"
 	}
 
+	"war_info_line6"
+	{
+		"pl"		"Każdy może iść wszędzie tam, gdzie chce"
+	}
+
 	"war_info_line7"
 	{
 		"pl"		"Nie badz DUPKIEM!"
@@ -146,6 +151,16 @@
 	"war_name"
 	{
 		"pl"		"Wojna"
+	}
+
+	"war_now_nc"
+	{
+		"pl"		"Teraz rozpoczyna się wojna"
+	}
+
+	"war_now"
+	{
+		"pl"		"Teraz rozpoczyna się wojna {purple}  {default}."
 	}
 
 }

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:17 UTC
+// Date: 2018-08-13 17:29:27 UTC
 // Language: Polish (pl)
 // 
 // To view other translations for this plugin, please visit:
@@ -146,6 +146,11 @@
 	"ffa_now_nc"
 	{
 		"pl"		"Rozpoczęła się runda FFA."
+	}
+
+	"ffa_now"
+	{
+		"pl"		"Teraz rozpoczyna się ffa  {purple}  {default}"
 	}
 
 }

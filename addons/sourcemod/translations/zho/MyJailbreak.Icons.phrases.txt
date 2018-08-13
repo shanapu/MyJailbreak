@@ -1,0 +1,21 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:34 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/298
+//
+"Phrases"
+{
+
+	"icons_on"
+	{
+		"zho"		"圖案 {purple}以開啟!"
+	}
+
+	"icons_off"
+	{
+		"zho"		"圖案 {purple}已關閉"
+	}
+
+}

@@ -1,0 +1,41 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:20 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/178
+//
+"Phrases"
+{
+
+	"warden_stopcountdown_nc"
+	{
+		"zho"		"在 {1} 秒後結束/停止!"
+	}
+
+	"warden_startstopcountdownhint_nc"
+	{
+		"zho"		"注意! 典獄長開始了 開始 / 倒數計時!"
+	}
+
+	"warden_no"
+	{
+		"zho"		"否"
+	}
+
+	"warden_painteroff"
+	{
+		"zho"		"噴漆工具 {purple}已關閉"
+	}
+
+	"warden_rebel_unmark"
+	{
+		"zho"		"從逃犯中移除玩家"
+	}
+
+	"warden_deputy_ctsonly"
+	{
+		"zho"		"只有 {purple}反恐小組{default} 可以當副典獄長!"
+	}
+
+}

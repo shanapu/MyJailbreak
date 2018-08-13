@@ -1,0 +1,416 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:23 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/180
+//
+"Phrases"
+{
+
+	"menu_info"
+	{
+		"zho"		"若要打開監獄選單,在聊天頻道輸入!menu"
+	}
+
+	"menu_info_title"
+	{
+		"zho"		"監獄選單"
+	}
+
+	"menu_countdown"
+	{
+		"zho"		"開始倒數計時"
+	}
+
+	"menu_opencell"
+	{
+		"zho"		"開啟牢房大門"
+	}
+
+	"menu_seteventdays"
+	{
+		"zho"		"設定活動日"
+	}
+
+	"menu_voteeventdays"
+	{
+		"zho"		"舉行活動日投票"
+	}
+
+	"menu_math"
+	{
+		"zho"		"開始數學測驗"
+	}
+
+	"menu_guns"
+	{
+		"zho"		"武器選單"
+	}
+
+	"menu_laser"
+	{
+		"zho"		"雷射筆選單"
+	}
+
+	"menu_noblock"
+	{
+		"zho"		"切換防卡人"
+	}
+
+	"menu_sparks"
+	{
+		"zho"		"切換子彈火花"
+	}
+
+	"menu_extend"
+	{
+		"zho"		"延長回合時間"
+	}
+
+	"menu_ffon"
+	{
+		"zho"		"為囚犯開啟隊友傷害"
+	}
+
+	"menu_ffoff"
+	{
+		"zho"		"為囚犯關閉隊友傷害"
+	}
+
+	"menu_randomdead"
+	{
+		"zho"		"殺死一個隨機囚犯"
+	}
+
+	"menu_unwarden"
+	{
+		"zho"		"從典獄長退休"
+	}
+
+	"menu_getwarden"
+	{
+		"zho"		"成為典獄長"
+	}
+
+	"menu_joint"
+	{
+		"zho"		"成為囚犯"
+	}
+
+	"menu_check"
+	{
+		"zho"		"檢查逃犯"
+	}
+
+	"menu_lr"
+	{
+		"zho"		"最後請求"
+	}
+
+	"menu_removewarden"
+	{
+		"zho"		"解除典獄長"
+	}
+
+	"menu_setwarden"
+	{
+		"zho"		"指派新典獄長"
+	}
+
+	"menu_rules"
+	{
+		"zho"		"規則"
+	}
+
+	"menu_joinct"
+	{
+		"zho"		"成為警衛"
+	}
+
+	"menu_guardct"
+	{
+		"zho"		"加入警衛等候隊列 (!guard)"
+	}
+
+	"menu_request"
+	{
+		"zho"		"請求"
+	}
+
+	"menu_votewarden"
+	{
+		"zho"		"舉行典獄長革職投票"
+	}
+
+	"menu_event_Titlestart"
+	{
+		"zho"		"在下一回合開始活動"
+	}
+
+	"menu_event_Titlevote"
+	{
+		"zho"		"舉行活動日投票"
+	}
+
+	"menu_war"
+	{
+		"zho"		"戰鬥"
+	}
+
+	"menu_ffa"
+	{
+		"zho"		"大亂鬥"
+	}
+
+	"menu_zeus"
+	{
+		"zho"		"電擊槍日"
+	}
+
+	"menu_zombie"
+	{
+		"zho"		"殭屍日"
+	}
+
+	"menu_hide"
+	{
+		"zho"		"藏於黑暗之中"
+	}
+
+	"menu_suicidebomber"
+	{
+		"zho"		"自殺炸彈客"
+	}
+
+	"menu_catch"
+	{
+		"zho"		"123木頭人"
+	}
+
+	"menu_knifefight"
+	{
+		"zho"		"刀戰"
+	}
+
+	"menu_hebattle"
+	{
+		"zho"		"手榴彈戰鬥"
+	}
+
+	"menu_cowboy"
+	{
+		"zho"		"牛仔"
+	}
+
+	"menu_drunk"
+	{
+		"zho"		"酒醉日"
+	}
+
+	"menu_torch"
+	{
+		"zho"		"火把接力賽"
+	}
+
+	"menu_noscope"
+	{
+		"zho"		"No Scope"
+	}
+
+	"menu_duckhunt"
+	{
+		"zho"		"鴨子狩獵"
+	}
+
+	"menu_admin"
+	{
+		"zho"		"管理員選單"
+	}
+
+	"menu_mute"
+	{
+		"zho"		"靜音選單"
+	}
+
+	"menu_painter"
+	{
+		"zho"		"上漆選單"
+	}
+
+	"menu_closecell"
+	{
+		"zho"		"關閉牢房大門"
+	}
+
+	"menu_voting"
+	{
+		"zho"		"舉行活動日投票"
+	}
+
+	"menu_voteday"
+	{
+		"zho"		"開始活動日投票"
+	}
+
+	"menu_votingwon"
+	{
+		"zho"		"此次投票共有 {2} 票. 由 {3} 票的{green}{1} {default}勝出."
+	}
+
+	"menu_minplayer"
+	{
+		"zho"		"若要進行活動日投票,至少要有{purple}一位警衛, & 一位囚犯"
+	}
+
+	"menu_progress"
+	{
+		"zho"		"這個活動 {darkred}{1} {default} {purple}正在進行中!"
+	}
+
+	"menu_wait"
+	{
+		"zho"		"你必須再等待 {purple}{1}{default} 個回合才能進行活動日投票!"
+	}
+
+	"menu_votingdraw"
+	{
+		"zho"		"此投票以平手結束,活動日將隨機挑選."
+	}
+
+	"menu_disabled"
+	{
+		"zho"		"活動日投票目前 {purple}已關閉!"
+	}
+
+	"menu_playerfreeday"
+	{
+		"zho"		"給予玩家自由日"
+	}
+
+	"menu_teamgamesmenu"
+	{
+		"zho"		"團隊遊戲 - 選單"
+	}
+
+	"menu_teamgamesgames"
+	{
+		"zho"		"團隊遊戲 - 遊戲列表"
+	}
+
+	"menu_undeputy"
+	{
+		"zho"		"從副典獄長退休"
+	}
+
+	"menu_removedeputy"
+	{
+		"zho"		"移除副典獄長"
+	}
+
+	"menu_deputybecome"
+	{
+		"zho"		"成為副典獄長"
+	}
+
+	"menu_deputyset"
+	{
+		"zho"		"指派新副典獄長"
+	}
+
+	"menu_rebel"
+	{
+		"zho"		"解除/標記玩家為叛亂者"
+	}
+
+	"menu_count"
+	{
+		"zho"		"計算視線內囚犯數量"
+	}
+
+	"menu_jailshop"
+	{
+		"zho"		"打開監獄商店"
+	}
+
+	"menu_orders"
+	{
+		"zho"		"命令"
+	}
+
+	"menu_ghosts"
+	{
+		"zho"		"幽靈戰鬥"
+	}
+
+	"menu_votingcancel"
+	{
+		"zho"		"投票已取消, 因為活動日 {purple}{1}{default} 已被選擇!"
+	}
+
+	"menu_removequeue"
+	{
+		"zho"		"將玩家移出警衛等候選單"
+	}
+
+	"menu_endround"
+	{
+		"zho"		"強制回合結束"
+	}
+
+	"menu_clearqueue"
+	{
+		"zho"		"清除警衛等候隊列"
+	}
+
+	"menu_noevent"
+	{
+		"zho"		"無活動日"
+	}
+
+	"menu_joinspec"
+	{
+		"zho"		"前往觀察者"
+	}
+
+	"menu_gangs"
+	{
+		"zho"		"幫派選單"
+	}
+
+	"menu_teleport"
+	{
+		"zho"		"傳送門之戰"
+	}
+
+	"menu_armsrace"
+	{
+		"zho"		"軍備競賽"
+	}
+
+	"menu_playerremovefreeday"
+	{
+		"zho"		"撤除玩家的自由日"
+	}
+
+	"menu_oneinthechamber"
+	{
+		"zho"		"室內一人"
+	}
+
+	"menu_nolr"
+	{
+		"zho"		"切換以擱置的最後請求"
+	}
+
+	"menu_dealdamage"
+	{
+		"zho"		"傷害交換日"
+	}
+
+	"menu_freeday"
+	{
+		"zho"		"自由日"
+	}
+
+}

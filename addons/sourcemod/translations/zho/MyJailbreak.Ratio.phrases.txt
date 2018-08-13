@@ -1,0 +1,271 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:25 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/201
+//
+"Phrases"
+{
+
+	"ratio_auto"
+	{
+		"zho"		"你不能使用自動選擇來加入隊伍"
+	}
+
+	"ratio_fullqueue"
+	{
+		"zho"		"警衛已滿. 你在隊列中是第 {green}#{1}{default} 個."
+	}
+
+	"ratio_info_title"
+	{
+		"zho"		"警衛等候隊列"
+	}
+
+	"ratio_empty"
+	{
+		"zho"		"請求目前{green}是空的{default}"
+	}
+
+	"ratio_noct"
+	{
+		"zho"		"你必須成為{green}囚犯{default}才能加入隊列."
+	}
+
+	"ratio_find"
+	{
+		"zho"		"從隊列中尋找下一位警衛. {1:N} 是新的警衛."
+	}
+
+	"ratio_random"
+	{
+		"zho"		"警衛等候隊列目前為空. {green}{1} {default}被隨機挑選為警衛."
+	}
+
+	"ratio_novalid"
+	{
+		"zho"		"無法找到一位{green} 有效玩家{default} 加入到警衛. 請聯繫管理員."
+	}
+
+	"ratio_number"
+	{
+		"zho"		"你在等候對列中,你是第 {green}#{1}{default} 個"
+	}
+
+	"ratio_thxvip"
+	{
+		"zho"		"感謝你已成為 {darkred}VIP{default}! 你將會被移至 {green}等候隊列的前面!{default}"
+	}
+
+	"ratio_advip"
+	{
+		"zho"		"成為 {darkred}VIP{default} 將會被自動移到對列前面."
+	}
+
+	"ratio_movetot"
+	{
+		"zho"		"這裡太多警衛了. {green}{1}{default} 被隨機挑選並移至囚犯."
+	}
+
+	"ratio_removed"
+	{
+		"zho"		"管理員 {1} 將 {2} 移出警衛等候隊列!"
+	}
+
+	"ratio_notonqueue"
+	{
+		"zho"		"你不在警衛等候隊列之中!"
+	}
+
+	"ratio_leavedqueue"
+	{
+		"zho"		"你不再位於等候隊列中!"
+	}
+
+	"ratio_accept_title"
+	{
+		"zho"		"警衛資格"
+	}
+
+	"ratio_accept_line1"
+	{
+		"zho"		"在你成為警衛之前,你必須同意下列規定:"
+	}
+
+	"ratio_accept_line2"
+	{
+		"zho"		"我確認我已讀過並了解規則"
+	}
+
+	"ratio_accept_line3"
+	{
+		"zho"		"我確認我已讀警衛規則兩次!"
+	}
+
+	"ratio_accept_line4"
+	{
+		"zho"		"我確認我將會公平進行遊戲並遵守伺服器規則."
+	}
+
+	"ratio_accept_line5"
+	{
+		"zho"		"不遵守規則將會無法以警衛進行遊戲"
+	}
+
+	"ratio_accept"
+	{
+		"zho"		"是,我同意這些規則"
+	}
+
+	"ratio_notaccept"
+	{
+		"zho"		"不,我並不想成為警衛."
+	}
+
+	"ratio_cooldown"
+	{
+		"zho"		"你因回答問題錯誤而被阻擋,請在下一回合再試."
+	}
+
+	"ratio_disabled"
+	{
+		"zho"		"比率分配已被管理員關閉"
+	}
+
+	"ratio_hasdisabled"
+	{
+		"zho"		"管理員已經關閉比率分配"
+	}
+
+	"ratio_hasactivated"
+	{
+		"zho"		"管理員已開啟比率分配,比率將會在下一場修正"
+	}
+
+	"ratio_active"
+	{
+		"zho"		"比率分配已生效! 1 個警衛對 {1} 個囚犯"
+	}
+
+	"ratio_stamm"
+	{
+		"zho"		"你至少需要 {1} 個Stamm點數才能成為警衛"
+	}
+
+	"ratio_banned_nc"
+	{
+		"zho"		"你不能成為警衛,因為你的警衛權限已被封鎖."
+	}
+
+	"ratio_clearqueue"
+	{
+		"zho"		"管理員已清除警衛等候隊列"
+	}
+
+	"ratio_reputation"
+	{
+		"zho"		"你至少需要 {1} 聲望點數才能成為警衛"
+	}
+
+	"ratio_remove"
+	{
+		"zho"		"從對列中移除:"
+	}
+
+	"ratio_banned"
+	{
+		"zho"		"你不能成為警衛,因為你的{green}警衛權限{default}已被封鎖"
+	}
+
+	"ratio_rankme"
+	{
+		"zho"		"你需要至少 {1} 點RankMe點數來成為警衛"
+	}
+
+	"ratio_close"
+	{
+		"zho"		"離開"
+	}
+
+	"ratio_steamrep"
+	{
+		"zho"		"你不能成為警衛因為你是 {red}騙子{default}. 請查看 steamrep.com"
+	}
+
+	"ratio_sure"
+	{
+		"zho"		"你確定?"
+	}
+
+	"ratio_yes"
+	{
+		"zho"		"是"
+	}
+
+	"ratio_no"
+	{
+		"zho"		"否"
+	}
+
+	"ratio_steamgroup"
+	{
+		"zho"		"你不能成為警衛,你需要先加入我們的Steam群組"
+	}
+
+	"ratio_lvlranks"
+	{
+		"zho"		"你至少需要等級 {1} 才能成為警衛"
+	}
+
+	"ratio_hours"
+	{
+		"zho"		"小時"
+	}
+
+	"ratio_seconds"
+	{
+		"zho"		"秒"
+	}
+
+	"ratio_minutes"
+	{
+		"zho"		"分鐘"
+	}
+
+	"ratio_mostactive"
+	{
+		"zho"		"你至少需要玩過 {1} 才能成為警衛."
+	}
+
+	"ratio_mostactive_terror"
+	{
+		"zho"		"你至少需要以囚犯玩過 {1} 才能成為警衛."
+	}
+
+	"ratio_guard_enable"
+	{
+		"zho"		"你同意在警衛無人時被隨機挑選為警衛"
+	}
+
+	"ratio_guard_disable"
+	{
+		"zho"		"你拒絕當無警衛時被隨機挑選為警衛"
+	}
+
+	"ratio_swap_spec"
+	{
+		"zho"		"你被移至囚犯,因為你已加入警衛隊伍"
+	}
+
+	"ratio_fullguards"
+	{
+		"zho"		"警衛數量已滿. 請稍後再試."
+	}
+
+	"ratio_voice"
+	{
+		"zho"		"你之前沒有使用過麥克風,你不能沒有麥克風就加入警衛. 請使用你的麥克風並再試一次."
+	}
+
+}

@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:40 UTC
+// Date: 2018-08-13 17:29:19 UTC
 // Language: Romanian (ro)
 // 
 // To view other translations for this plugin, please visit:
@@ -131,6 +131,16 @@
 	"warden_opentime"
 	{
 		"ro"		"Acum {purple}celulele{default} trebuie sa fie deschise!"
+	}
+
+	"warden_ffison"
+	{
+		"ro"		"Focul prietenos este {purple}activat!"
+	}
+
+	"warden_ffisoff"
+	{
+		"ro"		"Focul prietenos este {purple}dezactivat!"
 	}
 
 	"warden_voting"

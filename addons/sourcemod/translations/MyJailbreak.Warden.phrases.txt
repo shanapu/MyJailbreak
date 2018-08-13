@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:43 UTC
+// Date: 2018-08-13 17:29:21 UTC
 // Language: English (en)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,7 @@
 //
 "Phrases"
 {
+
 	"warden_new"
 	{
 		"#format"	"{1:N}"
@@ -1056,9 +1057,20 @@
 		"en"		"{1} seconds time to apply for warden"
 	}
 
+	"warden_apply_added"
+	{
+		"#format"	"{1:N}"
+		"en"		"{purple}{1}{default} applies as warden"
+	}
+
+	"warden_apply_removed"
+	{
+		"en"		"You've been removed from the Warden's application list."
+	}
+
 	"warden_no_applications"
 	{
-		"en"		"No one applied for the position of warden. A {purple}random warden{default} was selected."
+		"en"		"No one applied for the position of warden. {purple}A random warden{default} was selected."
 	}
 
 	"warden_one_application"
@@ -1071,9 +1083,9 @@
 		"en"		"Application time is over. \n Vote your new warden!"
 	}
 
-	"warden_vote_applicants"
+	"warden_cooldown_reset"
 	{
-		"en"		"Vote your new warden:"
+		"en"		"The cooldown for all wardens has been reset."
 	}
 
 	"warden_vote_applicants"

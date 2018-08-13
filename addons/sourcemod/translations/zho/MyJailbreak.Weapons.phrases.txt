@@ -1,0 +1,96 @@
+// Exported from SourceMod Translator
+// Date: 2018-08-13 17:29:31 UTC
+// Language: Chinese (Traditional) (zho)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/188
+//
+"Phrases"
+{
+
+	"weapons_disabled"
+	{
+		"zho"		"{purple}武器選單目前 {default} 已關閉!"
+	}
+
+	"weapons_same"
+	{
+		"zho"		"你將會取得 {purple}相同武器{default}."
+	}
+
+	"weapons_sameall"
+	{
+		"zho"		"你將會在每一回合取得{purple} 相同武器{default}."
+	}
+
+	"weapons_random"
+	{
+		"zho"		"你將會取得 {purple} 隨機武器{default}"
+	}
+
+	"weapons_randomall"
+	{
+		"zho"		"你將會在每一回合取得{purple} 隨機武器{default}."
+	}
+
+	"weapons_next"
+	{
+		"zho"		"你的設定將會在下一回合被{purple} 套用{default}."
+	}
+
+	"weapons_ta"
+	{
+		"zho"		"已取得{purple} 戰術探測手榴彈{default}!"
+	}
+
+	"weapons_health"
+	{
+		"zho"		"已取得 {purple} 治療針{default}"
+	}
+
+	"weapons_info_title"
+	{
+		"zho"		"武器選單"
+	}
+
+	"weapons_info_choose"
+	{
+		"zho"		"選擇一個武器"
+	}
+
+	"weapons_info_same"
+	{
+		"zho"		"相同武器"
+	}
+
+	"weapons_info_sameall"
+	{
+		"zho"		"每一回合相同武器"
+	}
+
+	"weapons_info_random"
+	{
+		"zho"		"隨機武器"
+	}
+
+	"weapons_info_randomall"
+	{
+		"zho"		"每一回合隨機武器"
+	}
+
+	"weapons_info_prim"
+	{
+		"zho"		"主要武器:"
+	}
+
+	"weapons_info_sec"
+	{
+		"zho"		"次要武器:"
+	}
+
+	"weapon_menu_max_usages"
+	{
+		"zho"		"你已到達槍枝配額的最大值!"
+	}
+
+}
