@@ -168,18 +168,6 @@ public void OnLibraryAdded(const char[] name)
 // Initialize Plugin - check/set sv_tags for MyJailbreak
 public void OnConfigsExecuted()
 {
-	if (gc_bTag.BoolValue)
-	{
-		ConVar hTags = FindConVar("sv_tags");
-		char sTags[128];
-		hTags.GetString(sTags, sizeof(sTags));
-		if (StrContains(sTags, "MyJailbreak", false) == -1)
-		{
-			StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-			hTags.SetString(sTags);
-		}
-	}
-
 	// Set custom Commands
 	int iCount = 0;
 	char sCommands[128], sCommandsL[12][32], sCommand[32];
@@ -197,7 +185,21 @@ public void OnConfigsExecuted()
 			RegAdminCmd(sCommand, Command_EndRound, ADMFLAG_CHANGEMAP);
 		}
 	}
+
+	if (!gc_bTag.BoolValue)
+		return;
+
+	ConVar hTags = FindConVar("sv_tags");
+	char sTags[128];
+	hTags.GetString(sTags, sizeof(sTags));
+
+	if (StrContains(sTags, "MyJailbreak", false) != -1)
+		return;
+
+	StrCat(sTags, sizeof(sTags), ", MyJailbreak");
+	hTags.SetString(sTags);
 }
+
 
 /******************************************************************************
                    COMMANDS
@@ -405,9 +407,7 @@ public int Native_RemoveEventDay(Handle plugin, int argc)
 public int Native_IsEventDayRunning(Handle plugin, int argc)
 {
 	if (!g_bEventDayRunning)
-	{
 		return false;
-	}
 
 	return true;
 }
@@ -416,9 +416,7 @@ public int Native_IsEventDayRunning(Handle plugin, int argc)
 public int Native_IsEventDayPlanned(Handle plugin, int argc)
 {
 	if (!g_bEventDayPlanned)
-	{
 		return false;
-	}
 
 	return true;
 }
@@ -448,9 +446,7 @@ public int Native_GetEventDayName(Handle plugin, int argc)
 public int Native_IsLastGuardRule(Handle plugin, int argc)
 {
 	if (!g_bLastGuardRuleActive)
-	{
 		return false;
-	}
 
 	return true;
 }
@@ -464,8 +460,10 @@ public int Native_SetLastGuardRule(Handle plugin, int argc)
 // Check if logging is active
 public int Native_GetActiveLogging(Handle plugin, int argc)
 {
-	if (gc_bLogging.BoolValue) return true;
-	else return false;
+	if (!gc_bLogging.BoolValue)
+		return false;
+
+	return true;
 }
 
 // Boolean Set Event Day running (true = running)

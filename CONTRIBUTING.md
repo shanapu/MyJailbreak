@@ -1,6 +1,6 @@
 # Code Contribution Guidelines
 ***
-First, thank you for contribute to the MyJailbreak project!
+:+1::tada: First, thank you for contribute to the MyJailbreak project! :+1::tada:
 ***
 This should be a small guide to avoid unnecessary problems when contributing code to MyJB.
 We're aware that the current code of MyJB doesn't fully follow this rules.

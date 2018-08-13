@@ -1,7 +1,7 @@
 ### Change Log
   
   
-**[Beta 13.dev]** - Tags & Prefixs to configs, ingonito & warden glow
+**[Beta 14]** - Tags & Prefixs to configs, ingonito & vote your warden
   
     
 *Added*
@@ -46,6 +46,8 @@
 *  Add-On: Change ConVars, block or execute commands & un/load plugins on EventDay start/end
     *  new plugin - disabled/eventday_toggle.smx
     *  new config - sourcemod/configs/MyJailbreak/eventday_toggle.cfg check comments in this cfg for configuration
+*  Catch: Freezed players become an icecube model
+    *  new cvar - sm_catch_model - path to the ice model
 *  Add-On: Support for adding freeday to Zephyrus store
     *  new plugin - disabled/warden_zephstore_freeday.smx
 		"FreeDay"
