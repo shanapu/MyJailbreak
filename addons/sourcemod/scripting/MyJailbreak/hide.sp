@@ -46,6 +46,8 @@
 #include <myicons>
 #define REQUIRE_PLUGIN
 
+#define WEAPON_SHOTGUN  4
+
 // Compiler Options
 #pragma semicolon 1
 #pragma newdecls required
@@ -55,6 +57,7 @@ bool g_bIsLateLoad = false;
 bool g_bIsHide = false;
 bool g_bStartHide = false;
 bool g_bIsRoundEnd = true;
+bool g_bShotgun[MAXPLAYERS + 1] = {false, ...};
 
 // Plugin bools
 bool gp_bWarden;
@@ -94,6 +97,12 @@ ConVar gc_bBeginSetW;
 ConVar gc_bBeginSetV;
 ConVar gc_bBeginSetVW;
 ConVar gc_bTeleportSpawn;
+
+ConVar gc_bHPSeekerEnable;
+ConVar gc_iHPSeekerDec;
+ConVar gc_iHPSeekerInc;
+ConVar gc_iHPSeekerIncShotgun;
+ConVar gc_iHPSeekerBonus;
 
 // Extern Convars
 ConVar g_sOldSkyName;
@@ -183,6 +192,12 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_hide_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 
+    gc_bHPSeekerEnable = CreateConVar("sm_hide_hp_seeker_enable", "1", "Should CT lose HP when shooting, 0 = off/1 = on.", _, true, 0.0, true, 1.0);
+    gc_iHPSeekerDec = CreateConVar("sm_hide_hp_seeker_dec", "5", "How many hp should a CT lose on shooting?", _, true, 0.00);
+    gc_iHPSeekerInc = CreateConVar("sm_hide_hp_seeker_inc", "15", "How many hp should a CT gain when hitting a hider?", _, true, 0.00);
+    gc_iHPSeekerIncShotgun = CreateConVar("sm_hide_hp_seeker_inc_shotgun", "5", "How many hp should a CT gain when hitting a hider with shotgun? (CS:GO only)", _, true, 0.00);
+    gc_iHPSeekerBonus = CreateConVar("sm_hide_hp_seeker_bonus", "50", "How many hp should a CT gain when killing a hider?", _, true, 0.00);	
+	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
 
@@ -190,6 +205,8 @@ public void OnPluginStart()
 	HookEvent("round_start", Event_RoundStart);
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("tagrenade_detonate", Event_TA_Detonate);
+	HookEvent("weapon_fire", Event_OnWeaponFire);
+	HookEvent("item_equip", Event_ItemEquip);
 	HookConVarChange(gc_sOverlayStartPath, OnSettingChanged);
 	HookConVarChange(gc_sSoundStartPath, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
@@ -613,6 +630,41 @@ public Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float
 	return Plugin_Continue;
 }
 
+public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup) 
+{
+    if (GetClientTeam(victim) == CS_TEAM_T) 
+	{
+        int remainingHealth = GetClientHealth(victim) - RoundToFloor(damage);
+
+        if (gc_bHPSeekerEnable.BoolValue && attacker > 0 && attacker <= MaxClients && IsPlayerAlive(attacker)) 
+		{
+            int decrease = gc_iHPSeekerDec.IntValue;
+
+            if (g_bShotgun[attacker])
+			{
+                SetEntityHealth(attacker, GetClientHealth(attacker) + gc_iHPSeekerIncShotgun.IntValue + decrease);
+			}
+            else 
+			{
+				SetEntityHealth(attacker, GetClientHealth(attacker) + gc_iHPSeekerInc.IntValue + decrease);
+			}
+
+            // give bonus health if the hider died
+            if (remainingHealth < 0)
+			{
+                SetEntityHealth(attacker, GetClientHealth(attacker) + gc_iHPSeekerBonus.IntValue);
+			}
+        }
+
+        if (remainingHealth < 0) 
+		{
+            return Plugin_Continue;
+        }
+    }
+
+    return Plugin_Continue;
+}
+
 // Round start
 public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 {
@@ -663,6 +715,7 @@ public void Event_RoundEnd(Event event, char[] name, bool dontBroadcast)
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 			g_iTA[i] = 0;
+			g_bShotgun[i] = false;
 
 			if (gp_bMyIcons)
 			{
@@ -760,6 +813,42 @@ public void Event_TA_Detonate(Event event, const char[] name, bool dontBroadcast
 	}
 }
 
+public void Event_ItemEquip(Event event, const char[] name, bool dontBroadcast) 
+{
+	if (!g_bIsHide)
+		return;
+	
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    int type = event.GetInt("weptype");
+    if (type == WEAPON_SHOTGUN) 
+	{
+        g_bShotgun[client] = true;
+    } 
+	else
+	{
+		g_bShotgun[client] = false;
+	}
+}
+
+public void Event_OnWeaponFire(Event event, const char[] name, bool dontBroadcast) {
+    if (!gc_bHPSeekerEnable.BoolValue || g_bIsRoundEnd || !g_bIsHide)
+        return;
+
+    int client = GetClientOfUserId(event.GetInt("userid"));
+    int decreaseHP = gc_iHPSeekerDec.IntValue;
+    int clientHealth = GetClientHealth(client);
+
+    if ((clientHealth - decreaseHP) > 0) 
+	{
+        SetEntityHealth(client, (clientHealth - decreaseHP));
+    } 
+	else 
+	{
+        CreateTimer(0.1, Timer_SlayClient, client, TIMER_FLAG_NO_MAPCHANGE);
+    }
+}
+
+
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -788,7 +877,11 @@ public void OnMapStart()
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 
-	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) g_iTA[i] = 0;
+	for (int i = 1; i <= MaxClients; i++) if (IsClientInGame(i)) 
+	{
+		g_iTA[i] = 0;
+		g_bShotgun[i] = false;
+	}
 }
 
 // Terror win Round if time runs out
@@ -826,6 +919,8 @@ public void OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_WeaponCanUse, OnWeaponCanUse);
 	SDKHook(client, SDKHook_OnTakeDamage, Hook_OnTakeDamage);
+	SDKHook(client, SDKHook_TraceAttack, OnTraceAttack);
+	g_bShotgun[client] = false;
 }
 
 
@@ -881,7 +976,8 @@ void ResetEventDay()
 		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
 		SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.0);
 		g_iTA[i] = 0;
-
+		g_bShotgun[i] = false;
+		
 		if (gp_bMyIcons)
 		{
 			MyIcons_BlockClientIcon(i, false);
@@ -1300,4 +1396,12 @@ public Action Timer_BeaconOn(Handle timer)
 	}
 
 	g_hTimerBeacon = null;
+}
+
+public Action Timer_SlayClient(Handle timer, int client) {
+    if (!IsClientInGame(client) || !IsPlayerAlive(client))
+        return Plugin_Stop;
+
+    ForcePlayerSuicide(client);
+    return Plugin_Stop;
 }
