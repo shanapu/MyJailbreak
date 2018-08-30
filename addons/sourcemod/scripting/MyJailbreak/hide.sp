@@ -192,11 +192,11 @@ public void OnPluginStart()
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_hide_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_hide_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 
-	gc_bHPSeekerEnable = CreateConVar("sm_hide_hp_seeker_enable", "1", "Should CT lose HP when shooting, 0 = off/1 = on.", _, true, 0.0, true, 1.0);
-	gc_iHPSeekerDec = CreateConVar("sm_hide_hp_seeker_dec", "5", "How many hp should a CT lose on shooting?", _, true, 0.00);
-	gc_iHPSeekerInc = CreateConVar("sm_hide_hp_seeker_inc", "15", "How many hp should a CT gain when hitting a hider?", _, true, 0.00);
-	gc_iHPSeekerIncShotgun = CreateConVar("sm_hide_hp_seeker_inc_shotgun", "5", "How many hp should a CT gain when hitting a hider with shotgun? (CS:GO only)", _, true, 0.00);
-	gc_iHPSeekerBonus = CreateConVar("sm_hide_hp_seeker_bonus", "50", "How many hp should a CT gain when killing a hider?", _, true, 0.00);	
+	gc_bHPSeekerEnable = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_enable", "1", "Should CT lose HP when shooting, 0 = off/1 = on.", _, true, 0.0, true, 1.0);
+	gc_iHPSeekerDec = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_dec", "5", "How many hp should a CT lose on shooting?", _, true, 0.00);
+	gc_iHPSeekerInc = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_inc", "15", "How many hp should a CT gain when hitting a hider?", _, true, 0.00);
+	gc_iHPSeekerIncShotgun = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_inc_shotgun", "5", "How many hp should a CT gain when hitting a hider with shotgun? (CS:GO only)", _, true, 0.00);
+	gc_iHPSeekerBonus = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_bonus", "50", "How many hp should a CT gain when killing a hider?", _, true, 0.00);	
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
