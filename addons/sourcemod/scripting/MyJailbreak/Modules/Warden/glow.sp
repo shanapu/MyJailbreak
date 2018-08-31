@@ -114,12 +114,12 @@ void NextFrame_WardenGlow(int userid)
 
 void NextFrame_WardenRemoveGlow(int userid)
 {
-	if (!gc_bPlugin.BoolValue || !gc_bGlow.BoolValue || !g_bEnabled || !gp_bCustomPlayerSkins)
+	if (!gc_bPlugin.BoolValue || !gc_bGlow.BoolValue || !gp_bCustomPlayerSkins)
 		return;
 
 	int client = GetClientOfUserId(userid);
 
-	if (!IsValidClient(client, true, false))
+	if (!IsValidClient(client, true, true))
 		return;
 
 	UnhookGlow(client);
