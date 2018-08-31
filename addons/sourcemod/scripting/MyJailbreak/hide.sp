@@ -21,7 +21,7 @@
  */
 
 /******************************************************************************
-				   STARTUP
+                   STARTUP
 ******************************************************************************/
 
 // Includes
@@ -402,7 +402,7 @@ public void OnPluginEnd()
 
 
 /******************************************************************************
-				   COMMANDS
+                   COMMANDS
 ******************************************************************************/
 
 // Admin & Warden set Event
@@ -615,7 +615,7 @@ public Action Command_VoteHide(int client, int args)
 }
 
 /******************************************************************************
-				   EVENTS
+                   EVENTS
 ******************************************************************************/
 
 public Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage, int &damagetype)	// todo clean up a bit
@@ -850,7 +850,7 @@ public void Event_OnWeaponFire(Event event, const char[] name, bool dontBroadcas
 
 
 /******************************************************************************
-				   FORWARDS LISTEN
+                   FORWARDS LISTEN
 ******************************************************************************/
 
 // Initialize Event
@@ -1040,7 +1040,7 @@ void ResetEventDay()
 
 
 /******************************************************************************
-				   FUNCTIONS
+                   FUNCTIONS
 ******************************************************************************/
 
 
@@ -1256,7 +1256,7 @@ void PrepareDay(bool thisround)
 }
 
 /******************************************************************************
-				   MENUS
+                   MENUS
 ******************************************************************************/
 
 void CreateInfoPanel(int client)
@@ -1269,7 +1269,7 @@ void CreateInfoPanel(int client)
 	Format(info, sizeof(info), "%T", "hide_info_title", client);
 	InfoPanel.SetTitle(info);
 
-	InfoPanel.DrawText("								   ");
+	InfoPanel.DrawText("                                   ");
 	Format(info, sizeof(info), "%T", "hide_info_line1", client);
 	InfoPanel.DrawText(info);
 	InfoPanel.DrawText("-----------------------------------");
