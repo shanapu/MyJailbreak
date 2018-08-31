@@ -669,6 +669,10 @@ void ListWeapons()
 	Format(Items[desc], 64, "UMP-45");
 	PushArrayArray(g_aPrimary, Items[0]);
 
+	Format(Items[ItemName], 64, "weapon_mp5sd");
+	Format(Items[desc], 64, "MP5-SD");
+	PushArrayArray(g_aPrimary, Items[0]);
+
 	Format(Items[ItemName], 64, "weapon_mp7");
 	Format(Items[desc], 64, "MP7");
 	PushArrayArray(g_aPrimary, Items[0]);
