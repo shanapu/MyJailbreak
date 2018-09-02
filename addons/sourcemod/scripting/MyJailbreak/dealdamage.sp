@@ -1553,7 +1553,7 @@ void UnhookGlow(int client)
 
 public Action Timer_SetModel(Handle timer, int userid)
 {
-	int client = GetClientOfUserid(userid);
+	int client = GetClientOfUserId(userid);
 	
 	if (!client)
 		return Plugin_Stop;
@@ -1570,6 +1570,8 @@ public Action Timer_SetModel(Handle timer, int userid)
 	}
 
 	if (gp_bCustomPlayerSkins) SetupGlowSkin(client);
+	
+	return Plugin_Stop
 }
 
 
