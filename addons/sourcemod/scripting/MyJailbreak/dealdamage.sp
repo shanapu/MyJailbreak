@@ -207,7 +207,7 @@ public void OnPluginStart()
 	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true, 0.0, true, 1.0);
 	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true, 0.0, true, 1.0);
 	gc_bColor = AutoExecConfig_CreateConVar("sm_dealdamage_color", "1", "0 - disabled, 1 - color the model of the players", _, true, 0.0, true, 1.0);
-	gc_bModel = AutoExecConfig_CreateConVar("sm_dealdamage_model_enable", "1", "0 - disabled, 1 - enable model ", _, true, 0.1, true, 1.0);
+	gc_bModel = AutoExecConfig_CreateConVar("sm_dealdamage_model_enable", "1", "0 - disabled, 1 - enable model ", _, true, 0.0, true, 1.0);
 	gc_sModelPathBlue = AutoExecConfig_CreateConVar("sm_dealdamage_model_blue", "models/player/prisoner/prisoner_new_blue.mdl", "Path to the model for team blue.");
 	gc_sModelPathRed = AutoExecConfig_CreateConVar("sm_dealdamage_model_red", "models/player/prisoner/prisoner_new_red.mdl", "Path to the model for team red.");
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
@@ -217,7 +217,7 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set dealdamage round", _, true, 0.0, true, 1.0);
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
@@ -1203,7 +1203,7 @@ void PrepareDay(bool thisround)
 
 		if (gc_bModel.BoolValue)
 		{
-			CreateTimer (1.1, Timer_SetModel, i);
+			CreateTimer (1.1, Timer_SetModel, GetClientUserId(i));
 		}
 	}
 
@@ -1551,8 +1551,13 @@ void UnhookGlow(int client)
 }
 
 
-public Action Timer_SetModel(Handle timer, int client)
+public Action Timer_SetModel(Handle timer, int userid)
 {
+	int client = GetClientOfUserid(userid);
+	
+	if (!client)
+		return Plugin_Stop;
+		
 	GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
 
 	if (g_iClientTeam[client] == TEAM_BLUE)
