@@ -845,7 +845,7 @@ public void Event_OnWeaponFire(Event event, const char[] name, bool dontBroadcas
 	} 
 	else 
 	{
-		CreateTimer(0.1, Timer_SlayClient, client, TIMER_FLAG_NO_MAPCHANGE);
+		CreateTimer(0.1, Timer_SlayClient, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 	}
 }
 
@@ -1399,7 +1399,12 @@ public Action Timer_BeaconOn(Handle timer)
 	g_hTimerBeacon = null;
 }
 
-public Action Timer_SlayClient(Handle timer, int client) {
+public Action Timer_SlayClient(Handle timer, int userid) 
+{
+	int client = GetClientOfUserId(userid);
+	if (!client)
+		return Plugin_Stop;
+		
 	if (!IsClientInGame(client) || !IsPlayerAlive(client))
 		return Plugin_Stop;
 
