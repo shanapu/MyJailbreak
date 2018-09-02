@@ -4,6 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
+ * Contributer: 8guawong
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -99,6 +100,7 @@ ConVar gc_bSpawnRandom;
 ConVar gc_sAdminFlag;
 ConVar gc_bKillLoser;
 
+ConVar gc_bModel;
 ConVar gc_sModelPathBlue;
 ConVar gc_sModelPathRed;
 ConVar gc_bColor;
@@ -205,6 +207,7 @@ public void OnPluginStart()
 	gc_bChat = AutoExecConfig_CreateConVar("sm_dealdamage_chat", "1", "0 - disabled, 1 - enable print results in chat", _, true, 0.0, true, 1.0);
 	gc_bConsole = AutoExecConfig_CreateConVar("sm_dealdamage_console", "1", "0 - disabled, 1 - enable print results in client console", _, true, 0.0, true, 1.0);
 	gc_bColor = AutoExecConfig_CreateConVar("sm_dealdamage_color", "1", "0 - disabled, 1 - color the model of the players", _, true, 0.0, true, 1.0);
+	gc_bModel = AutoExecConfig_CreateConVar("sm_dealdamage_model_enable", "1", "0 - disabled, 1 - enable model ", _, true, 0.0, true, 1.0);
 	gc_sModelPathBlue = AutoExecConfig_CreateConVar("sm_dealdamage_model_blue", "models/player/prisoner/prisoner_new_blue.mdl", "Path to the model for team blue.");
 	gc_sModelPathRed = AutoExecConfig_CreateConVar("sm_dealdamage_model_red", "models/player/prisoner/prisoner_new_red.mdl", "Path to the model for team red.");
 	gc_iRounds = AutoExecConfig_CreateConVar("sm_dealdamage_rounds", "2", "Rounds to play in a row", _, true, 1.0);
@@ -214,7 +217,7 @@ public void OnPluginStart()
 	gc_iCooldownDay = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_day", "3", "Rounds cooldown after a event until event can be start again", _, true, 0.0);
 	gc_iCooldownStart = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_start", "3", "Rounds until event can be start after mapchange.", _, true, 0.0);
 	gc_bSetABypassCooldown = AutoExecConfig_CreateConVar("sm_dealdamage_cooldown_admin", "1", "0 - disabled, 1 - ignore the cooldown when admin/vip set dealdamage round", _, true, 0.0, true, 1.0);
-	gc_bSounds = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.1, true, 1.0);
+	gc_bSounds = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_enable", "1", "0 - disabled, 1 - enable sounds ", _, true, 0.0, true, 1.0);
 	gc_sSoundStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_sounds_start", "music/MyJailbreak/start.mp3", "Path to the soundfile which should be played for a start.");
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_dealdamage_overlays_start", "overlays/MyJailbreak/start", "Path to the start Overlay DONT TYPE .vmt or .vft");
@@ -266,15 +269,21 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 {
 	if (convar == gc_sModelPathRed)
 	{
-		strcopy(g_sModelPathRed, sizeof(g_sModelPathRed), newValue);
-		Downloader_AddFileToDownloadsTable(g_sModelPathRed);
-		PrecacheModel(g_sModelPathRed);
+		if (gc_bModel.BoolValue)
+		{
+			strcopy(g_sModelPathRed, sizeof(g_sModelPathRed), newValue);
+			Downloader_AddFileToDownloadsTable(g_sModelPathRed);
+			PrecacheModel(g_sModelPathRed);
+		}
 	}
 	else if (convar == gc_sModelPathBlue)
 	{
-		strcopy(g_sModelPathBlue, sizeof(g_sModelPathBlue), newValue);
-		Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
-		PrecacheModel(g_sModelPathBlue);
+		if (gc_bModel.BoolValue)
+		{
+			strcopy(g_sModelPathBlue, sizeof(g_sModelPathBlue), newValue);
+			Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
+			PrecacheModel(g_sModelPathBlue);
+		}
 	}
 	else if (convar == gc_sOverlayStartPath)    // Add overlay to download and precache table if changed
 	{
@@ -847,10 +856,13 @@ public void OnMapStart()
 		PrecacheDecalAnyDownload(g_sOverlayStartPath);
 	}
 
-	Downloader_AddFileToDownloadsTable(g_sModelPathRed);
-	Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
-	PrecacheModel(g_sModelPathBlue);
-	PrecacheModel(g_sModelPathRed);
+	if (gc_bModel.BoolValue)
+	{
+		Downloader_AddFileToDownloadsTable(g_sModelPathRed);
+		Downloader_AddFileToDownloadsTable(g_sModelPathBlue);
+		PrecacheModel(g_sModelPathBlue);
+		PrecacheModel(g_sModelPathRed);
+	}
 }
 
 // Map End
@@ -1189,7 +1201,10 @@ void PrepareDay(bool thisround)
 			MyIcons_BlockClientIcon(i, true);
 		}
 
-		CreateTimer (1.1, Timer_SetModel, i);
+		if (gc_bModel.BoolValue)
+		{
+			CreateTimer (1.1, Timer_SetModel, GetClientUserId(i));
+		}
 	}
 
 	if (gp_bMyJailbreak)
@@ -1536,8 +1551,13 @@ void UnhookGlow(int client)
 }
 
 
-public Action Timer_SetModel(Handle timer, int client)
+public Action Timer_SetModel(Handle timer, int userid)
 {
+	int client = GetClientOfUserId(userid);
+	
+	if (!client)
+		return Plugin_Stop;
+		
 	GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
 
 	if (g_iClientTeam[client] == TEAM_BLUE)
@@ -1550,6 +1570,8 @@ public Action Timer_SetModel(Handle timer, int client)
 	}
 
 	if (gp_bCustomPlayerSkins) SetupGlowSkin(client);
+	
+	return Plugin_Stop;
 }
 
 
