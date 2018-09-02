@@ -1571,7 +1571,7 @@ public Action Timer_SetModel(Handle timer, int userid)
 
 	if (gp_bCustomPlayerSkins) SetupGlowSkin(client);
 	
-	return Plugin_Stop
+	return Plugin_Stop;
 }
 
 
