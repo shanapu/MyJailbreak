@@ -633,6 +633,9 @@ public Action Hook_OnTakeDamage(int victim, int &attacker, int &inflictor, float
 
 public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &damage, int &damagetype, int &ammotype, int hitbox, int hitgroup) 
 {
+	if (!g_bIsHide)
+		return Plugin_Continue;
+
 	if (GetClientTeam(victim) == CS_TEAM_T) 
 	{
 		int remainingHealth = GetClientHealth(victim) - RoundToFloor(damage);
