@@ -197,7 +197,7 @@ public void OnPluginStart()
 	gc_iHPSeekerDec = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_dec", "5", "How many hp should a CT lose on shooting?", _, true, 0.00);
 	gc_iHPSeekerInc = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_inc", "15", "How many hp should a CT gain when hitting a hider?", _, true, 0.00);
 	gc_iHPSeekerIncShotgun = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_inc_shotgun", "5", "How many hp should a CT gain when hitting a hider with shotgun? (CS:GO only)", _, true, 0.00);
-	gc_iHPSeekerBonus = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_bonus", "50", "How many hp should a CT gain when killing a hider?", _, true, 0.00);	
+	gc_iHPSeekerBonus = AutoExecConfig_CreateConVar("sm_hide_hp_seeker_bonus", "50", "How many hp should a CT gain when killing a hider?", _, true, 0.00);
 	
 	AutoExecConfig_ExecuteFile();
 	AutoExecConfig_CleanFile();
@@ -636,11 +636,14 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 	if (!g_bIsHide)
 		return Plugin_Continue;
 
-	if (GetClientTeam(victim) == CS_TEAM_T) 
+	if (attacker < 1 || attacker > MaxClients || !IsPlayerAlive(attacker))
+		return Plugin_Continue;
+
+	if (GetClientTeam(victim) == CS_TEAM_T && GetClientTeam(attacker) == CS_TEAM_CT)
 	{
 		int remainingHealth = GetClientHealth(victim) - RoundToFloor(damage);
 
-		if (gc_bHPSeekerEnable.BoolValue && attacker > 0 && attacker <= MaxClients && IsPlayerAlive(attacker)) 
+		if (gc_bHPSeekerEnable.BoolValue)
 		{
 			int decrease = gc_iHPSeekerDec.IntValue;
 
@@ -648,7 +651,7 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 			{
 				SetEntityHealth(attacker, GetClientHealth(attacker) + gc_iHPSeekerIncShotgun.IntValue + decrease);
 			}
-			else 
+			else
 			{
 				SetEntityHealth(attacker, GetClientHealth(attacker) + gc_iHPSeekerInc.IntValue + decrease);
 			}
@@ -660,7 +663,7 @@ public Action OnTraceAttack(int victim, int &attacker, int &inflictor, float &da
 			}
 		}
 
-		if (remainingHealth < 0) 
+		if (remainingHealth < 0)
 		{
 			return Plugin_Continue;
 		}
