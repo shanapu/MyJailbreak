@@ -1229,9 +1229,6 @@ public Action Command_OpenMenu(int client, int args)
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinct", client);
 						mainmenu.AddItem("ChangeTeamCT", menuinfo);
 					}
-
-					Format(menuinfo, sizeof(menuinfo), "%T", "menu_joinspec", client);
-					mainmenu.AddItem("ChangeTeamSpec", menuinfo);
 				}
 			}
 
