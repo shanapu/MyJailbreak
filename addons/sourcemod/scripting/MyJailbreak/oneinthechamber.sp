@@ -335,7 +335,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS) // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteOITC, "Allows players to vote for a OnInTheChamber");
 		}
@@ -349,7 +349,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS) // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_SetOITC, "Allows the Admin or Warden to set OneInTheChamber as next round");
 		}

@@ -311,7 +311,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteFFA, "Allows players to vote for a FFA");
 		}
@@ -325,7 +325,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_Setffa, "Allows the Admin or Warden to set a ffa");
 		}

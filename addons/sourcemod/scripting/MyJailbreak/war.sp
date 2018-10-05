@@ -314,7 +314,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteWar, "Allows players to vote for a war");
 		}
@@ -328,7 +328,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_SetWar, "Allows the Admin or Warden to set a war for next rounds");
 		}

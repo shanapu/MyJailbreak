@@ -563,7 +563,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_OpenMenu, "opens the menu depends on players team/rank");
 	}
 
@@ -575,7 +575,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_VoteEventDays, "open a vote EventDays menu for player");
 	}
 
@@ -587,7 +587,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_SetEventDay, "open a Set EventDays menu for Warden/Admin");
 	}
 
@@ -599,7 +599,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_VotingMenu, "Allows warden & admin to opens event day voting");
 	}
 
@@ -1156,7 +1156,7 @@ public Action Command_OpenMenu(int client, int args)
 					mainmenu.AddItem("jailshop", menuinfo);
 				}
 
-				if (GetCommandFlags("sm_gangs") != INVALID_FCVAR_FLAGS)
+				if (CommandExists("sm_gangs"))
 				{
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_gangs", client);
 					mainmenu.AddItem("gangs", menuinfo);
@@ -1197,7 +1197,7 @@ public Action Command_OpenMenu(int client, int args)
 
 				if (gc_bTeam.BoolValue)
 				{
-					if (GetCommandFlags("sm_guard") != INVALID_FCVAR_FLAGS)
+					if (CommandExists("sm_guard"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_guardct", client);
 						mainmenu.AddItem("guard", menuinfo);
@@ -1219,7 +1219,7 @@ public Action Command_OpenMenu(int client, int args)
 					Format(menuinfo, sizeof(menuinfo), "%T", "menu_joint", client);
 					mainmenu.AddItem("ChangeTeamT", menuinfo);
 
-					if (GetCommandFlags("sm_guard") != INVALID_FCVAR_FLAGS)
+					if (CommandExists("sm_guard"))
 					{
 						Format(menuinfo, sizeof(menuinfo), "%T", "menu_guardct", client);
 						mainmenu.AddItem("guard", menuinfo);

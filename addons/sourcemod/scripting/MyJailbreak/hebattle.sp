@@ -340,7 +340,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteHEbattle, "Allows players to vote for a hebattle");
 		}
@@ -354,7 +354,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_SetHEbattle, "Allows the Admin or Warden to set hebattle as next round");
 		}

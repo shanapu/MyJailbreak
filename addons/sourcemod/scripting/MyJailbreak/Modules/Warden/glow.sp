@@ -210,9 +210,6 @@ public Action OnSetTransmit_GlowSkin(int iSkin, int client)
 // remove glow
 void UnhookGlow(int client)
 {
-	if (!IsValidClient(client, true, true))
-		return;
-
 	int iSkin = CPS_GetSkin(client);
 	if (iSkin == INVALID_ENT_REFERENCE)
 		return;

@@ -422,7 +422,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_BecomeWarden, "Allows the warde taking the charge over prisoners");
 		}
@@ -436,7 +436,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_ExitWarden, "Allows the player to retire from the position");
 		}
@@ -450,7 +450,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteWarden, "Allows the player to vote against Warden");
 		}
@@ -464,7 +464,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegAdminCmd(sCommand, AdminCommand_SetWarden, ADMFLAG_GENERIC, "Allows the admin to set a new Warden");
 		}
@@ -478,7 +478,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegAdminCmd(sCommand, AdminCommand_RemoveWarden, ADMFLAG_GENERIC, "Allows the admin to remove the Warden");
 		}

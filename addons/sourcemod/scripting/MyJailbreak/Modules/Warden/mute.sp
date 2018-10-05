@@ -107,7 +107,7 @@ public void Mute_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_MuteMenu, "Allows a warden to mute all terrorists for a specified duration or untill the next round.");
 	}
 
@@ -119,7 +119,7 @@ public void Mute_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_UnMuteMenu, "Allows a warden to unmute the terrorists.");
 	}
 }
