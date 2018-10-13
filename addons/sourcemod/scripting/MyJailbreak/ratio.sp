@@ -76,6 +76,7 @@ ConVar gc_bNoQueue;
 
 // Booleans
 bool g_bRatioEnable = true;
+bool g_bWarmup = false;
 bool g_bQueueCooldown[MAXPLAYERS+1] = {false, ...};
 bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 
@@ -174,8 +175,10 @@ public void OnPluginStart()
 	// Hooks
 	AddCommandListener(Event_OnJoinTeam, "jointeam");
 	HookEvent("player_connect_full", Event_OnFullConnect, EventHookMode_Pre);
+	HookEvent("round_prestart", Event_RoundPreStart, EventHookMode_Pre);
 	HookEvent("player_team", Event_PlayerTeam_Post, EventHookMode_Post);
 	HookEvent("round_end", Event_RoundEnd_Post, EventHookMode_Post);
+	HookEvent("round_announce_warmup", Event_WarmupStart, EventHookMode_Post);
 //	HookConVarChange(gc_sAdminFlag, OnSettingChanged);
 	HookConVarChange(gc_sPrefix, OnSettingChanged);
 
@@ -762,6 +765,32 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 	}
 
 	return Plugin_Continue;
+}
+
+public Action Event_RoundPreStart(Event event, const char[] name, bool dontBroadcast)
+{
+	if (g_bWarmup && GameRules_GetProp("m_bWarmupPeriod") == 1)
+	{
+		g_bWarmup = false;
+		if (g_bRatioEnable)
+		{
+			FixTeamRatio();
+		}
+		else if (gc_bToggleAnnounce.BoolValue)
+		{
+			CPrintToChatAll("%s %t", g_sPrefix, "ratio_disabled");
+		}
+
+		for (int i = 1; i <= MaxClients; i++)
+		{
+			g_bQueueCooldown[i] = false;
+		}
+	}
+}
+
+public void Event_WarmupStart(Event event, const char[] name, bool dontBroadcast)
+{
+	g_bWarmup = true;
 }
 
 public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount)
