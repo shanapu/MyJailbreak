@@ -153,6 +153,11 @@ public Plugin myinfo = {
 	url = MYJB_URL_LINK
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	//Manually mark native as optional
+	MarkNativeAsOptional("ArmsFix_ModelSafe");
+}
 // Start
 public void OnPluginStart()
 {
@@ -428,7 +433,7 @@ public Action ArmsFix_OnSpawnModel(int client, char[] model, int modelLen, char[
 	if (!g_bIsZombie)
 		return Plugin_Continue;
 		
-	if (GetClientTeam(client) == CS_TEAM_T)
+	if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		strcopy(model, modelLen, g_sModelPathZombie);
 		strcopy(arms, armsLen, g_sModelPathZombieArms);
@@ -1206,7 +1211,7 @@ void PrepareDay(bool thisround)
 		{
 			SetEntityHealth(i, zombieHP);
 
-			if (!gp_bArmsFix)
+			if (!gp_bArmsFix || thisround)
 				CreateTimer (1.1, Timer_SetModel, i);
 
 			DarkenScreen(i, true);
@@ -1528,6 +1533,13 @@ public Action Timer_SetModel(Handle timer, int client)
 	{
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious[client], sizeof(g_sModelPathPrevious[]));
 		SetEntityModel(client, g_sModelPathZombie);
+		if (gp_bArmsFix)
+		{
+			if (ArmsFix_ModelSafe(client))
+			{
+				SetEntPropString(client, Prop_Send, "m_szArmsModel", g_sModelPathZombieArms);
+			}
+		}
 	}
 }
 
