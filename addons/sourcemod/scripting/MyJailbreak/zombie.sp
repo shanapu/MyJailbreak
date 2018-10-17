@@ -2,7 +2,7 @@
  * MyJailbreak - Zombie Event Day Plugin.
  * by: shanapu
  * https://github.com/shanapu/MyJailbreak/
- * 
+ *
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
  * Contributer: olegtsvetkov
  *
@@ -11,7 +11,7 @@
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, version 3.0, as published by the
  * Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
@@ -46,6 +46,7 @@
 #include <CustomPlayerSkins>
 #include <myjailbreak>
 #include <myweapons>
+#include <armsfix>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -65,6 +66,7 @@ bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyJailbreak;
 bool gp_bMyWeapons;
+bool gp_bArmsFix;
 
 bool g_bTerrorZombies[MAXPLAYERS+1];
 
@@ -90,6 +92,7 @@ ConVar gc_bVision;
 ConVar gc_bGlow;
 ConVar gc_iGlowMode;
 ConVar gc_sModelPathZombie;
+ConVar gc_sModelPathZombieArms;
 ConVar gc_bSounds;
 ConVar gc_sSoundStartPath;
 ConVar gc_bOverlays;
@@ -132,7 +135,8 @@ float g_fPos[3];
 
 // Strings
 char g_sPrefix[64];
-char g_sModelPathZombie[256];
+char g_sModelPathZombie[PLATFORM_MAX_PATH];
+char g_sModelPathZombieArms[PLATFORM_MAX_PATH];
 char g_sHasVoted[1500];
 char g_sSoundStartPath[256];
 char g_sSkyName[256];
@@ -206,6 +210,7 @@ public void OnPluginStart()
 	gc_bOverlays = AutoExecConfig_CreateConVar("sm_zombie_overlays_enable", "1", "0 - disabled, 1 - enable overlays", _, true, 0.0, true, 1.0);
 	gc_sOverlayStartPath = AutoExecConfig_CreateConVar("sm_zombie_overlays_start", "overlays/MyJailbreak/zombie", "Path to the start Overlay DONT TYPE .vmt or .vft");
 	gc_sModelPathZombie = AutoExecConfig_CreateConVar("sm_zombie_model", "models/player/custom_player/zombie/revenant/revenant_v2.mdl", "Path to the model for zombies.");
+	gc_sModelPathZombieArms = AutoExecConfig_CreateConVar("sm_zombie_arms_model", "models/player/custom_player/zombie/revenant/revenant_arms.mdl", "Path to the arms model for zombies. - Requires ArmsFix");
 	gc_bAllowLR = AutoExecConfig_CreateConVar("sm_zombie_allow_lr", "0", "0 - disabled, 1 - enable LR for last round and end eventday", _, true, 0.0, true, 1.0);
 
 	AutoExecConfig_ExecuteFile();
@@ -224,6 +229,7 @@ public void OnPluginStart()
 	// FindConVar
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
+	gc_sModelPathZombieArms.GetString(g_sModelPathZombieArms, sizeof(g_sModelPathZombieArms));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 
 	// Logs
@@ -238,6 +244,12 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 		strcopy(g_sModelPathZombie, sizeof(g_sModelPathZombie), newValue);
 		Downloader_AddFileToDownloadsTable(g_sModelPathZombie);
 		PrecacheModel(g_sModelPathZombie);
+	}
+	else if (convar == gc_sModelPathZombieArms)
+	{
+		strcopy(g_sModelPathZombieArms, sizeof(g_sModelPathZombieArms), newValue);
+		Downloader_AddFileToDownloadsTable(g_sModelPathZombieArms);
+		PrecacheModel(g_sModelPathZombieArms);
 	}
 	else if (convar == gc_sOverlayStartPath)
 	{
@@ -270,6 +282,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bMyJailbreak = LibraryExists("myjailbreak");
 	gp_bMyWeapons = LibraryExists("myweapons");
+	gp_bArmsFix = LibraryExists("ArmsFix");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -301,6 +314,10 @@ public void OnLibraryRemoved(const char[] name)
 	else if (StrEqual(name, "myweapons"))
 	{
 		gp_bMyWeapons = false;
+	}
+	else if (StrEqual(name, "ArmsFix"))
+	{
+		gp_bArmsFix = false;
 	}
 }
 
@@ -334,6 +351,10 @@ public void OnLibraryAdded(const char[] name)
 	{
 		gp_bMyWeapons = true;
 	}
+	else if (StrEqual(name, "ArmsFix"))
+	{
+		gp_bArmsFix = true;
+	}
 }
 
 // Initialize Plugin
@@ -347,6 +368,7 @@ public void OnConfigsExecuted()
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
 	gc_sOverlayStartPath.GetString(g_sOverlayStartPath, sizeof(g_sOverlayStartPath));
 	gc_sModelPathZombie.GetString(g_sModelPathZombie, sizeof(g_sModelPathZombie));
+	gc_sModelPathZombieArms.GetString(g_sModelPathZombieArms, sizeof(g_sModelPathZombieArms));
 	gc_sSoundStartPath.GetString(g_sSoundStartPath, sizeof(g_sSoundStartPath));
 
 	// FindConVar
@@ -401,6 +423,19 @@ public void OnPluginEnd()
 	MyJailbreak_RemoveEventDay("zombie");
 }
 
+public Action ArmsFix_OnSpawnModel(int client, char[] model, int modelLen, char[] arms, int armsLen)
+{
+	if (!g_bIsZombie)
+		return Plugin_Continue;
+		
+	if (GetClientTeam(client) == CS_TEAM_T)
+	{
+		strcopy(model, modelLen, g_sModelPathZombie);
+		strcopy(arms, armsLen, g_sModelPathZombieArms);
+		return Plugin_Changed;
+	}
+	return Plugin_Continue;
+}
 /******************************************************************************
                    COMMANDS
 ******************************************************************************/
@@ -479,7 +514,7 @@ public Action Command_SetZombie(int client, int args)
 			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");
 			return Plugin_Handled;
 		}
-		
+
 		if (!gc_bSetW.BoolValue)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "zombie_setbywarden");
@@ -681,7 +716,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 		{
 			PrintCenterTextAll("%t", "zombie_twin_nc");
 		}
-		if (winner == 3) 
+		if (winner == 3)
 		{
 			PrintCenterTextAll("%t", "zombie_ctwin_nc");
 		}
@@ -720,7 +755,7 @@ public void Event_RoundEnd_Pre(Event event, char[] name, bool dontBroadcast)
 				MyJailbreak_SetEventDayName("none");
 				MyJailbreak_FogOff();
 			}
-			
+
 			CPrintToChatAll("%s %t", g_sPrefix, "zombie_end");
 		}
 	}
@@ -786,7 +821,7 @@ public Action Event_PlayerDeath(Handle event, char[] name, bool dontBroadcast)
 
 	if (GetClientTeam(victim) == CS_TEAM_CT || GetAlivePlayersCount(CS_TEAM_T) <= 1)
 		return;
-	
+
 	g_bTerrorZombies[victim] = true;
 
 	CreateTimer(4.0, Timer_MakeZombie, GetClientUserId(victim), TIMER_FLAG_NO_MAPCHANGE);
@@ -830,7 +865,8 @@ public Action Timer_MakeZombie(Handle timer, int userid)
 			EmitSoundToClientAny(client, g_sSoundStartPath);
 		}
 
-		CreateTimer (0.1, Timer_SetModel, client);
+		if (!gp_bArmsFix)
+			CreateTimer (0.1, Timer_SetModel, client);
 	}
 
 	return Plugin_Stop;
@@ -864,7 +900,9 @@ public void OnMapStart()
 	}
 
 	Downloader_AddFileToDownloadsTable(g_sModelPathZombie);
+	Downloader_AddFileToDownloadsTable(g_sModelPathZombieArms);
 	PrecacheModel(g_sModelPathZombie);
+	PrecacheModel(g_sModelPathZombieArms);
 }
 
 // Map End
@@ -1079,7 +1117,7 @@ void StartEventRound(bool thisround)
 	{
 		g_bStartZombie = true;
 		g_iCoolDown++;
-		
+
 		CPrintToChatAll("%s %t", g_sPrefix, "zombie_next");
 		PrintCenterTextAll("%t", "zombie_next_nc");
 	}
@@ -1104,7 +1142,7 @@ void PrepareDay(bool thisround)
 		SJD_OpenDoors();
 	}
 
-	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn 
+	if ((thisround && gc_bTeleportSpawn.BoolValue) || !gc_bSpawnCell.BoolValue || !gp_bSmartJailDoors || (gc_bSpawnCell.BoolValue && (SJD_IsCurrentMapConfigured() != true))) // spawn Terrors to CT Spawn
 	{
 		int RandomCT = 0;
 		for (int i = 1; i <= MaxClients; i++)
@@ -1159,7 +1197,7 @@ void PrepareDay(bool thisround)
 		CreateInfoPanel(i);
 
 		StripAllPlayerWeapons(i);
-		
+
 		g_bTerrorZombies[i] = false;
 
 		GivePlayerItem(i, "weapon_knife");
@@ -1168,7 +1206,8 @@ void PrepareDay(bool thisround)
 		{
 			SetEntityHealth(i, zombieHP);
 
-			CreateTimer (1.1, Timer_SetModel, i);
+			if (!gp_bArmsFix)
+				CreateTimer (1.1, Timer_SetModel, i);
 
 			DarkenScreen(i, true);
 		}
@@ -1468,7 +1507,7 @@ public Action Timer_StartEvent(Handle timer)
 		MyJailbreak_FogOn();
 	}
 
-	if (gc_iRegen.IntValue != 0) 
+	if (gc_iRegen.IntValue != 0)
 	{
 		g_hTimerRegen = CreateTimer(5.0, Timer_ReGenHealth, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	}
