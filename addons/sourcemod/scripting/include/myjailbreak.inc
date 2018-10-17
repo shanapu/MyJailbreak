@@ -78,6 +78,8 @@ public void __pl_myjailbreak_SetNTVOptional()
 
 	MarkNativeAsOptional("MyJailbreak_BeaconOn");
 	MarkNativeAsOptional("MyJailbreak_BeaconOff");
+	
+	MarkNativeAsOptional("MyJailbreak_CheckVIPFlags");
 }
 #endif
 
