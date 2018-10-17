@@ -769,7 +769,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 
 public Action Event_RoundPreStart(Event event, const char[] name, bool dontBroadcast)
 {
-	if (g_bWarmup && GameRules_GetProp("m_bWarmupPeriod") == 1)
+	if (g_bWarmup && GameRules_GetProp("m_bWarmupPeriod") != 1)
 	{
 		g_bWarmup = false;
 		if (g_bRatioEnable)
