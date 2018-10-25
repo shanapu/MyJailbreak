@@ -41,6 +41,7 @@
 #include <myjbwarden>
 #include <hosties>
 #include <lastrequest>
+#include <franug_deadgames>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -64,6 +65,7 @@ TG_Team TGTeam[MAXPLAYERS+1];
 bool g_bIsLateLoad = false;
 bool gp_bMyJBWarden = false;
 bool gp_bHosties = false;
+bool gp_bDeadGames = false;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -163,6 +165,7 @@ public void OnAllPluginsLoaded()
 {
 	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bHosties = LibraryExists("lastrequest");
+	gp_bDeadGames = LibraryExists("franug_deadgames");
 }
 
 
@@ -176,6 +179,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bHosties = false;
 	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -187,6 +194,10 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "lastrequest"))
 	{
 		gp_bHosties = true;
+	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = true;
 	}
 }
 
@@ -333,9 +344,9 @@ void ShowHUD()
 		warden = warden_get();
 	}
 
-	int aliveCT = GetAlivePlayersCount(CS_TEAM_CT);
+	int aliveCT = GetPlayerCount(true, CS_TEAM_CT);
 	int allCT = GetTeamClientCount(CS_TEAM_CT);
-	int aliveT = GetAlivePlayersCount(CS_TEAM_T);
+	int aliveT = GetPlayerCount(true, CS_TEAM_T);
 	int allT = GetTeamClientCount(CS_TEAM_T);
 	int iLastCT = -1;
 	char sLastCT[32];
@@ -360,11 +371,14 @@ void ShowHUD()
 	if (!gc_bPlugin.BoolValue)
 		return;
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, gc_bAlive.BoolValue))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, false, gc_bAlive.BoolValue))
+			continue;
+
 		if (!g_bEnableHud[i])
 			continue;
-		
+
 		if (gp_bHosties && IsClientInLastRequest(i))
 			continue;
 
@@ -516,4 +530,28 @@ void ShowHUD()
 			}
 		}
 	}
+}
+
+static int GetPlayerCount(bool alive = false, int team = -1)
+{
+	int i, iCount = 0;
+
+	for (i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, !alive))
+			continue;
+
+		if (gp_bDeadGames)
+		{
+			if(DeadGames_IsOnGame(i))
+				continue;
+		}
+
+		if (team != -1 && GetClientTeam(i) != team)
+			continue;
+
+		iCount++;
+	}
+
+	return iCount;
 }

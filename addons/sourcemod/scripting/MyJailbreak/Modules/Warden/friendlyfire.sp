@@ -138,7 +138,7 @@ public void FriendlyFire_Event_PlayerDeath(Event event, const char[] name, bool 
 	if (!g_bFF.BoolValue)
 		return;
 
-	if (GetAlivePlayersCount(CS_TEAM_T) < 1)
+	if (GetPlayerCount(true, CS_TEAM_T) < 1)
 	{
 		SetCvar("mp_teammates_are_enemies", 0);
 		CS_TerminateRound(5.0, CSRoundEnd_CTWin, false);
@@ -218,4 +218,28 @@ public void FriendlyFire_OnConfigsExecuted()
 public void FriendlyFire_OnClientPutInServer(int client)
 {
 	SDKHook(client, SDKHook_TraceAttack, FriendlyFire_OnTraceAttack);
+}
+
+static int GetPlayerCount(bool alive = false, int team = -1)
+{
+	int i, iCount = 0;
+
+	for (i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, !alive))
+			continue;
+
+		if (gp_bDeadGames)
+		{
+			if(DeadGames_IsOnGame(i))
+				continue;
+		}
+
+		if (team != -1 && GetClientTeam(i) != team)
+			continue;
+
+		iCount++;
+	}
+
+	return iCount;
 }

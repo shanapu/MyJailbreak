@@ -196,7 +196,7 @@ public int Handler_KillMenu(Menu menu, MenuAction action, int client, int Positi
 			}
 			else
 			{
-				playercount = GetAlivePlayersCount(CS_TEAM_T);
+				playercount = GetPlayerCount(true, CS_TEAM_T);
 				minT = 1;
 			}
 
@@ -270,4 +270,28 @@ public Action Timer_KillPlayer(Handle timer, int userid)
 	else if (gc_iRandomMode.IntValue == 2) PerformSmite(0, client);
 	else if (gc_iRandomMode.IntValue == 3) ServerCommand("sm_timebomb %N 1", client);
 	else if (gc_iRandomMode.IntValue == 4) ServerCommand("sm_firebomb %N 1", client);
+}
+
+static int GetPlayerCount(bool alive = false, int team = -1)
+{
+	int i, iCount = 0;
+
+	for (i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, !alive))
+			continue;
+
+		if (gp_bDeadGames)
+		{
+			if(DeadGames_IsOnGame(i))
+				continue;
+		}
+
+		if (team != -1 && GetClientTeam(i) != team)
+			continue;
+
+		iCount++;
+	}
+
+	return iCount;
 }

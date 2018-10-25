@@ -49,6 +49,7 @@
 #include <chat-processor>
 #include <scp>
 #include <CustomPlayerSkins>
+#include <franug_deadgames>
 #define REQUIRE_PLUGIN
 
 #include <mystocks>
@@ -107,6 +108,7 @@ bool gp_bSimpleChatProcessor = false;
 bool gp_bBasecomm = false;
 bool gp_bSourceComms = false;
 bool gp_bCustomPlayerSkins = false;
+bool gp_bDeadGames = false;
 
 // Integers
 int g_iApplicationTime= 0;
@@ -500,6 +502,7 @@ public void OnAllPluginsLoaded()
 	gp_bBasecomm = LibraryExists("basecomm");
 	gp_bSourceComms = LibraryExists("sourcecomms");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
+	gp_bDeadGames = LibraryExists("franug_deadgames");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -540,6 +543,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bCustomPlayerSkins = false;
 	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -579,6 +586,10 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "CustomPlayerSkins"))
 	{
 		gp_bCustomPlayerSkins = true;
+	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = true;
 	}
 }
 
@@ -1408,7 +1419,7 @@ Action SetTheWarden(int client, int caller)
 			}
 		}
 
-	//	delete g_hTimerOpen; // why delete don't work?
+	//	delete g_hTimerRandom; // why delete don't work?
 		if (g_hTimerRandom != null)
 		{
 			KillTimer(g_hTimerRandom);
