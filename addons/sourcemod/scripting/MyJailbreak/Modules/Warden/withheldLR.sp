@@ -168,7 +168,7 @@ public void NoLR_OnConfigsExecuted()
 
 public Action Listen_OnCommand(int client, const char[] command, int args)
 {
-	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled)
+	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled || !warden_exist())
 		return Plugin_Continue;
 
 	//Seach for command in cmd array
