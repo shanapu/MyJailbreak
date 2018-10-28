@@ -1382,6 +1382,8 @@ public Action Timer_StartEvent(Handle timer)
 				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
+
+		EnableWeaponFire(i, true);
 	}
 
 	if (gc_bSounds.BoolValue)
