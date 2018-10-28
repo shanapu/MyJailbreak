@@ -1308,6 +1308,7 @@ public void OnAvailableLR(int Announced)
 	HandCuffs_OnAvailableLR(Announced);
 	Deputy_OnAvailableLR(Announced);
 	Marker_OnAvailableLR(Announced);
+	NoBlock_OnAvailableLR();
 
 	if (gc_bRemoveLR.BoolValue && g_iWarden != -1)
 	{

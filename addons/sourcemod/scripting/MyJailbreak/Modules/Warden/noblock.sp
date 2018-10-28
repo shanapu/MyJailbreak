@@ -79,11 +79,11 @@ public void NoBlock_OnPluginStart()
 
 public Action Command_ToggleNoBlock(int client, int args)
 {
-	if (gc_bNoBlock.BoolValue) 
+	if (gc_bNoBlock.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bNoBlockDeputy.BoolValue))
 		{
-			if (!g_bNoBlock) 
+			if (!g_bNoBlock)
 			{
 				g_bNoBlock = true;
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_noblockon");
@@ -119,7 +119,7 @@ public void NoBlock_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
 }
 
-public void OnAvailableLR(int Announced)
+void NoBlock_OnAvailableLR()
 {
 	for (int i = 1; i <= MaxClients; i++)
 	{
