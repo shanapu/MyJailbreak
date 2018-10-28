@@ -119,6 +119,24 @@ public void NoBlock_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
 }
 
+public void OnAvailableLR(int Announced)
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
+	}
+
+	if (gc_bNoBlockMode.BoolValue)
+	{
+		SetCvar("mp_solid_teammates", 1);
+	}
+
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_noblockoff");
+}
+
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
