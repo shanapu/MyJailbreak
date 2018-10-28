@@ -125,7 +125,7 @@ int g_iCatchCounter[MAXPLAYERS+1];
 int g_iMaxRound;
 int g_iFreezeTime;
 int g_iTsLR;
-int g_iIceEntity[MAXPLAYERS+1] = -1;
+int g_iIceEntity[MAXPLAYERS+1] = {INVALID_ENT_REFERENCE, ...};
 
 // Handles
 Handle g_hTimerSprint[MAXPLAYERS+1];
@@ -1262,19 +1262,20 @@ void CatchEm(int client, int attacker)
 
 	CPrintToChatAll("%s %t", g_sPrefix, "catch_catch", attacker, client);
 
-	g_iIceEntity[client] = CreateEntityByName("prop_dynamic_override");
+	int iEntity = CreateEntityByName("prop_dynamic_override");
 
-	if (g_iIceEntity[client] == -1)
+	if (iEntity == -1)
 		return;
 
-	SetEntityModel(g_iIceEntity[client], g_sItemModel);
-	SetEntProp(g_iIceEntity[client], Prop_Send, "m_CollisionGroup", 2);
+	SetEntityModel(iEntity, g_sItemModel);
+	SetEntProp(iEntity, Prop_Send, "m_CollisionGroup", 2);
 
 	float vec[3];
 	GetClientAbsOrigin(client, vec);
 
 	TeleportEntity(client, vec, NULL_VECTOR, NULL_VECTOR);
-	TeleportEntity(g_iIceEntity[client], vec, NULL_VECTOR, NULL_VECTOR);
+	TeleportEntity(iEntity, vec, NULL_VECTOR, NULL_VECTOR);
+	g_iIceEntity[client] = EntIndexToEntRef(iEntity);
 }
 
 
@@ -1295,11 +1296,15 @@ void FreeEm(int client, int attacker)
 
 	CPrintToChatAll("%s %t", g_sPrefix, "catch_unfreeze", attacker, client);
 
-	if (g_iIceEntity[client] == -1)
+	if (g_iIceEntity[client] == INVALID_ENT_REFERENCE)
 		return;
 
-	AcceptEntityInput(g_iIceEntity[client], "kill");
-	g_iIceEntity[client] = -1;
+	int iEntity = EntRefToEntIndex(g_iIceEntity[client]);
+	if (iEntity == INVALID_ENT_REFERENCE)
+		return;
+
+	AcceptEntityInput(iEntity, "kill");
+	g_iIceEntity[client] = INVALID_ENT_REFERENCE;
 }
 
 
