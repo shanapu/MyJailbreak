@@ -875,5 +875,10 @@ public Action Timer_StopRespawn(Handle timer)
 public Action Timer_Respawn(Handle timer, int userid)
 {
 	int client = GetClientOfUserId(userid);
+	if (!client)
+		return Plugin_Handled;
+
 	CS_RespawnPlayer(client);
+
+	return Plugin_Handled;
 }
