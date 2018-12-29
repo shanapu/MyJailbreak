@@ -88,7 +88,7 @@ public Action BackStab_OnTakedamage(int victim, int &attacker, int &inflictor, f
 
 	if (IsClientWarden(victim) || (IsClientDeputy(victim) && gc_bBackstabDeputy.BoolValue))
 	{
-		if (!MyJailbreak_CheckVIPFlags(victim, "sm_warden_backstab_flag", gc_sAdminFlagBackstab, "sm_warden_backstab_flag"))
+		if (!MyJB_CheckVIPFlags(victim, "sm_warden_backstab_flag", gc_sAdminFlagBackstab, "sm_warden_backstab_flag"))
 			return Plugin_Continue;
 
 		char sWeapon[32];

@@ -468,7 +468,7 @@ public Action Command_SetTorch(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Torch Relay was started by groupvoting");
 		}
 	}
-	else if (MyJailbreak_CheckVIPFlags(client, "sm_torch_flag", gc_sAdminFlag, "sm_torch_flag")) // Called by admin/VIP
+	else if (MyJB_CheckVIPFlags(client, "sm_torch_flag", gc_sAdminFlag, "sm_torch_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
@@ -1512,4 +1512,20 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	ResetSprint(client);
 	g_iSprintStatus[client] &= ~ IsSprintCoolDown;
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailbreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

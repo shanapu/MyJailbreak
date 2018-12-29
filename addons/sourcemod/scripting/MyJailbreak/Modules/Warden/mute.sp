@@ -210,7 +210,7 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 		if (!IsValidClient(i, true, true))
 			continue;
 
-		if (MyJailbreak_CheckVIPFlags(i, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
+		if (MyJB_CheckVIPFlags(i, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
 			continue;
 
 		if (GetClientTeam(i) != CS_TEAM_CT)
@@ -252,7 +252,7 @@ public void OnClientSpeakingEx(int client)
 			if (!IsValidClient(i, true, true))
 				continue;
 
-			if (MyJailbreak_CheckVIPFlags(i, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
+			if (MyJB_CheckVIPFlags(i, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
 				continue;
 
 			if ((GetClientTeam(i) != CS_TEAM_CT) && (!g_bIsMuted[i] || (GetClientListeningFlags(i) != VOICE_MUTED)) || 
@@ -316,7 +316,7 @@ void MuteClient(int client, int time, int muter)
 	if (!IsValidClient(client, true, true))
 		return;
 
-	if (MyJailbreak_CheckVIPFlags(client, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
+	if (MyJB_CheckVIPFlags(client, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
 		return;
 
 	if (GetClientTeam(client) != CS_TEAM_CT)
@@ -407,7 +407,7 @@ void MuteMenuPlayer(int client)
 			if (!IsValidClient(i, true, true))
 				continue;
 
-			if (MyJailbreak_CheckVIPFlags(i, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
+			if (MyJB_CheckVIPFlags(i, "sm_warden_mute_immuntiy", gc_sAdminFlagMute, "sm_warden_mute_immuntiy"))
 				continue;
 
 			if ((GetClientTeam(i) != CS_TEAM_CT) && !g_bIsMuted[i])

@@ -76,7 +76,7 @@ public Action Command_LaserMenu(int client, int args)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bLaserDeputy.BoolValue))
 		{
-			if (MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
+			if (MyJB_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 			{
 				char menuinfo[255];
 				Menu menu = new Menu(Handler_LaserMenu);
@@ -146,7 +146,7 @@ public Action Laser_OnPlayerRunCmd(int client, int &buttons, int &impulse, float
 		if (!IsValidClient(client, true, true))
 			return Plugin_Continue;
 
-		if (!MyJailbreak_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
+		if (!MyJB_CheckVIPFlags(client, "sm_warden_laser_flag", gc_sAdminFlagLaser, "sm_warden_laser_flag"))
 			return Plugin_Continue;
 
 //		g_bLaserUse[client] = true;

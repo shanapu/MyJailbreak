@@ -508,7 +508,7 @@ void CuffsEm(int client, int attacker)
 
 		CPrintToChatAll("%s %t", g_sPrefix, "warden_cuffson", attacker, client);
 		CPrintToChat(attacker, "%s %t", g_sPrefix, "warden_cuffsgot", g_iPlayerHandCuffs[attacker]);
-		if (MyJailbreak_CheckVIPFlags(client, "sm_warden_handcuffs_flag", gc_sAdminFlagCuffs, "sm_warden_handcuffs_flag"))
+		if (MyJB_CheckVIPFlags(client, "sm_warden_handcuffs_flag", gc_sAdminFlagCuffs, "sm_warden_handcuffs_flag"))
 		{
 			CreateTimer (2.5, Timer_HasPaperClip, client);
 		}

@@ -166,7 +166,7 @@ public void Repeat_Event_RoundStart(Event event, char[] name, bool dontBroadcast
 		g_bRepeated[i] = false;
 		g_iRepeatCounter[i] = 0;
 
-		if (MyJailbreak_CheckVIPFlags(i, "sm_repeat_flag", gc_sAdminFlagRepeat, "sm_repeat_flag"))
+		if (MyJB_CheckVIPFlags(i, "sm_repeat_flag", gc_sAdminFlagRepeat, "sm_repeat_flag"))
 		{
 			g_iRepeatCounter[i] = -1;
 		}
@@ -210,7 +210,7 @@ public void Repeat_OnClientPutInServer(int client)
 {
 	g_iRepeatCounter[client] = 0;
 
-	if (MyJailbreak_CheckVIPFlags(client, "sm_repeat_flag", gc_sAdminFlagRepeat, "sm_repeat_flag"))
+	if (MyJB_CheckVIPFlags(client, "sm_repeat_flag", gc_sAdminFlagRepeat, "sm_repeat_flag"))
 	{
 		g_iRepeatCounter[client] = -1;
 	}

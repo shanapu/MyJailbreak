@@ -81,6 +81,7 @@ bool g_bQueueCooldown[MAXPLAYERS+1] = {false, ...};
 bool g_bEnableGuard[MAXPLAYERS+1] = {true, ...};
 
 bool gp_bWarden = false;
+bool gp_bMyJailbreak = false;
 bool gp_bMyJBWarden = false;
 
 // Handles
@@ -346,6 +347,7 @@ public void OnAllPluginsLoaded()
 {
 	gp_bMyJBWarden = LibraryExists("myjbwarden");
 	gp_bWarden = LibraryExists("warden");
+	gp_bMyJailbreak = LibraryExists("myjailbreak");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -358,6 +360,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bWarden = false;
 	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailbreak = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -369,6 +375,10 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "warden"))
 	{
 		gp_bWarden = true;
+	}
+	else if (StrEqual(name, "myjailbreak"))
+	{
+		gp_bMyJailbreak = true;
 	}
 }
 
@@ -520,7 +530,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 			{
 				AddToQueue(client);
 			}
@@ -538,7 +548,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		{
 			CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
@@ -547,7 +557,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 		return Plugin_Handled;
 	}
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 	{
 		if (gc_bRespawn.BoolValue)
 		{
@@ -564,7 +574,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			
 			if (iIndex == -1)
 			{
-				if (gc_bVIPQueue.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+				if (gc_bVIPQueue.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 				{
 					if (iQueueSize == 0)
 					{
@@ -595,7 +605,7 @@ public Action Command_JoinGuardQueue(int client, int iArgNum)
 			{
 				CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_number", iIndex + 1);
 
-				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+				if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 				{
 					CReplyToCommand(client, "%s %t", g_sPrefix, "ratio_advip");
 				}
@@ -667,7 +677,7 @@ public Action AdminCommand_ClearQueue(int client, int args)
 
 public Action Command_ToggleRatio(int client, int args)
 {
-	if (gc_bToggle.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+	if (gc_bToggle.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 	{
 		if (g_bRatioEnable)
 		{
@@ -759,7 +769,7 @@ public Action Event_OnFullConnect(Event event, const char[] name, bool dontBroad
 	if (!gc_bForceTConnect.BoolValue || !g_bRatioEnable)
 		return Plugin_Continue;
 
-	if (!gc_bAdminBypass.BoolValue || !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+	if (!gc_bAdminBypass.BoolValue || !MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 	{
 		CreateTimer(1.0, Timer_ForceTSide, GetClientUserId(client));
 	}
@@ -859,7 +869,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 
 		if (iIndex == -1)
 		{
-			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
+			if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 			{
 				AddToQueue(client);
 			}
@@ -878,7 +888,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		{
 			CPrintToChat(client, "%s %t", g_sPrefix, "ratio_fullqueue", iIndex + 1);
 
-			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+			if (gc_bAdsVIP.BoolValue && gc_bVIPQueue.BoolValue && !MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 			{
 				CPrintToChat(client, "%s %t", g_sPrefix, "ratio_advip");
 			}
@@ -887,7 +897,7 @@ public Action Event_OnJoinTeam(int client, const char[] szCommand, int iArgCount
 		return Plugin_Handled;
 	}
 
-	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
+	if ((gc_iJoinMode.IntValue == 0) || (gc_bAdminBypass.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag")))
 	{
 		return Plugin_Continue;
 	}
@@ -927,7 +937,7 @@ void AddToQueue(int client)
 
 	if (iIndex == -1)
 	{
-		if (gc_bVIPQueue.BoolValue && MyJailbreak_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
+		if (gc_bVIPQueue.BoolValue && MyJB_CheckVIPFlags(client, "sm_ratio_flag", gc_sAdminFlag, "sm_ratio_flag"))
 		{
 			if (iQueueSize == 0)
 				iIndex = PushArrayCell(g_aGuardQueue, client);
@@ -1699,4 +1709,20 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 	{
 		delete menu;
 	}
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailbreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

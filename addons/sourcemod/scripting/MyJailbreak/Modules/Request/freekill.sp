@@ -450,7 +450,7 @@ int GetRandomAdmin()
 		if (!IsValidClient(i, false, true))
 			continue;
 
-		if (!MyJailbreak_CheckVIPFlags(i, "sm_freekill_flag", gc_sAdminFlag, "sm_freekill_flag"))
+		if (!MyJB_CheckVIPFlags(i, "sm_freekill_flag", gc_sAdminFlag, "sm_freekill_flag"))
 			continue;
 
 		admins[adminsCount++] = i;

@@ -1950,3 +1950,19 @@ void OnWardenCreation(int client)
 	HandCuffs_OnWardenCreation(client);
 	Glow_OnWardenCreation(client);
 }
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailBreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
+}
