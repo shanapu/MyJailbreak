@@ -101,7 +101,7 @@ public Action Command_FriendlyFire(int client, int args)
 					Cvar_tg_ct_friendlyfire.IntValue = OldCvar_tg_ct_friendlyfire;
 				}
 			}
-			else CPrintToChat(client, "%s %t", g_sPrefix, "warden_ffison");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_ffison");
 		}
 		else
 		{
@@ -118,7 +118,7 @@ public Action Command_FriendlyFire(int client, int args)
 					Cvar_tg_ct_friendlyfire.IntValue = 1;
 				}
 			}
-			else CPrintToChat(client, "%s %t", g_sPrefix, "warden_ffisoff");
+			else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_ffisoff");
 		}
 	}
 
