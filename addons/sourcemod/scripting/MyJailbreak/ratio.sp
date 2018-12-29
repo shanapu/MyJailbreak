@@ -985,7 +985,8 @@ public void OnMapStart()
 			do
 			{
 				g_iCountQuestions++;
-			} while (KvGotoNextKey(hKeyValues));
+			}
+			while (KvGotoNextKey(hKeyValues));
 		}
 	}
 }
@@ -1382,9 +1383,11 @@ void FixTeamRatio()
 		else if (gc_bBalanceTerror.BoolValue)
 		{
 			client = GetRandomClientFromTeam(CS_TEAM_T);
-			while (!g_bEnableGuard[client])
+			if(!client)
 			{
-				client = GetRandomClientFromTeam(CS_TEAM_T);
+				CPrintToChatAll("%s %t", g_sPrefix, "ratio_novalid");
+
+				break;
 			}
 
 			CPrintToChatAll("%s %t", g_sPrefix, "ratio_random", client);
@@ -1486,8 +1489,14 @@ int GetRandomClientFromTeam(int iTeam)
 	int iNumFound;
 	int clients[MAXPLAYERS];
 
-	for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, true, true))
+	for (int i = 1; i <= MaxClients; i++)
 	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		if (iTeam == CS_TEAM_T && !g_bEnableGuard[i])
+			continue;
+
 		if (GetClientPendingTeam(i) != iTeam)
 			continue;
 
@@ -1649,6 +1658,12 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 					else if (gc_bBalanceTerror.BoolValue)
 					{
 						newGuard = GetRandomClientFromTeam(CS_TEAM_T);
+						if (!newGuard)
+						{
+							CPrintToChatAll("%s %t", g_sPrefix, "ratio_novalid");
+							return;
+						}
+
 						CPrintToChatAll("%s %t", g_sPrefix, "ratio_random", newGuard);
 					}
 					else
@@ -1659,6 +1674,7 @@ public int ChangeMenu(Menu menu, MenuAction action, int client, int selection)
 					if (!IsValidClient(newGuard, true, true))
 					{
 						CPrintToChatAll("%s %t", g_sPrefix, "ratio_novalid");
+						return;
 					}
 
 					ChangeClientTeam(newGuard, CS_TEAM_CT);
