@@ -78,6 +78,7 @@ ConVar gc_bSetABypassCooldown;
 ConVar gc_bVote;
 ConVar gc_bOverlays;
 ConVar gc_bFreezeHider;
+ConVar gc_bBlackout;
 ConVar gc_iRoundTime;
 ConVar gc_fBeaconTime;
 ConVar gc_iCooldownDay;
@@ -172,6 +173,7 @@ public void OnPluginStart()
 	gc_sAdminFlag = AutoExecConfig_CreateConVar("sm_hide_flag", "g", "Set flag for admin/vip to set this Event Day.");
 	gc_bVote = AutoExecConfig_CreateConVar("sm_hide_vote", "1", "0 - disabled, 1 - allow player to vote for hide round", _, true, 0.0, true, 1.0);
 	gc_bFreezeHider = AutoExecConfig_CreateConVar("sm_hide_freezehider", "1", "0 - disabled, 1 - enable freeze hider when hidetime gone", _, true, 0.0, true, 1.0);
+	gc_bBlackout = AutoExecConfig_CreateConVar("sm_hide_blackout", "1", "0 - disabled, 1 - enable black out seekers screen on hide time", _, true, 0.0, true, 1.0);
 	gc_iTAgrenades = AutoExecConfig_CreateConVar("sm_hide_tagrenades", "3", "how many tagrenades a guard have?", _, true, 1.0);
 
 	gc_bBeginSetA = AutoExecConfig_CreateConVar("sm_hide_begin_admin", "1", "When admin set event (!sethide) = 0 - start event next round, 1 - start event current round", _, true, 0.0, true, 1.0);
@@ -1204,7 +1206,11 @@ void PrepareDay(bool thisround)
 		else if (GetClientTeam(i) == CS_TEAM_CT)
 		{
 			GivePlayerItem(i, "weapon_tagrenade");
-			DarkenScreen(i, true);
+
+			if (gc_bBlackout.BoolValue)
+			{
+				DarkenScreen(i, true);
+			}
 		}
 	}
 
@@ -1356,6 +1362,7 @@ public Action Timer_StartEvent(Handle timer)
 		{
 			SetEntityMoveType(i, MOVETYPE_WALK);
 			SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 1.4);
+
 			DarkenScreen(i, false);
 		}
 		else if (GetClientTeam(i) == CS_TEAM_T)
