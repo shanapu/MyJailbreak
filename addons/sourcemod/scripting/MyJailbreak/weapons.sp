@@ -1002,7 +1002,7 @@ public Action Timer_Fix(Handle timer, int userid)
 
 	g_hTimers[client] = null;
 
-	if (IsClientInGame(client))
+	if (client)
 	{
 		if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
 		{
