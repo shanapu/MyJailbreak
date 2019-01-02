@@ -1367,7 +1367,7 @@ public Action Timer_StartEvent(Handle timer)
 		}
 		else if (GetClientTeam(i) == CS_TEAM_T)
 		{
-			if (gc_bFreezeHider)
+			if (gc_bFreezeHider.BoolValue)
 			{
 				SetEntityMoveType(i, MOVETYPE_NONE);
 				SetEntPropFloat(i, Prop_Data, "m_flLaggedMovementValue", 0.0);
