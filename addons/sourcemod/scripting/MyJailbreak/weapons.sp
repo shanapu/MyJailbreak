@@ -1002,9 +1002,9 @@ public Action Timer_Fix(Handle timer, int userid)
 
 	g_hTimers[client] = null;
 
-	if (client)
+	if (IsValidClient(client, false, false))
 	{
-		if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
+		if (GetClientTeam(client) > 1)
 		{
 			GiveSavedWeaponsFix(client);
 		}
