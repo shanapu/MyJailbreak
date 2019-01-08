@@ -287,7 +287,15 @@ public void OnAllPluginsLoaded()
 public void OnConfigsExecuted()
 {
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
-
+	
+	// prevent memory leaks
+	delete g_aPrimary;
+	delete g_aSecondary;
+	delete g_hMenu1;
+	delete g_hMenu2;
+	delete g_hMenu3;
+	delete g_hMenu4;
+	
 	g_aPrimary = CreateArray(128);
 	g_aSecondary = CreateArray(128);
 	ListWeapons();

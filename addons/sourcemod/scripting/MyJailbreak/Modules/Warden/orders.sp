@@ -172,6 +172,10 @@ public void Orders_OnConfigsExecuted()
 		}
 	}
 	while (kvMenu.GotoNextKey());
+	
+	// prevent memory leaks
+	delete kvMenu;
+	delete hFile;
 }
 
 
@@ -258,6 +262,10 @@ void Command_Handler(char[] number)
 		}
 	}
 	else SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
+	
+	// prevent memory leaks
+	delete kvMenu;
+	delete hFile;
 }
 
 /******************************************************************************
