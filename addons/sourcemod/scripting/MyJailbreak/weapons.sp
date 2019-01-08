@@ -291,7 +291,13 @@ public void OnConfigsExecuted()
 	g_aPrimary = CreateArray(128);
 	g_aSecondary = CreateArray(128);
 	ListWeapons();
-
+	
+	// prevent memory leaks
+	if (g_hMenu1 != null)delete g_hMenu1;
+	if (g_hMenu2 != null)delete g_hMenu2;
+	if (g_hMenu3 != null)delete g_hMenu3;
+	if (g_hMenu4 != null)delete g_hMenu4;
+	
 	// Create menus
 	g_hMenu1 = Menu_BuildOptionsMenu(true);
 	g_hMenu2 = Menu_BuildOptionsMenu(false);

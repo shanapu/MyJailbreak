@@ -110,6 +110,10 @@ public void Orders_OnMapStart()
 			PrecacheSoundAnyDownload(sSound);
 	}
 	while (kvMenu.GotoNextKey());
+	
+	// prevent memory leaks
+	delete kvMenu;
+	delete hFile;
 }
 
 public void Orders_OnConfigsExecuted()
@@ -172,6 +176,10 @@ public void Orders_OnConfigsExecuted()
 		}
 	}
 	while (kvMenu.GotoNextKey());
+	
+	// prevent memory leaks
+	delete kvMenu;
+	delete hFile;
 }
 
 
