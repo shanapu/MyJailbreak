@@ -79,23 +79,28 @@ public void Orders_OnMapStart()
 {
 	GetCurrentMap(g_sCurrentMap, sizeof(g_sCurrentMap));
 
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
-	if (!hFile)
+	File hFile = OpenFile(g_sMenuFile, "rt");
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 		// return Plugin_Handled;
 	}
+	delete hFile;
 
 	KeyValues kvMenu = CreateKeyValues("Menu");
 
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 	}
 	if (!kvMenu.GotoFirstSubKey())
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
 	}
+	
 	do
 	{
 		char sSound[64];
@@ -110,6 +115,7 @@ public void Orders_OnMapStart()
 			PrecacheSoundAnyDownload(sSound);
 	}
 	while (kvMenu.GotoNextKey());
+	delete kvMenu;
 }
 
 public void Orders_OnConfigsExecuted()
