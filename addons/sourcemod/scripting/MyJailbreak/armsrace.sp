@@ -1108,41 +1108,35 @@ void GetWeapons()
 	char g_filename[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, g_filename, sizeof(g_filename), "configs/MyJailbreak/armsrace.ini");
 
-	Handle file = OpenFile(g_filename, "rt");
+	File hFile = OpenFile(g_filename, "rt");
 
-	if (file == INVALID_HANDLE)
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Arms Race - Can't read %s correctly! (ImportFromFile)", g_filename);
 	}
+	delete hFile;
 
 	g_aWeapons = CreateArray(32);
 
-	while (!IsEndOfFile(file))
+	while (!IsEndOfFile(hFile))
 	{
 		char line[128];
 
-		if (!ReadFileLine(file, line, sizeof(line)))
-		{
+		if (!ReadFileLine(hFile, line, sizeof(line)))
 			break;
-		}
 
 		TrimString(line);
 
 		if (StrContains(line, "/", false) != -1)
-		{
 			continue;
-		}
 
 		if (!line[0])
-		{
 			continue;
-		}
 
 		PushArrayString(g_aWeapons, line);
 	}
 
-	CloseHandle(file);
-	
 	g_iMaxLevel = GetArraySize(g_aWeapons);
 }
 

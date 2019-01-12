@@ -977,26 +977,26 @@ public void OnClientDisconnect_Post(int client)
 public void OnMapStart()
 {
 	g_bRatioEnable = true;
-	
+
 	if(hKeyValues)
 	{
 		delete hKeyValues;
 	}
-	
+
 	g_iCountQuestions = 0;
-	
+
 	char szPath[256];
-	hKeyValues = CreateKeyValues("Questions");
+	hKeyValues = new KeyValues("Questions");
 	BuildPath(Path_SM, szPath, sizeof(szPath), "configs/MyJailbreak/questions.cfg");
-	if (FileToKeyValues(hKeyValues, szPath))
+	if (hKeyValues.ImportFromFile(szPath))
 	{
-		if(KvGotoFirstSubKey(hKeyValues))
+		if(hKeyValues.GotoFirstSubKey()))
 		{
 			do
 			{
 				g_iCountQuestions++;
 			}
-			while (KvGotoNextKey(hKeyValues));
+			while (hKeyValues.GotoNextKey());
 		}
 	}
 }

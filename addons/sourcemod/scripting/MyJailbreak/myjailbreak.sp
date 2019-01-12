@@ -390,6 +390,11 @@ public int Native_AddEventDay(Handle plugin, int argc)
 	char sBuffer[32];
 
 	GetNativeString(1, sBuffer, sizeof(sBuffer));
+
+	int iIndex = g_aEventDayList.FindString(sBuffer);
+	if (iIndex != -1)
+		return;
+
 	g_aEventDayList.PushString(sBuffer);
 
 	SortEventDays();
@@ -624,5 +629,6 @@ void SortEventDays()
 			g_aEventDayList.Erase(index+1);
 		}
 	}
+
 	delete hFile;
 }

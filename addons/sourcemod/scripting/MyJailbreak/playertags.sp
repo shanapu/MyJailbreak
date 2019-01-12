@@ -439,20 +439,21 @@ public void Frame_HandleTag(int userid)
 
 void LoadPlayerTags(int client)
 {
-	Handle hFile = OpenFile(g_sConfigFile, "rt");
+	File hFile = OpenFile(g_sConfigFile, "rt");
 
-	if (!hFile)
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak PlayerTags - Can't open File: %s", g_sConfigFile);
-		return;
 	}
+	delete hFile;
 
 	KeyValues kvMenu = new KeyValues("PlayerTags");
 
 	if (!kvMenu.ImportFromFile(g_sConfigFile))
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak PlayerTags - Can't read %s correctly! (ImportFromFile)", g_sConfigFile);
-		return;
 	}
 
 	char steamid[24];
@@ -512,6 +513,8 @@ void LoadPlayerTags(int client)
 		if (kvMenu.JumpToKey(sGroup))
 		{
 			GetTags(client, kvMenu);
+
+			delete kvMenu;
 			return;
 		}
 	}
@@ -520,7 +523,7 @@ void LoadPlayerTags(int client)
 	char sFlags[21] = "abcdefghijklmnopqrstz";
 
 	// backwards loop
-	for (int i = sizeof(sFlags)-1; i >= 0; i--)
+	for (int i = sizeof(sFlags) - 1; i >= 0; i--)
 	{
 		char sFlag[1];
 		sFlag[0] = sFlags[i]; //Get only one char
@@ -530,7 +533,7 @@ void LoadPlayerTags(int client)
 			if (kvMenu.JumpToKey(sFlag))
 			{
 				GetTags(client, kvMenu);
-				
+
 				delete kvMenu;
 				return;
 			}
