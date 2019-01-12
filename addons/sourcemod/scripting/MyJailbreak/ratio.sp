@@ -88,8 +88,8 @@ bool gp_bMyJBWarden = false;
 Handle g_aGuardQueue;
 Handle g_aGuardList;
 Handle g_hDataPackTeam;
-Handle hKeyValues;
 Handle gF_OnClientJoinGuards;
+KeyValues g_hKeyValues;
 
 // Integer
 int g_iRandomAnswer[MAXPLAYERS+1];
@@ -978,25 +978,23 @@ public void OnMapStart()
 {
 	g_bRatioEnable = true;
 
-	if(hKeyValues)
-	{
-		delete hKeyValues;
-	}
+	delete g_hKeyValues;
 
 	g_iCountQuestions = 0;
 
 	char szPath[256];
-	hKeyValues = new KeyValues("Questions");
+	g_hKeyValues = new KeyValues("Questions");
 	BuildPath(Path_SM, szPath, sizeof(szPath), "configs/MyJailbreak/questions.cfg");
-	if (hKeyValues.ImportFromFile(szPath))
+
+	if (g_hKeyValues.ImportFromFile(szPath))
 	{
-		if(hKeyValues.GotoFirstSubKey()))
+		if(g_hKeyValues.GotoFirstSubKey())
 		{
 			do
 			{
 				g_iCountQuestions++;
 			}
-			while (hKeyValues.GotoNextKey());
+			while (g_hKeyValues.GotoNextKey());
 		}
 	}
 }
@@ -1089,46 +1087,46 @@ void Menu_GuardQuestions(int client)
 	char szRandomQuestion[16];
 	IntToString(GetRandomInt(1, g_iCountQuestions), szRandomQuestion, sizeof(szRandomQuestion));
 	g_iRandomAnswer[client] = GetRandomInt(1, 3);
-	KvRewind(hKeyValues);
+	g_hKeyValues.Rewind();
 
-	if(KvJumpToKey(hKeyValues, szRandomQuestion))
+	if(g_hKeyValues.JumpToKey(szRandomQuestion))
 	{
 		char info[128], szBuffer[256];
 		Format(info, sizeof(info), "%T", "ratio_question_title", client);
 		InfoPanel.SetTitle(info);
 		InfoPanel.DrawText("-----------------------------------");
-		KvGetString(hKeyValues, "line1", szBuffer, sizeof(szBuffer));
+		g_hKeyValues.GetString("line1", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawText(szBuffer);
-		KvGetString(hKeyValues, "line2", szBuffer, sizeof(szBuffer));
+		g_hKeyValues.GetString("line2", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawText(szBuffer);
 		InfoPanel.DrawText("-----------------------------------");
 
 		if (g_iRandomAnswer[client] == 1)
 		{
 			InfoPanel.DrawText("    ");
-			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			g_hKeyValues.GetString("right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
 
 		InfoPanel.DrawText("    ");
-		KvGetString(hKeyValues, "wrong1", szBuffer, sizeof(szBuffer));
+		g_hKeyValues.GetString("wrong1", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawItem(szBuffer);
 
 		if (g_iRandomAnswer[client] == 2)
 		{
 			InfoPanel.DrawText("    ");
-			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			g_hKeyValues.GetString("right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
 
 		InfoPanel.DrawText("    ");
-		KvGetString(hKeyValues, "wrong2", szBuffer, sizeof(szBuffer));
+		g_hKeyValues.GetString("wrong2", szBuffer, sizeof(szBuffer));
 		InfoPanel.DrawItem(szBuffer);
 
 		if (g_iRandomAnswer[client] == 3)
 		{
 			InfoPanel.DrawText("    ");
-			KvGetString(hKeyValues, "right", szBuffer, sizeof(szBuffer));
+			g_hKeyValues.GetString("right", szBuffer, sizeof(szBuffer));
 			InfoPanel.DrawItem(szBuffer);
 		}
 
