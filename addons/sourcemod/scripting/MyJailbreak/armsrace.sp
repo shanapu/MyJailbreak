@@ -1115,7 +1115,6 @@ void GetWeapons()
 		delete hFile;
 		SetFailState("MyJailbreak Arms Race - Can't read %s correctly! (ImportFromFile)", g_filename);
 	}
-	delete hFile;
 
 	g_aWeapons = CreateArray(32);
 
@@ -1136,6 +1135,8 @@ void GetWeapons()
 
 		PushArrayString(g_aWeapons, line);
 	}
+
+	delete hFile;
 
 	g_iMaxLevel = GetArraySize(g_aWeapons);
 }
