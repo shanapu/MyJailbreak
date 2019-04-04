@@ -265,22 +265,19 @@ public void MyJailbreak_MenuEnd(int client, Menu menu)
 // What should we do when new item was picked?
 public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, int itemNum)
 {
-	if (!IsValidClient(client, false, true))
-	{
-		delete menu;
-		return;
-	}
-
 	char command[24];
 
 	if (action == MenuAction_Select)
 	{
-		char info[64];
-		menu.GetItem(itemNum, info, sizeof(info));
-
-		if (GetTrieString(g_hCommandTrie, info, command, sizeof(command)))
+		if (IsValidClient(client, false, true))
 		{
-			FakeClientCommand(client, command);
+			char info[64];
+			menu.GetItem(itemNum, info, sizeof(info));
+
+			if (GetTrieString(g_hCommandTrie, info, command, sizeof(command)))
+			{
+				FakeClientCommand(client, command);
+			}
 		}
 	}
 	else if (action == MenuAction_End)

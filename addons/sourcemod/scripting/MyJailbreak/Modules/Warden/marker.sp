@@ -284,27 +284,19 @@ void MarkerMenu(int client)
 
 public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemNum)
 {
-	if (IsValidClient(client, false, false)){
-		delete menu;
-		return;
-	}
-	if (!IsClientWarden(client) && !IsClientDeputy(client))
-	{
-		CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
-		delete menu;
-		return;
-	}
-
 	if (action == MenuAction_Select)
 	{
-		char info[32];char info2[32];
-		bool found = menu.GetItem(itemNum, info, sizeof(info), _, info2, sizeof(info2));
-		int marker = StringToInt(info);
-
-		if (found)
+		if(IsValidClient(client, false, false) && (!IsClientWarden(client) && !IsClientDeputy(client)))
 		{
-			SetupMarker(marker);
-			CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_set", g_sColorNames[marker]);
+			char info[32];char info2[32];
+			bool found = menu.GetItem(itemNum, info, sizeof(info), _, info2, sizeof(info2));
+			int marker = StringToInt(info);
+
+			if (found)
+			{
+				SetupMarker(marker);
+				CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_set", g_sColorNames[marker]);
+			}
 		}
 	}
 	else if (action == MenuAction_End)
