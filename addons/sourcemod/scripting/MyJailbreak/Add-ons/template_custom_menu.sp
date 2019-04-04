@@ -121,6 +121,7 @@ public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, in
 {
 	if (!IsValidClient(client, false, true))
 	{
+		delete menu;
 		return;
 	}
 
@@ -146,6 +147,10 @@ public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, in
 			FakeClientCommand(client, "say prisoner test item!");
 		}
 
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 

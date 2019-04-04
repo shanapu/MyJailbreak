@@ -128,6 +128,7 @@ public Action Command_Counter(int client, int args)
 			Format(info1, sizeof(info1), "%T", "warden_close", client);
 			InfoPanel.DrawItem(info1);
 			InfoPanel.Send(client, Handler_NullCancel, 23);
+			delete InfoPanel;
 		}
 	}
 	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_notwarden");

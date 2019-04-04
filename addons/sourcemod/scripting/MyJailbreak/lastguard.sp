@@ -604,6 +604,7 @@ void StartLastGuard()
 			InfoPanel.DrawItem(info);
 
 			InfoPanel.Send(i, Handler_NullCancel, 20);
+			delete InfoPanel;
 
 			SetEntProp(i, Prop_Send, "m_CollisionGroup", 2);  // 2 - none / 5 - 'default'
 			SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);

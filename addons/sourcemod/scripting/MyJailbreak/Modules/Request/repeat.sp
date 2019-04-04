@@ -261,6 +261,7 @@ void RepeatMenu(int client)
 	InfoPanel.DrawItem(info1);
 
 	InfoPanel.Send(client, Handler_NullCancel, 20);
+	delete InfoPanel;
 }
 
 /******************************************************************************

@@ -283,6 +283,10 @@ public int FreeKillAcceptHandler(Menu menu, MenuAction action, int client, int P
 			}
 		}
 	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
 }
 
 public int FreeKillHandler(Menu menu, MenuAction action, int client, int Position)

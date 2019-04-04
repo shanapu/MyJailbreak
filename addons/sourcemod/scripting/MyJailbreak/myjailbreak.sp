@@ -617,4 +617,6 @@ void SortEventDays()
 		}
 	}
 	else LogError("couldn't read from file: %s", sBuffer);
+
+	delete hFile;
 }

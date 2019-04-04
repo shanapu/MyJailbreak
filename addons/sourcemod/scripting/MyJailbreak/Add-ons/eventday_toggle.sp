@@ -76,7 +76,7 @@ public void OnConfigsExecuted()
 
 	Handle hFile = OpenFile(g_sFile, "rt");
 
-	if (!hFile)
+	if (hFile == null)
 	{
 		SetFailState("MyJailbreak EventDay Toggle - Can't open File: %s", g_sFile);
 		// return Plugin_Handled;
@@ -86,12 +86,18 @@ public void OnConfigsExecuted()
 
 	if (!kvMenu.ImportFromFile(g_sFile))
 	{
+		delete kvMenu;
+		delete hFile;
+
 		SetFailState("MyJailbreak EventDay Toggle - Can't read %s correctly! (ImportFromFile)", g_sFile);
 		return;
 	}
 
 	if (!kvMenu.GotoFirstSubKey())
 	{
+		delete kvMenu;
+		delete hFile;
+
 		SetFailState("MyJailbreak EventDay Toggle - Can't read %s correctly! (GotoFirstSubKey)", g_sFile);
 		return;
 	}
@@ -128,6 +134,7 @@ public void OnConfigsExecuted()
 	if (kvMenu)
 	{
 		delete kvMenu;
+		delete hFile;
 	}
 }
 

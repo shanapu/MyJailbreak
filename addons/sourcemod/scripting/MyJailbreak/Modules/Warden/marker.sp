@@ -284,12 +284,14 @@ void MarkerMenu(int client)
 
 public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemNum)
 {
-	if (!IsValidClient(client, false, false))
+	if (IsValidClient(client, false, false)){
+		delete menu;
 		return;
-
+	}
 	if (!IsClientWarden(client) && !IsClientDeputy(client))
 	{
 		CPrintToChat(client, "%s %t", g_sPrefix, "warden_notwarden");
+		delete menu;
 		return;
 	}
 
@@ -304,6 +306,10 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 			SetupMarker(marker);
 			CPrintToChatAll("%s %t", g_sPrefix, "warden_marker_set", g_sColorNames[marker]);
 		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 

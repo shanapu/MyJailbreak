@@ -441,11 +441,13 @@ void LoadPlayerTags(int client)
 {
 	Handle hFile = OpenFile(g_sConfigFile, "rt");
 
-	if (!hFile)
+	if (hFile == null)
 	{
 		SetFailState("MyJailbreak PlayerTags - Can't open File: %s", g_sConfigFile);
 		return;
 	}
+
+	delete hFile;
 
 	KeyValues kvMenu = new KeyValues("PlayerTags");
 
@@ -512,6 +514,7 @@ void LoadPlayerTags(int client)
 		if (kvMenu.JumpToKey(sGroup))
 		{
 			GetTags(client, kvMenu);
+			delete kvMenu;
 			return;
 		}
 	}

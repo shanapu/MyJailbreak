@@ -111,7 +111,8 @@ float g_fPos[3];
 float g_DrunkAngles[20] = {0.0, 5.0, 10.0, 15.0, 20.0, 25.0, 20.0, 15.0, 10.0, 5.0, 0.0, -5.0, -10.0, -15.0, -20.0, -25.0, -20.0, -15.0, -10.0, -5.0};
 
 // Handles
-Handle g_hTimerTruce;
+Handle g_hTimerTruce;
+
 Handle g_hTimerWiggle;
 Handle g_hTimerBeacon;
 
@@ -1076,6 +1077,8 @@ void CreateInfoPanel(int client)
 	InfoPanel.DrawItem(info);
 
 	InfoPanel.Send(client, Handler_NullCancel, 20); // open info Panel
+
+	delete InfoPanel;
 }
 
 /******************************************************************************

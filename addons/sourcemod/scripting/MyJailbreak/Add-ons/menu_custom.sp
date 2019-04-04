@@ -76,12 +76,16 @@ public void MyJailbreak_MenuStart(int client, Menu menu)
 
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
+		delete kvMenu;
+		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 		return;
 	}
 
 	if (!kvMenu.GotoFirstSubKey())
 	{
+		delete kvMenu;
+		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
 		return;
 	}
@@ -153,6 +157,7 @@ public void MyJailbreak_MenuStart(int client, Menu menu)
 	if (kvMenu)
 	{
 		delete kvMenu;
+		delete hFile;
 	}
 }
 
@@ -172,12 +177,16 @@ public void MyJailbreak_MenuEnd(int client, Menu menu)
 
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
+		delete kvMenu;
+		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 		return;
 	}
 
 	if (!kvMenu.GotoFirstSubKey())
 	{
+		delete kvMenu;
+		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
 		return;
 	}
@@ -247,6 +256,7 @@ public void MyJailbreak_MenuEnd(int client, Menu menu)
 
 	if (kvMenu)
 	{
+		delete hFile;
 		delete kvMenu;
 	}
 }
@@ -257,6 +267,7 @@ public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, in
 {
 	if (!IsValidClient(client, false, true))
 	{
+		delete menu;
 		return;
 	}
 
@@ -271,5 +282,9 @@ public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, in
 		{
 			FakeClientCommand(client, command);
 		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
 	}
 }

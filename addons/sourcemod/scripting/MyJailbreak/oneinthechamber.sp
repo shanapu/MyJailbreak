@@ -1109,7 +1109,10 @@ void CreateInfoPanel(int client)
 
 	InfoPanel.DrawItem(info);
 	InfoPanel.Send(client, Handler_NullCancel, 20);
+	delete InfoPanel;
 }
+
+
 
 /******************************************************************************
                    TIMER
