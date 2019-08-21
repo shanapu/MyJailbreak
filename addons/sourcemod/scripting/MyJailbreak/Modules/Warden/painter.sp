@@ -90,7 +90,7 @@ public Action Command_PainterMenu(int client, int args)
 	{
 		if ((IsClientWarden(client)) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue) || ((GetClientTeam(client) == CS_TEAM_T) && g_bPainterT))
 		{
-			if (MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag") || (GetClientTeam(client) == CS_TEAM_T))
+			if (MyJB_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag") || (GetClientTeam(client) == CS_TEAM_T))
 			{
 				char menuinfo[255];
 
@@ -171,7 +171,7 @@ public void Painter_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_PainterMenu, "Allows Warden to toggle on/off the wardens Painter");
 	}
 }
@@ -181,7 +181,7 @@ public Action Painter_OnPlayerRunCmd(int client, int &buttons, int &impulse, flo
 	if (!IsPlayerAlive(client))
 		return;
 
-	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && MyJailbreak_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag")) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
+	if ((IsClientWarden(client) && gc_bPainter.BoolValue && g_bPainter[client] && MyJB_CheckVIPFlags(client, "sm_warden_painter_flag", gc_sAdminFlagPainter, "sm_warden_painter_flag")) || ((GetClientTeam(client) == CS_TEAM_T) && gc_bPainter.BoolValue && g_bPainterT && g_bPainter[client]) || (IsClientDeputy(client) && gc_bPainterDeputy.BoolValue && g_bPainter[client]))
 	{
 		for (int i = 0; i < MAX_BUTTONS; i++)
 		{

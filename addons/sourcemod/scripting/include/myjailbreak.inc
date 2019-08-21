@@ -28,7 +28,7 @@
 
 // Defines
 
-#define MYJB_VERSION "Beta 14.0-<COMMIT>"
+#define MYJB_VERSION "Beta 14.1.dev-<COMMIT>"
 
 #define MYJB_URL_LINK "https://github.com/shanapu/MyJailbreak"
 
@@ -78,6 +78,8 @@ public void __pl_myjailbreak_SetNTVOptional()
 
 	MarkNativeAsOptional("MyJailbreak_BeaconOn");
 	MarkNativeAsOptional("MyJailbreak_BeaconOff");
+	
+	MarkNativeAsOptional("MyJailbreak_CheckVIPFlags");
 }
 #endif
 

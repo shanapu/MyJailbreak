@@ -49,6 +49,7 @@
 #include <chat-processor>
 #include <scp>
 #include <CustomPlayerSkins>
+#include <franug_deadgames>
 #define REQUIRE_PLUGIN
 
 #include <mystocks>
@@ -107,6 +108,7 @@ bool gp_bSimpleChatProcessor = false;
 bool gp_bBasecomm = false;
 bool gp_bSourceComms = false;
 bool gp_bCustomPlayerSkins = false;
+bool gp_bDeadGames = false;
 
 // Integers
 int g_iApplicationTime= 0;
@@ -422,7 +424,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_BecomeWarden, "Allows the warde taking the charge over prisoners");
 		}
@@ -436,7 +438,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_ExitWarden, "Allows the player to retire from the position");
 		}
@@ -450,7 +452,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteWarden, "Allows the player to vote against Warden");
 		}
@@ -464,7 +466,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegAdminCmd(sCommand, AdminCommand_SetWarden, ADMFLAG_GENERIC, "Allows the admin to set a new Warden");
 		}
@@ -478,7 +480,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegAdminCmd(sCommand, AdminCommand_RemoveWarden, ADMFLAG_GENERIC, "Allows the admin to remove the Warden");
 		}
@@ -500,6 +502,7 @@ public void OnAllPluginsLoaded()
 	gp_bBasecomm = LibraryExists("basecomm");
 	gp_bSourceComms = LibraryExists("sourcecomms");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
+	gp_bDeadGames = LibraryExists("franug_deadgames");
 }
 
 public void OnLibraryRemoved(const char[] name)
@@ -540,6 +543,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bCustomPlayerSkins = false;
 	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -579,6 +586,10 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "CustomPlayerSkins"))
 	{
 		gp_bCustomPlayerSkins = true;
+	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = true;
 	}
 }
 
@@ -1297,6 +1308,7 @@ public void OnAvailableLR(int Announced)
 	HandCuffs_OnAvailableLR(Announced);
 	Deputy_OnAvailableLR(Announced);
 	Marker_OnAvailableLR(Announced);
+	NoBlock_OnAvailableLR();
 
 	if (gc_bRemoveLR.BoolValue && g_iWarden != -1)
 	{
@@ -1408,7 +1420,7 @@ Action SetTheWarden(int client, int caller)
 			}
 		}
 
-	//	delete g_hTimerOpen; // why delete don't work?
+	//	delete g_hTimerRandom; // why delete don't work?
 		if (g_hTimerRandom != null)
 		{
 			KillTimer(g_hTimerRandom);
@@ -1937,4 +1949,20 @@ void OnWardenCreation(int client)
 	Laser_OnWardenCreation(client);
 	HandCuffs_OnWardenCreation(client);
 	Glow_OnWardenCreation(client);
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailBreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

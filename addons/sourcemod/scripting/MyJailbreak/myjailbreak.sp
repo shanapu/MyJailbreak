@@ -53,6 +53,8 @@ ConVar gc_iRandomEventDayStartDelay;
 ConVar gc_iRandomEventDayType;
 ConVar gc_bDisableMedic;
 
+ConVar gc_sTags;
+
 // Booleans
 bool g_bEventDayPlanned = false;
 bool g_bEventDayRunning = false;
@@ -142,6 +144,9 @@ public void OnPluginStart()
 	HookEvent("round_end", Event_RoundEnd);
 
 	g_aEventDayList = new ArrayList(32);
+	
+	// Find Cvars
+	gc_sTags = FindConVar("sv_tags");
 }
 
 public void OnAllPluginsLoaded()
@@ -180,7 +185,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegAdminCmd(sCommand, Command_EndRound, ADMFLAG_CHANGEMAP);
 		}
@@ -189,15 +194,14 @@ public void OnConfigsExecuted()
 	if (!gc_bTag.BoolValue)
 		return;
 
-	ConVar hTags = FindConVar("sv_tags");
 	char sTags[128];
-	hTags.GetString(sTags, sizeof(sTags));
+	gc_sTags.GetString(sTags, sizeof(sTags));
 
 	if (StrContains(sTags, "MyJailbreak", false) != -1)
 		return;
 
 	StrCat(sTags, sizeof(sTags), ", MyJailbreak");
-	hTags.SetString(sTags);
+	gc_sTags.SetString(sTags);
 }
 
 
@@ -386,6 +390,11 @@ public int Native_AddEventDay(Handle plugin, int argc)
 	char sBuffer[32];
 
 	GetNativeString(1, sBuffer, sizeof(sBuffer));
+
+	int iIndex = g_aEventDayList.FindString(sBuffer);
+	if (iIndex != -1)
+		return;
+
 	g_aEventDayList.PushString(sBuffer);
 
 	SortEventDays();
@@ -598,25 +607,27 @@ void SortEventDays()
 {
 	char sBuffer[64];
 	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), "configs/MyJailbreak/sorting_events.ini");
-	Handle hFile = OpenFile(sBuffer, "r");
-	if (hFile != INVALID_HANDLE)
+	File hFile = OpenFile(sBuffer, "r");
+	if (hFile == null)
 	{
-		int num = -1;
-		while (!IsEndOfFile(hFile) && ReadFileLine(hFile, sBuffer, sizeof(sBuffer)))
-		{
-			TrimString(sBuffer);
+		LogError("couldn't read from file: %s", sBuffer);
+		delete hFile;
+		return;
+	}
+	
+	int num = -1;
+	while (hFile.EndOfFile() && hFile.ReadLine(sBuffer, sizeof(sBuffer)))
+	{
+		TrimString(sBuffer);
 
-			int index = g_aEventDayList.FindString(sBuffer);
-			if (index != -1)
-			{
-				num++;
-				g_aEventDayList.ShiftUp(num);
-				g_aEventDayList.SetString(num, sBuffer);
-				g_aEventDayList.Erase(index+1);
-			}
+		int index = g_aEventDayList.FindString(sBuffer);
+		if (index != -1)
+		{
+			num++;
+			g_aEventDayList.ShiftUp(num);
+			g_aEventDayList.SetString(num, sBuffer);
+			g_aEventDayList.Erase(index+1);
 		}
 	}
-	else LogError("couldn't read from file: %s", sBuffer);
-
 	delete hFile;
 }

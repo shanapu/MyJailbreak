@@ -311,7 +311,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteArmsRace, "Allows players to vote for a ArmsRace");
 		}
@@ -325,7 +325,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_Setarmsrace, "Allows the Admin or Warden to set a armsrace");
 		}
@@ -373,7 +373,7 @@ public Action Command_Setarmsrace(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event armsrace was started by groupvoting");
 		}
 	}
-	else if (MyJailbreak_CheckVIPFlags(client, "sm_armsrace_flag", gc_sAdminFlag, "sm_armsrace_flag")) // Called by admin/VIP
+	else if (MyJB_CheckVIPFlags(client, "sm_armsrace_flag", gc_sAdminFlag, "sm_armsrace_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
@@ -1110,41 +1110,36 @@ void GetWeapons()
 	char g_filename[PLATFORM_MAX_PATH];
 	BuildPath(Path_SM, g_filename, sizeof(g_filename), "configs/MyJailbreak/armsrace.ini");
 
-	Handle file = OpenFile(g_filename, "rt");
+	File hFile = OpenFile(g_filename, "rt");
 
-	if (file == INVALID_HANDLE)
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Arms Race - Can't read %s correctly! (ImportFromFile)", g_filename);
 	}
 
 	g_aWeapons = CreateArray(32);
 
-	while (!IsEndOfFile(file))
+	while (!IsEndOfFile(hFile))
 	{
 		char line[128];
 
-		if (!ReadFileLine(file, line, sizeof(line)))
-		{
+		if (!ReadFileLine(hFile, line, sizeof(line)))
 			break;
-		}
 
 		TrimString(line);
 
 		if (StrContains(line, "/", false) != -1)
-		{
 			continue;
-		}
 
 		if (!line[0])
-		{
 			continue;
-		}
 
 		PushArrayString(g_aWeapons, line);
 	}
 
-	CloseHandle(file);
-	
+	delete hFile;
+
 	g_iMaxLevel = GetArraySize(g_aWeapons);
 }
 
@@ -1302,4 +1297,20 @@ public Action CS_OnTerminateRound(float &delay, CSRoundEndReason &reason)
 	}
 
 	return Plugin_Handled;
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailbreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

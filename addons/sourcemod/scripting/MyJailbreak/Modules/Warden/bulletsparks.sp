@@ -71,7 +71,7 @@ public Action Command_BulletSparks(int client, int args)
 	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bBulletSparks.BoolValue)
 		return Plugin_Handled;
 
-	if (!MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
+	if (!MyJB_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 		return Plugin_Handled;
 
 	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))
@@ -103,7 +103,7 @@ public Action BulletSparks_Event_BulletImpact(Event event, char[] sName, bool bD
 	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bBulletSparks.BoolValue || !g_bBulletSparks[client])
 		return Plugin_Continue;
 
-	if (!MyJailbreak_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
+	if (!MyJB_CheckVIPFlags(client, "sm_warden_bulletsparks_flag", gc_sAdminFlagBulletSparks, "sm_warden_bulletsparks_flag"))
 		return Plugin_Continue;
 
 	if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bBulletSparksDeputy.BoolValue))

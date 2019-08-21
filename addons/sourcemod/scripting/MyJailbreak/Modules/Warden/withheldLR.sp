@@ -146,7 +146,7 @@ public void NoLR_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS) // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_NoLR, "Allows the Warden to witheld the last request");
 		}
@@ -168,7 +168,7 @@ public void NoLR_OnConfigsExecuted()
 
 public Action Listen_OnCommand(int client, const char[] command, int args)
 {
-	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled)
+	if (!g_bIsNoLR || !gc_bNoLR.BoolValue || !gc_bPlugin.BoolValue || !g_bEnabled || !warden_exist())
 		return Plugin_Continue;
 
 	//Seach for command in cmd array

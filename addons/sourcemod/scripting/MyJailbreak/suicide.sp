@@ -374,7 +374,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteSuicideBomber, "Allows players to vote for a duckhunt");
 		}
@@ -388,7 +388,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_SetSuicideBomber, "Allows the Admin or Warden to set Suicide Bomber as next round");
 		}
@@ -435,7 +435,7 @@ public Action Command_SetSuicideBomber(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Hide was started by groupvoting");
 		}
 	}
-	else if (MyJailbreak_CheckVIPFlags(client, "sm_suicidebomber_flag", gc_sAdminFlag, "sm_suicidebomber_flag")) // Called by admin/VIP
+	else if (MyJB_CheckVIPFlags(client, "sm_suicidebomber_flag", gc_sAdminFlag, "sm_suicidebomber_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
@@ -1466,4 +1466,20 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 	g_iSprintStatus[client] &= ~ IsSprintCoolDown;
 
 	return;
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailbreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

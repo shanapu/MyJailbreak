@@ -407,7 +407,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteTorch, "Allows players to vote for a torch ");
 		}
@@ -421,7 +421,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_SetTorch, "Allows the Admin or Warden to set torch as next round");
 		}
@@ -468,7 +468,7 @@ public Action Command_SetTorch(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Torch Relay was started by groupvoting");
 		}
 	}
-	else if (MyJailbreak_CheckVIPFlags(client, "sm_torch_flag", gc_sAdminFlag, "sm_torch_flag")) // Called by admin/VIP
+	else if (MyJB_CheckVIPFlags(client, "sm_torch_flag", gc_sAdminFlag, "sm_torch_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
@@ -1383,6 +1383,8 @@ public Action Timer_StartEvent(Handle timer)
 				ShowOverlay(i, g_sOverlayStartPath, 2.0);
 			}
 		}
+
+		EnableWeaponFire(i, true);
 	}
 
 	if (gc_bSounds.BoolValue)
@@ -1511,4 +1513,20 @@ public void Event_PlayerSpawn(Event event, const char[] name, bool dontBroadcast
 
 	ResetSprint(client);
 	g_iSprintStatus[client] &= ~ IsSprintCoolDown;
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailbreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

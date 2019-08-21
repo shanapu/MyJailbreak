@@ -64,30 +64,27 @@ public void OnPluginStart()
 // Here we add an new item to the beginn of the menu
 public void MyJailbreak_MenuStart(int client, Menu menu)
 {
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
+	File hFile = OpenFile(g_sMenuFile, "rt");
 
-	if (!hFile)
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't open File: %s", g_sMenuFile);
-		// return Plugin_Handled;
 	}
+	delete hFile;
 
-	KeyValues kvMenu = CreateKeyValues("CustomMenuItems");
+	KeyValues kvMenu = new KeyValues("CustomMenuItems");
 
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
 		delete kvMenu;
-		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
-		return;
 	}
 
 	if (!kvMenu.GotoFirstSubKey())
 	{
 		delete kvMenu;
-		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
-		return;
 	}
 	do
 	{
@@ -154,41 +151,35 @@ public void MyJailbreak_MenuStart(int client, Menu menu)
 	}
 	while (kvMenu.GotoNextKey());
 
-	if (kvMenu)
-	{
-		delete kvMenu;
-		delete hFile;
-	}
+	delete kvMenu;
+
 }
 
 
 // Here we add an new item to the end of the menu
 public void MyJailbreak_MenuEnd(int client, Menu menu)
 {
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
+	File hFile = OpenFile(g_sMenuFile, "rt");
 
-	if (!hFile)
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't open File: %s", g_sMenuFile);
-		// return Plugin_Handled;
 	}
 
-	KeyValues kvMenu = CreateKeyValues("CustomMenuItems");
+	KeyValues kvMenu = new KeyValues("CustomMenuItems");
 
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
 		delete kvMenu;
-		delete hFile;
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
-		return;
 	}
 
 	if (!kvMenu.GotoFirstSubKey())
 	{
 		delete kvMenu;
-		delete hFile;
+
 		SetFailState("MyJailbreak Menu - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
-		return;
 	}
 	do
 	{
@@ -254,11 +245,8 @@ public void MyJailbreak_MenuEnd(int client, Menu menu)
 	}
 	while (kvMenu.GotoNextKey());
 
-	if (kvMenu)
-	{
-		delete hFile;
-		delete kvMenu;
-	}
+	delete hFile;
+	delete kvMenu;
 }
 
 

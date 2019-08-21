@@ -43,6 +43,7 @@
 #include <lastrequest>
 #include <CustomPlayerSkins>
 #include <smartjaildoors>
+#include <franug_deadgames>
 #define REQUIRE_PLUGIN
 
 // Compiler Options
@@ -61,6 +62,7 @@ bool gp_bSmartJailDoors;
 bool gp_bCustomPlayerSkins;
 bool gp_bMyWeapons;
 bool gp_bMyJBWarden;
+bool gp_bDeadGames;
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -214,6 +216,7 @@ public void OnAllPluginsLoaded()
 	gp_bSmartJailDoors = LibraryExists("smartjaildoors");
 	gp_bCustomPlayerSkins = LibraryExists("CustomPlayerSkins");
 	gp_bMyWeapons = LibraryExists("myweapons");
+	gp_bDeadGames = LibraryExists("franug_deadgames");
 }
 
 
@@ -243,6 +246,10 @@ public void OnLibraryRemoved(const char[] name)
 	{
 		gp_bMyWeapons = false;
 	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = false;
+	}
 }
 
 public void OnLibraryAdded(const char[] name)
@@ -271,6 +278,10 @@ public void OnLibraryAdded(const char[] name)
 	{
 		gp_bMyWeapons = true;
 	}
+	else if (StrEqual(name, "franug_deadgames"))
+	{
+		gp_bDeadGames = true;
+	}
 }
 
 public void OnConfigsExecuted()
@@ -293,7 +304,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteLastGuard, "Allows terrors to vote and last CT to set Last Guard Rule");	
 		}
@@ -314,7 +325,7 @@ public Action Command_VoteLastGuard(int client, int args)
 	{
 		if (gc_bVote.BoolValue && (GetClientTeam(client) == CS_TEAM_T) && IsPlayerAlive(client))
 		{
-			if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1))
+			if ((GetPlayerCount(true, CS_TEAM_CT) == 1) && (GetPlayerCount(true, CS_TEAM_T) > 1))
 			{
 				if (gp_bMyJailBreak)
 				{
@@ -333,7 +344,7 @@ public Action Command_VoteLastGuard(int client, int args)
 					{
 						if (StrContains(g_sHasVoted, steamid, true) == -1)
 						{
-							int playercount = (GetAlivePlayersCount(CS_TEAM_T) / 2);
+							int playercount = (GetPlayerCount(true, CS_TEAM_T) / 2);
 							g_iVoteCount++;
 							int Missing = playercount - g_iVoteCount + 1;
 							Format(g_sHasVoted, sizeof(g_sHasVoted), "%s, %s", g_sHasVoted, steamid);
@@ -355,7 +366,7 @@ public Action Command_VoteLastGuard(int client, int args)
 		}
 		else if (gc_bSetCT.BoolValue && (GetClientTeam(client) == CS_TEAM_CT) && IsPlayerAlive(client))
 		{
-			if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1))
+			if ((GetPlayerCount(true, CS_TEAM_CT) == 1) && (GetPlayerCount(true, CS_TEAM_T) > 1))
 			{
 				if (gp_bMyJailBreak)
 				{
@@ -403,7 +414,7 @@ public void Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 
 	CreateTimer(2.5, Timer_LastGuardBeginn);
 
-	if (GetAlivePlayersCount(CS_TEAM_CT) >= gc_iMinCT.IntValue)
+	if (GetPlayerCount(true, CS_TEAM_CT) >= gc_iMinCT.IntValue)
 	{
 		g_bMinCT = true;
 	}
@@ -529,7 +540,7 @@ void StartLastGuard()
 			warden_enable(false);
 		}
 
-		int Tcount = (GetAlivePlayersCount(CS_TEAM_T)*gc_iTimePerT.IntValue);
+		int Tcount = (GetPlayerCount(true, CS_TEAM_T)*gc_iTimePerT.IntValue);
 		if (gc_iTime.IntValue != 0)
 		{
 			GameRules_SetProp("m_iRoundTime", (60+Tcount+(gc_iTime.IntValue*60)), 4, 0, true);
@@ -620,7 +631,7 @@ void StartLastGuard()
 			if (IsPlayerAlive(i) && GetClientTeam(i) == CS_TEAM_CT)
 			{
 				SetEntityHealth(i, HPCT);
-				CPrintToChatAll("%s %t", g_sPrefix, "lastguard_hp", GetAlivePlayersCount(CS_TEAM_T), HPterrors, i, HPCT);
+				CPrintToChatAll("%s %t", g_sPrefix, "lastguard_hp", GetPlayerCount(true, CS_TEAM_T), HPterrors, i, HPCT);
 			}
 		}
 
@@ -637,7 +648,7 @@ void CheckStatus()
 {
 	if (gc_bPlugin.BoolValue && !g_bIsLR && !g_bIsLastGuard && gc_bAutomatic.BoolValue)
 	{
-		if ((GetAlivePlayersCount(CS_TEAM_CT) == 1) && (GetAlivePlayersCount(CS_TEAM_T) > 1) && g_bMinCT)
+		if ((GetPlayerCount(true, CS_TEAM_CT) == 1) && (GetPlayerCount(true, CS_TEAM_T) > 1) && g_bMinCT)
 		{
 			if (gp_bMyJailBreak) if (MyJailbreak_IsEventDayRunning())
 			return;
@@ -868,4 +879,28 @@ void UnhookWallhack(int client)
 			SDKUnhook(iSkin, SDKHook_SetTransmit, OnSetTransmit_Wallhack);
 		}
 	}
+}
+
+static int GetPlayerCount(bool alive = false, int team = -1)
+{
+	int i, iCount = 0;
+
+	for (i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i,_, !alive))
+			continue;
+
+		if (gp_bDeadGames)
+		{
+			if(DeadGames_IsOnGame(i))
+				continue;
+		}
+
+		if (team != -1 && GetClientTeam(i) != team)
+			continue;
+
+		iCount++;
+	}
+
+	return iCount;
 }

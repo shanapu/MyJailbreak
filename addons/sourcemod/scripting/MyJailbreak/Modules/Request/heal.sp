@@ -168,7 +168,7 @@ public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		g_iHealCounter[i] = 0;
 		g_bHealed[i] = false;
 
-		if (MyJailbreak_CheckVIPFlags(i, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
+		if (MyJB_CheckVIPFlags(i, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
 		{
 			g_iHealCounter[i] = -1;
 		}
@@ -195,7 +195,7 @@ public void Heal_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_Heal, "Allows a Terrorist request healing");
 		}
@@ -206,7 +206,7 @@ public void Heal_OnClientPutInServer(int client)
 {
 	g_iHealCounter[client] = 0;
 
-	if (MyJailbreak_CheckVIPFlags(client, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
+	if (MyJB_CheckVIPFlags(client, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
 	{
 		g_iHealCounter[client] = -1;
 	}

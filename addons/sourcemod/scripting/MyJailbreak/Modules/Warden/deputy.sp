@@ -138,7 +138,7 @@ public void Deputy_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_SetDeputy, "Allows the warden to choose a deputy or a player to be deputy");
 	}
 
@@ -150,7 +150,7 @@ public void Deputy_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_ExitDeputy, "Allows the warden to remove the deputy and the deputy to retire from the position");
 	}
 
@@ -162,7 +162,7 @@ public void Deputy_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegAdminCmd(sCommand, AdminCommand_RemoveDeputy, ADMFLAG_GENERIC);
 	}
 }
@@ -444,7 +444,6 @@ public void Deputy_OnAvailableLR(int Announced)
 	if (gc_bRemoveLRDeputy.BoolValue && g_iDeputy != -1)
 	{
 		RemoveTheDeputy();
-		Forward_OnDeputyRemoved(g_iDeputy);
 	}
 }
 /******************************************************************************

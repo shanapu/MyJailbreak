@@ -319,7 +319,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_VoteDrunk, "Allows players to vote for a drunk");
 		}
@@ -333,7 +333,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegConsoleCmd(sCommand, Command_SetDrunk, "Allows the Admin or Warden to set drunk as next round");
 		}
@@ -382,7 +382,7 @@ public Action Command_SetDrunk(int client, int args)
 			LogToFileEx(g_sEventsLogFile, "Event Drunk was started by groupvoting");
 		}
 	}
-	else if (MyJailbreak_CheckVIPFlags(client, "sm_drunk_flag", gc_sAdminFlag, "sm_drunk_flag")) // Called by admin/VIP
+	else if (MyJB_CheckVIPFlags(client, "sm_drunk_flag", gc_sAdminFlag, "sm_drunk_flag")) // Called by admin/VIP
 	{
 		if (!gc_bSetA.BoolValue)
 		{
@@ -1168,4 +1168,20 @@ public Action Timer_Drunk(Handle timer, int userid)
 	}
 
 	return Plugin_Handled;
+}
+
+bool MyJB_CheckVIPFlags(int client, const char[] command, ConVar flags, char[] feature)
+{
+	if (gp_bMyJailbreak)
+		return MyJailbreak_CheckVIPFlags(client, command, flags, feature);
+
+	char sBuffer[32];
+	flags.GetString(sBuffer, sizeof(sBuffer));
+
+	if (strlen(sBuffer) == 0) // ???
+		return true;
+
+	int iFlags = ReadFlagString(sBuffer);
+
+	return CheckCommandAccess(client, command, iFlags);
 }

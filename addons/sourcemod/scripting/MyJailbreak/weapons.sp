@@ -287,9 +287,17 @@ public void OnAllPluginsLoaded()
 public void OnConfigsExecuted()
 {
 	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
-
-	g_aPrimary = CreateArray(128);
-	g_aSecondary = CreateArray(128);
+	
+	delete g_aPrimary;
+	delete g_aSecondary;
+	
+	delete g_hMenu1;
+	delete g_hMenu2;
+	delete g_hMenu3;
+	delete g_hMenu4;
+	
+	g_aPrimary = new ArrayList(128);
+	g_aSecondary = new ArrayList(128);
 	ListWeapons();
 
 	// Create menus
@@ -310,7 +318,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_Weapons, "Open the weapon menu if enabled (in EventDays/for CT)");
 	}
 }
@@ -1002,9 +1010,9 @@ public Action Timer_Fix(Handle timer, int userid)
 
 	g_hTimers[client] = null;
 
-	if (IsClientInGame(client))
+	if (IsValidClient(client, false, false))
 	{
-		if (GetClientTeam(client) > 1 && IsPlayerAlive(client))
+		if (GetClientTeam(client) > 1)
 		{
 			GiveSavedWeaponsFix(client);
 		}

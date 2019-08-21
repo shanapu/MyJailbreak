@@ -199,7 +199,7 @@ stock void SetCvar(char[] cvar, int value)
 stock void SetCvarFloat(char[] cvar, float value)
 {
 	Handle hCvar = FindConVar(cvar);
-	if (hCvar == INVALID_HANDLE)
+	if (hCvar == null)
 		return;
 
 	new flags = GetConVarFlags(hCvar);

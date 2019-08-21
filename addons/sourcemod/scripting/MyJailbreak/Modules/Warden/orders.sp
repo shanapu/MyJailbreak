@@ -79,29 +79,33 @@ public void Orders_OnMapStart()
 {
 	GetCurrentMap(g_sCurrentMap, sizeof(g_sCurrentMap));
 
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
-	if (!hFile)
+	File hFile = OpenFile(g_sMenuFile, "rt");
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
-		// return Plugin_Handled;
 	}
+	delete hFile;
 
-	KeyValues hkvMenu = CreateKeyValues("Menu");
+	KeyValues kvMenu = new KeyValues("Menu");
 
-	if (!hkvMenu.ImportFromFile(g_sMenuFile))
+	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 	}
-	if (!hkvMenu.GotoFirstSubKey())
+	if (!kvMenu.GotoFirstSubKey())
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
 	}
+	
 	do
 	{
 		char sSound[64];
 		char sOverlay[64];
-		hkvMenu.GetString("overlay", sOverlay, sizeof(sOverlay));
-		hkvMenu.GetString("sound", sSound, sizeof(sSound));
+		kvMenu.GetString("overlay", sOverlay, sizeof(sOverlay));
+		kvMenu.GetString("sound", sSound, sizeof(sSound));
 
 		if (strlen(sOverlay) > 0 && gc_bOverlays.BoolValue)
 			PrecacheDecalAnyDownload(sOverlay);
@@ -109,9 +113,9 @@ public void Orders_OnMapStart()
 		if (strlen(sSound) > 0 && gc_bSounds.BoolValue)
 			PrecacheSoundAnyDownload(sSound);
 	}
-	while (hkvMenu.GotoNextKey());
+	while (kvMenu.GotoNextKey());
 
-	delete hkvMenu;
+	delete kvMenu;
 }
 
 public void Orders_OnConfigsExecuted()
@@ -128,55 +132,58 @@ public void Orders_OnConfigsExecuted()
 	for(int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_OrderMenu, "Open the wardens orders menu");
 	}
 
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
-	if (!hFile)
+	File hFile = OpenFile(g_sMenuFile, "rt");
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
-		// return Plugin_Handled;
 	}
+	delete hFile;
 
-	KeyValues hkvMenu = CreateKeyValues("Menu");
+	KeyValues kvMenu = new KeyValues("Menu");
 
 	ClearTrie(g_hCommandTrie);
 
 	if (!hkvMenu.ImportFromFile(g_sMenuFile))
 	{
-		delete hkvMenu;
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 	}
 
 	if (!hkvMenu.GotoFirstSubKey())
 	{
-		delete hkvMenu;
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
 	}
 	do
 	{
 		char sMaps[PLATFORM_MAX_PATH];
 		char sNumber[4];
-		
-		hkvMenu.GetSectionName(sNumber, sizeof(sNumber));
+
+		kvMenu.GetSectionName(sNumber, sizeof(sNumber));
 		int num = StringToInt(sNumber);
-		
-		hkvMenu.GetString("commands", sCommands, sizeof(sCommands));
-		hkvMenu.GetString("maps", sMaps, sizeof(sMaps));
+
+		kvMenu.GetString("commands", sCommands, sizeof(sCommands));
+		kvMenu.GetString("maps", sMaps, sizeof(sMaps));
+
 		if ((strlen(sCommands) > 0) && (StrContains(sMaps, g_sCurrentMap, true) == -1))
 		{
 			ReplaceString(sCommands, sizeof(sCommands), " ", "");
 			iCount = ExplodeString(sCommands, ",", sCommandsL, sizeof(sCommandsL), sizeof(sCommandsL[]));
-			
+
 			for (int i = 0; i < iCount; i++)
 			{
 				SetTrieValue(g_hCommandTrie, sCommandsL[i], num);
 			}
 		}
 	}
-	while (hkvMenu.GotoNextKey());
-	delete hkvMenu;
+	while (kvMenu.GotoNextKey());
+
+	delete kvMenu;
 }
 
 
@@ -208,17 +215,17 @@ public Action Event_Say(int client, char[] command,int arg)
 
 void Command_Handler(char[] number)
 {
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
+	File hFile = OpenFile(g_sMenuFile, "rt");
 
-	if (hFile)
+	if (hFile != null)
 	{
-		KeyValues hkvMenu = CreateKeyValues("Orders");
+		delete hFile;
+		KeyValues kvMenu = new KeyValues("Orders");
 
 		if (!hkvMenu.ImportFromFile(g_sMenuFile))
 		{
+			delete kvMenu;
 			SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
-			delete hFile;
-			delete hkvMenu;
 		}
 
 		if (hkvMenu.JumpToKey(number, false))
@@ -243,8 +250,8 @@ void Command_Handler(char[] number)
 				char sTime[12];
 				char sTeam[6];
 				char szTeam[4][6];
-				hkvMenu.GetString("overlay_time", sTime, sizeof(sTime));
-				hkvMenu.GetString("overlay_team", sTeam, sizeof(sTeam));
+				kvMenu.GetString("overlay_time", sTime, sizeof(sTime));
+				kvMenu.GetString("overlay_team", sTeam, sizeof(sTeam));
 				
 				ReplaceString(sTeam, sizeof(sTeam), " ", "");
 				int iCount = ExplodeString(sTeam, ",", szTeam, sizeof(szTeam), sizeof(szTeam[]));
@@ -263,14 +270,14 @@ void Command_Handler(char[] number)
 			}
 			delete hkvMenu;
 		}
+
+		delete kvMenu;
 	}
-	else 
+	else
 	{
 		delete hFile;
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 	}
-
-	delete hFile;
 }
 
 /******************************************************************************
@@ -305,26 +312,27 @@ public Action Menu_BuildOrderMenu(int client)
 	Menu menu = new Menu(Handler_Menu);
 	menu.SetTitle(sText);
 
-	Handle hFile = OpenFile(g_sMenuFile, "rt");
+	File hFile = OpenFile(g_sMenuFile, "rt");
 
-	if (!hFile)
+	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
-		// return Plugin_Handled;
 	}
+	delete hFile;
 
-	KeyValues kvMenu = CreateKeyValues("Orders");
+	KeyValues kvMenu = new KeyValues("Orders");
 
 	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
-		return Plugin_Handled;
 	}
 
 	if (!kvMenu.GotoFirstSubKey())
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
-		return Plugin_Handled;
 	}
 	do
 	{
@@ -343,10 +351,7 @@ public Action Menu_BuildOrderMenu(int client)
 	}
 	while (kvMenu.GotoNextKey());
 
-	if (kvMenu)
-	{
-		delete kvMenu;
-	}
+	delete kvMenu;
 
 	menu.Display(client, MENU_TIME_FOREVER);
 	menu.ExitButton = true;
@@ -363,11 +368,11 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 		char sParam[32];
 		GetMenuItem(menu, param, sParam, sizeof(sParam));
 
-		Handle hFile = OpenFile(g_sMenuFile, "rt");
+		File hFile = OpenFile(g_sMenuFile, "rt");
 
-		if (hFile)
+		if (hFile != null)
 		{
-			KeyValues kvMenu = CreateKeyValues("Menu");
+			KeyValues kvMenu = new KeyValues("Menu");
 
 			if (!kvMenu.ImportFromFile(g_sMenuFile))
 			{
@@ -400,14 +405,22 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 					char szTeam[4][6];
 					kvMenu.GetString("overlay_time", sTime, sizeof(sTime));
 					kvMenu.GetString("overlay_team", sTeam, sizeof(sTeam));
-					
+
 					ReplaceString(sTeam, sizeof(sTeam), " ", "");
 					int iCount = ExplodeString(sTeam, ",", szTeam, sizeof(szTeam), sizeof(szTeam[]));
-					
+
 					for (int iTeam = 0; iTeam < iCount; iTeam++)
 					{
-						for (int i = 1; i <= MaxClients; i++) if (IsValidClient(i, false, false))
-						if (GetClientTeam(i) == StringToInt(szTeam[iTeam])) ShowOverlay(i, sValue, StringToFloat(sTime));
+						for (int i = 1; i <= MaxClients; i++)
+						{
+							if (!IsValidClient(i, false, false))
+								continue;
+
+							if (GetClientTeam(i) == StringToInt(szTeam[iTeam]))
+							{
+								ShowOverlay(i, sValue, StringToFloat(sTime));
+							}
+						}
 					}
 				}
 
@@ -416,14 +429,17 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 				{
 					EmitSoundToAllAny(sValue);
 				}
-				delete hFile;
 				delete kvMenu;
 			}
 		}
-		else 
+		else
 		{
+			delete hFile;
 			SetFailState("MyJailbreak Warden - Can't open File: %s", g_sMenuFile);
 		}
+
+		delete hFile;
+
 	}
 	else if (action == MenuAction_Cancel)
 	{

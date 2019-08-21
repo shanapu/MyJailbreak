@@ -79,11 +79,11 @@ public void NoBlock_OnPluginStart()
 
 public Action Command_ToggleNoBlock(int client, int args)
 {
-	if (gc_bNoBlock.BoolValue) 
+	if (gc_bNoBlock.BoolValue)
 	{
 		if (IsClientWarden(client) || (IsClientDeputy(client) && gc_bNoBlockDeputy.BoolValue))
 		{
-			if (!g_bNoBlock) 
+			if (!g_bNoBlock)
 			{
 				g_bNoBlock = true;
 				CPrintToChatAll("%s %t", g_sPrefix, "warden_noblockon");
@@ -119,6 +119,24 @@ public void NoBlock_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
 }
 
+void NoBlock_OnAvailableLR()
+{
+	for (int i = 1; i <= MaxClients; i++)
+	{
+		if (!IsValidClient(i, true, true))
+			continue;
+
+		SetEntProp(i, Prop_Send, "m_CollisionGroup", 5);  // 2 - none / 5 - 'default'
+	}
+
+	if (gc_bNoBlockMode.BoolValue)
+	{
+		SetCvar("mp_solid_teammates", 1);
+	}
+
+	CPrintToChatAll("%s %t", g_sPrefix, "warden_noblockoff");
+}
+
 /******************************************************************************
                    FORWARDS LISTENING
 ******************************************************************************/
@@ -137,7 +155,7 @@ public void NoBlock_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_ToggleNoBlock, "Allows the Warden to toggle no block");
 	}
 }

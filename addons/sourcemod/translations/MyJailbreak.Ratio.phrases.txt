@@ -281,4 +281,9 @@
 		"en"		"You have not used your mic before, you cannot join guards without voice. Use your mic and try again."
 	}
 
+	"ratio_question_title"
+	{
+		"en"		"Please answer the following questions to become a Guard."
+	}
+
 }

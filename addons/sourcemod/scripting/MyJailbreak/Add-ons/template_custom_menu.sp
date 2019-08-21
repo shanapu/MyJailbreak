@@ -151,8 +151,6 @@ public void MyJailbreak_MenuHandler(Menu menu, MenuAction action, int client, in
 }
 
 
-
-
 // Remove this part for your own custom plugin!
 public void OnMapStart()
 {

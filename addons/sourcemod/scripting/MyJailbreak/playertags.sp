@@ -254,7 +254,7 @@ public void OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 		{
 			RegAdminCmd(sCommand,  Command_Incognito, ADMFLAG_RESERVATION, "Allows admin to toggle incognito - show default tags instead of admin tags");
 		}
@@ -439,13 +439,14 @@ public void Frame_HandleTag(int userid)
 
 void LoadPlayerTags(int client)
 {
-	Handle hFile = OpenFile(g_sConfigFile, "rt");
+	File hFile = OpenFile(g_sConfigFile, "rt");
 
 	if (hFile == null)
 	{
+		delete hFile;
 		SetFailState("MyJailbreak PlayerTags - Can't open File: %s", g_sConfigFile);
-		return;
 	}
+	delete hFile;
 
 	delete hFile;
 
@@ -453,8 +454,8 @@ void LoadPlayerTags(int client)
 
 	if (!kvMenu.ImportFromFile(g_sConfigFile))
 	{
+		delete kvMenu;
 		SetFailState("MyJailbreak PlayerTags - Can't read %s correctly! (ImportFromFile)", g_sConfigFile);
-		return;
 	}
 
 	char steamid[24];
@@ -514,6 +515,7 @@ void LoadPlayerTags(int client)
 		if (kvMenu.JumpToKey(sGroup))
 		{
 			GetTags(client, kvMenu);
+
 			delete kvMenu;
 			return;
 		}
@@ -523,7 +525,7 @@ void LoadPlayerTags(int client)
 	char sFlags[21] = "abcdefghijklmnopqrstz";
 
 	// backwards loop
-	for (int i = sizeof(sFlags)-1; i >= 0; i--)
+	for (int i = sizeof(sFlags) - 1; i >= 0; i--)
 	{
 		char sFlag[1];
 		sFlag[0] = sFlags[i]; //Get only one char
@@ -533,7 +535,7 @@ void LoadPlayerTags(int client)
 			if (kvMenu.JumpToKey(sFlag))
 			{
 				GetTags(client, kvMenu);
-				
+
 				delete kvMenu;
 				return;
 			}

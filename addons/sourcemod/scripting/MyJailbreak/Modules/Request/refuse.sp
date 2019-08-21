@@ -188,7 +188,7 @@ public void Refuse_Event_RoundStart(Event event, char[] name, bool dontBroadcast
 		g_bRefused[i] = false;
 		g_bAllowRefuse = false;
 
-		if (MyJailbreak_CheckVIPFlags(i, "sm_refuse_flag", gc_sAdminFlagRefuse, "sm_refuse_flag"))
+		if (MyJB_CheckVIPFlags(i, "sm_refuse_flag", gc_sAdminFlagRefuse, "sm_refuse_flag"))
 		{
 			g_iRefuseCounter[i] = -1;
 		}
@@ -223,7 +223,7 @@ public void Refuse_OnConfigsExecuted()
 	for (int i = 0; i < iCount; i++)
 	{
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
-		if (GetCommandFlags(sCommand) == INVALID_FCVAR_FLAGS)  // if command not already exist
+		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_refuse, "Allows the Warden start refusing time and Terrorist to refuse a game");
 	}
 }
@@ -232,7 +232,7 @@ public void Refuse_OnClientPutInServer(int client)
 {
 	g_iRefuseCounter[client] = 0;
 
-	if (MyJailbreak_CheckVIPFlags(client, "sm_refuse_flag", gc_sAdminFlagRefuse, "sm_refuse_flag"))
+	if (MyJB_CheckVIPFlags(client, "sm_refuse_flag", gc_sAdminFlagRefuse, "sm_refuse_flag"))
 	{
 		g_iRefuseCounter[client] = -1;
 	}
