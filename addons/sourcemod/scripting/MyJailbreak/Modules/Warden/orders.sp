@@ -148,13 +148,13 @@ public void Orders_OnConfigsExecuted()
 
 	ClearTrie(g_hCommandTrie);
 
-	if (!hkvMenu.ImportFromFile(g_sMenuFile))
+	if (!kvMenu.ImportFromFile(g_sMenuFile))
 	{
 		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 	}
 
-	if (!hkvMenu.GotoFirstSubKey())
+	if (!kvMenu.GotoFirstSubKey())
 	{
 		delete kvMenu;
 		SetFailState("MyJailbreak Warden - Can't read %s correctly! (GotoFirstSubKey)", g_sMenuFile);
@@ -222,29 +222,29 @@ void Command_Handler(char[] number)
 		delete hFile;
 		KeyValues kvMenu = new KeyValues("Orders");
 
-		if (!hkvMenu.ImportFromFile(g_sMenuFile))
+		if (!kvMenu.ImportFromFile(g_sMenuFile))
 		{
 			delete kvMenu;
 			SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
 		}
 
-		if (hkvMenu.JumpToKey(number, false))
+		if (kvMenu.JumpToKey(number, false))
 		{
 			char sValue[PLATFORM_MAX_PATH];
 
-			hkvMenu.GetString("chat", sValue, sizeof(sValue));
+			kvMenu.GetString("chat", sValue, sizeof(sValue));
 			if (strlen(sValue) > 0)
 			{
 				CPrintToChatAll("%s %s", g_sPrefix, sValue);
 			}
 
-			hkvMenu.GetString("HUD", sValue, sizeof(sValue));
+			kvMenu.GetString("HUD", sValue, sizeof(sValue));
 			if (strlen(sValue) > 0)
 			{
 				PrintCenterTextAll("%s", sValue);
 			}
 
-			hkvMenu.GetString("overlay", sValue, sizeof(sValue));
+			kvMenu.GetString("overlay", sValue, sizeof(sValue));
 			if (strlen(sValue) > 0)
 			{
 				char sTime[12];
@@ -263,12 +263,12 @@ void Command_Handler(char[] number)
 				}
 			}
 
-			hkvMenu.GetString("sound", sValue, sizeof(sValue));
+			kvMenu.GetString("sound", sValue, sizeof(sValue));
 			if (strlen(sValue) > 0)
 			{
 				EmitSoundToAllAny(sValue);
 			}
-			delete hkvMenu;
+			delete kvMenu;
 		}
 
 		delete kvMenu;
