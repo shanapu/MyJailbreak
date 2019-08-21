@@ -1288,6 +1288,8 @@ void CreateInfoPanel(int client)
 	InfoPanel.DrawItem(info);
 
 	InfoPanel.Send(client, Handler_NullCancel, 20); // open info Panel
+
+	delete InfoPanel;
 }
 
 void SendResults(int client)
@@ -1342,6 +1344,8 @@ void SendResults(int client)
 	if (gc_bChat.BoolValue) CPrintToChat(client, info);
 
 	if (gc_bShowPanel.BoolValue) InfoPanel.Send(client, Handler_NullCancel, 20); // open info Panel
+
+	delete InfoPanel;
 }
 
 /******************************************************************************

@@ -448,6 +448,8 @@ void LoadPlayerTags(int client)
 	}
 	delete hFile;
 
+	delete hFile;
+
 	KeyValues kvMenu = new KeyValues("PlayerTags");
 
 	if (!kvMenu.ImportFromFile(g_sConfigFile))

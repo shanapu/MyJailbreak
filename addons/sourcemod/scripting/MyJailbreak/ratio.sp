@@ -455,6 +455,7 @@ public Action Command_ViewGuardQueue(int client, int args)
 	Format(info, sizeof(info), "%T", "ratio_close", client);
 	InfoPanel.DrawItem(info);
 	InfoPanel.Send(client, Handler_NullCancel, 12);
+	delete InfoPanel;
 
 	return Plugin_Handled;
 }
@@ -1034,6 +1035,7 @@ void Menu_AcceptGuardRules(int client)
 	InfoPanel.DrawItem(info);
 
 	InfoPanel.Send(client, Handler_AcceptGuardRules, 20);
+	delete InfoPanel;
 }
 
 public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, int param2)
@@ -1078,6 +1080,10 @@ public int Handler_AcceptGuardRules(Handle menu, MenuAction action, int param1, 
 				g_bQueueCooldown[client] = true;
 			}
 		}
+	}	
+	else if (action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 
@@ -1131,6 +1137,7 @@ void Menu_GuardQuestions(int client)
 		}
 
 		InfoPanel.Send(client, Handler_GuardQuestions, 20);
+		delete InfoPanel;
 	}
 }
 
@@ -1259,6 +1266,10 @@ public int Handler_GuardQuestions(Handle menu, MenuAction action, int param1, in
 				}
 			}
 		}
+	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
 	}
 }
 

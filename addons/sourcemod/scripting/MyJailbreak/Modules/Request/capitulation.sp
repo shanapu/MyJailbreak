@@ -327,6 +327,10 @@ public int Handler_CapitulationMenu(Menu menu, MenuAction action, int client, in
 			}
 		}
 	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
 }
 
 /******************************************************************************

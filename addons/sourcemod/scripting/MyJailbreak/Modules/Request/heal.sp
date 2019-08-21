@@ -283,6 +283,11 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 			}
 		}
 	}
+	else if (action == MenuAction_End)
+	{
+		delete menu;
+	}
+
 }
 
 

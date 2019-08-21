@@ -129,7 +129,8 @@ int g_iTsLR;
 // Handles
 Handle g_hTimerFreeze;
 Handle g_hTimerBeacon;
-Handle g_hTimerRegen;
+Handle g_hTimerRegen;
+
 // floats
 float g_fPos[3];
 
@@ -1424,6 +1425,7 @@ void CreateInfoPanel(int client)
 	InfoPanel.DrawItem(info);
 
 	InfoPanel.Send(client, Handler_NullCancel, 20);
+	delete InfoPanel;
 }
 
 /******************************************************************************

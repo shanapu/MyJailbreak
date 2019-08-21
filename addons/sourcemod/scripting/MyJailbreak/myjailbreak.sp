@@ -629,6 +629,5 @@ void SortEventDays()
 			g_aEventDayList.Erase(index+1);
 		}
 	}
-
 	delete hFile;
 }

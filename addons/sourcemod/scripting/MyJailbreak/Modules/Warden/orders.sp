@@ -169,6 +169,7 @@ public void Orders_OnConfigsExecuted()
 
 		kvMenu.GetString("commands", sCommands, sizeof(sCommands));
 		kvMenu.GetString("maps", sMaps, sizeof(sMaps));
+
 		if ((strlen(sCommands) > 0) && (StrContains(sMaps, g_sCurrentMap, true) == -1))
 		{
 			ReplaceString(sCommands, sizeof(sCommands), " ", "");
@@ -267,6 +268,7 @@ void Command_Handler(char[] number)
 			{
 				EmitSoundToAllAny(sValue);
 			}
+			delete kvMenu;
 		}
 
 		delete kvMenu;
@@ -375,6 +377,7 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 			if (!kvMenu.ImportFromFile(g_sMenuFile))
 			{
 				SetFailState("MyJailbreak Warden - Can't read %s correctly! (ImportFromFile)", g_sMenuFile);
+				delete hFile;
 				delete kvMenu;
 			}
 
@@ -426,7 +429,6 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 				{
 					EmitSoundToAllAny(sValue);
 				}
-
 				delete kvMenu;
 			}
 		}
@@ -437,6 +439,7 @@ public int Handler_Menu(Menu menu, MenuAction action, int client, int param)
 		}
 
 		delete hFile;
+
 	}
 	else if (action == MenuAction_Cancel)
 	{
