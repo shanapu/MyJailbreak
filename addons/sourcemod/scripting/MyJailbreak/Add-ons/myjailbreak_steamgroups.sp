@@ -192,7 +192,7 @@ public void OnClientPostAdminCheck(int client)
 	SteamWorks_GetUserGroupStatus(client, StringToInt(g_sGroupWarden));
 }
 
-public int SteamWorks_OnClientGroupStatus(int authid, int groupAccountID, bool isMember, bool isOfficer)
+public void SteamWorks_OnClientGroupStatus(int authid, int groupAccountID, bool isMember, bool isOfficer)
 {
 	int client = GetUserAuthID(authid);
 	if (client == -1)

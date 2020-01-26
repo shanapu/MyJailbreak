@@ -1,8 +1,8 @@
-
 #if defined _rankme_included
   #endinput
 #endif
 #define _rankme_included
+
 enum WEAPONS_ENUM{
 	KNIFE,
 	GLOCK,
@@ -44,11 +44,15 @@ enum WEAPONS_ENUM{
 	INFERNO,
 	DECOY,
 	TASER,
+	MP5SD,
+	BREACHCHARGE,
 }
+
 enum STATS_NAMES{
 	SCORE,
 	KILLS,
 	DEATHS,
+	ASSISTS,
 	SUICIDES,
 	TK,
 	SHOTS,
@@ -65,7 +69,15 @@ enum STATS_NAMES{
 	HOSTAGES_RESCUED,
 	VIP_KILLED,
 	VIP_ESCAPED,
-	VIP_PLAYED
+	VIP_PLAYED,
+	MVP,
+	DAMAGE,
+	MATCH_WIN,
+	MATCH_DRAW,
+	MATCH_LOSE,
+	FB,
+	NS,
+	NSD
 }
 
 enum HITBOXES{
@@ -80,7 +92,7 @@ enum HITBOXES{
 }
 
 
-public SharedPlugin:__pl_rankme= 
+public SharedPlugin __pl_rankme= 
 {
 	name = "rankme",
 	file = "kento_rankme.smx",
@@ -89,14 +101,11 @@ public SharedPlugin:__pl_rankme=
 	#else
 	required = 0
 	#endif
-};
+}
 
-funcenum RankCallback
-{
-	public(client, rank,any:data),
-};
+typedef RankCallback = function Action(int client, int rank, any data);
 
-public __pl_rankme_SetNTVOptional()
+public void __pl_rankme_SetNTVOptional()
 {
 	MarkNativeAsOptional("RankMe_GivePoint");
 	MarkNativeAsOptional("RankMe_GetRank");
@@ -105,6 +114,7 @@ public __pl_rankme_SetNTVOptional()
 	MarkNativeAsOptional("RankMe_GetSession");
 	MarkNativeAsOptional("RankMe_GetWeaponStats");
 	MarkNativeAsOptional("RankMe_GetHitbox");
+	MarkNativeAsOptional("RankMe_IsPlayerLoaded");
 }
 
 /*********************************************************
@@ -117,7 +127,7 @@ public __pl_rankme_SetNTVOptional()
  * @param printtoall	Print the change to the everyone
  * @noreturn		
  *********************************************************/
-native RankMe_GivePoint(client,points,String:reason[],printtoplayer,printtoall);
+native void RankMe_GivePoint(int client, int points, char[] reason, int printtoplayer, int printtoall);
 
 /*********************************************************
  * Get rank of a player on the server
@@ -127,7 +137,7 @@ native RankMe_GivePoint(client,points,String:reason[],printtoplayer,printtoall);
  * @param data	Any data you would like that return on the callback
  * @noreturn		
  *********************************************************/
-native RankMe_GetRank(client,RankCallback:callback,any:data=0);
+native void RankMe_GetRank(int client, RankCallback callback, any data = 0);
 
 /*********************************************************
  * Get the score (points) of a player on the server
@@ -136,7 +146,7 @@ native RankMe_GetRank(client,RankCallback:callback,any:data=0);
  * @param data	Any data you would like that return on the callback
  * @return		The score of the client
  *********************************************************/
-native RankMe_GetPoints(client);
+native int RankMe_GetPoints(int client);
 
 /*********************************************************
  * Get stats of a player on the server
@@ -145,7 +155,7 @@ native RankMe_GetPoints(client);
  * @param stats_return	The array that will return the data following the ENUM STATS_NAME;
  * @noreturn		
  *********************************************************/
-native RankMe_GetStats(client,stats_return[]);
+native void RankMe_GetStats(int client, int[] stats_return);
 
 /*********************************************************
  * Get session of a player on the server
@@ -154,7 +164,7 @@ native RankMe_GetStats(client,stats_return[]);
  * @param session_return	The array that will return the data following the ENUM STATS_NAME;
  * @noreturn		
  *********************************************************/
-native RankMe_GetSession(client,session_return[]);
+native void RankMe_GetSession(int client,int[] session_return);
 
 /*********************************************************
  * Get weapon stats of a player on the server
@@ -163,7 +173,7 @@ native RankMe_GetSession(client,session_return[]);
  * @param session_return	The array that will return the data following the ENUM WEAPONS_ENUM;
  * @noreturn		
  *********************************************************/
-native RankMe_GetWeaponStats(client,weapons_return[]);
+native void RankMe_GetWeaponStats(int client, int[] weapons_return);
 
 /*********************************************************
  * Get hitbox stats of a player on the server
@@ -172,7 +182,15 @@ native RankMe_GetWeaponStats(client,weapons_return[]);
  * @param session_return	The array that will return the data following the ENUM HITBOXES;
  * @noreturn		
  *********************************************************/
-native RankMe_GetHitbox(client,hitbox_return[]);
+native void RankMe_GetHitbox(int client, int[] hitbox_return);
+
+/*********************************************************
+ * Get if player is loaded 
+ *
+ * @param client	Client index
+ * @return			If the client is loaded
+ *********************************************************/
+native void RankMe_IsPlayerLoaded(int client);
 
 /**********************************************************************
  * When a player has been loaded
@@ -180,7 +198,7 @@ native RankMe_GetHitbox(client,hitbox_return[]);
  * @param         client        The client index of the player that has been loaded
  * @noreturn
  **********************************************************************/
-forward Action:RankMe_OnPlayerLoaded(client);
+forward Action RankMe_OnPlayerLoaded(int client);
 
 /**********************************************************************
  * When a player has been saved
@@ -188,4 +206,4 @@ forward Action:RankMe_OnPlayerLoaded(client);
  * @param         client        The client index of the player that has been saved
  * @noreturn
  **********************************************************************/
-forward Action:RankMe_OnPlayerSaved(client);
+forward Action RankMe_OnPlayerSaved(int client);

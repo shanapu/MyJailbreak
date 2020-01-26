@@ -58,14 +58,12 @@ done
 
 echo "Move all addons binary files to disbaled folder"
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_kento_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_rankme.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_gangs.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_reputation.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_mostactive.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_teamgames.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_steamgroups.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_stamm.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_zephstore_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_sm-store_credits.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_simplestats.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/myjailbreak_devzones.smx addons/sourcemod/plugins/MyJailbreak/disabled
@@ -76,8 +74,6 @@ echo "Move all addons binary files to disbaled folder"
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_addicted.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_databomb.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/ratio_ctbans_r1ko.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_paperclips.smx addons/sourcemod/plugins/MyJailbreak/disabled
-  mv addons/sourcemod/plugins/MyJailbreak/warden_zephstore_freeday.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/menu_custom.smx addons/sourcemod/plugins/MyJailbreak/disabled
   mv addons/sourcemod/plugins/MyJailbreak/eventday_toggle.smx addons/sourcemod/plugins/MyJailbreak/disabled
   rm -r addons/sourcemod/plugins/MyJailbreak/template_custom_menu.smx

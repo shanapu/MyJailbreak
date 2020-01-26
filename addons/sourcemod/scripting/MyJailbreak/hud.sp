@@ -48,19 +48,6 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-/**
- * TeamGames teams
- */
-enum TG_Team
-{
-	TG_ErrorTeam = -1, // CTs, dead Ts, etc...
-	TG_NoneTeam, // Ts who are not in TeamGames team
-	TG_RedTeam, // Ts who are in TeamGames Red team
-	TG_BlueTeam // Ts who are in TeamGames Blue team
-};
-
-TG_Team TGTeam[MAXPLAYERS+1];
-
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bMyJBWarden = false;
@@ -290,11 +277,6 @@ public void Event_PlayerTeamDeath(Event event, const char[] name, bool dontBroad
 	ShowHUD();
 }
 
-public void TG_OnPlayerTeam(int client, int activator, TG_Team teamBefore, TG_Team teamAfter)
-{
-	TGTeam[client] = teamAfter;
-}
-
 /******************************************************************************
                    FORWARDS LISTEN
 ******************************************************************************/
@@ -381,14 +363,6 @@ void ShowHUD()
 
 		if (gp_bHosties && IsClientInLastRequest(i))
 			continue;
-
-		ConVar cv_TGNotification = FindConVar("tg_team_notification");
-		
-		if (cv_TGNotification != null && (cv_TGNotification.IntValue == 1 || cv_TGNotification.IntValue == 2))
-		{
-			if ((TGTeam[i] == TG_RedTeam) || (TGTeam[i] == TG_BlueTeam))
-				return;
-		}
 
 		if(gc_bType.BoolValue)
 		{

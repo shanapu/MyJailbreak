@@ -30,7 +30,6 @@
 #include <vip_core>
 #include <stamm>
 #include <reputation>
-#include <rankme>
 #include <hl_gangs>
 #include <mostactive>
 
@@ -63,11 +62,6 @@ public bool MyJailbreak_OnCheckVIP(int client, char[] feature)
 	else if (StrEqual(feature, "sm_warden_bulletsparks_flag", false))
 	{
 		if (Reputation_GetRep(client) > 99)
-			return true;
-	}
-	else if (StrEqual(feature, "sm_lastguard_flag", false))
-	{
-		if (RankMe_GetPoints(client) > 99)
 			return true;
 	}
 	else if (StrEqual(feature, "sm_request_flag", false))

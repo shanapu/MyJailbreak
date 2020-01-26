@@ -16,7 +16,6 @@ env:
 
 matrix:
   allow_failures:
-    - env: VERSION=1.10
     - env: VERSION=1.11
 
 script:

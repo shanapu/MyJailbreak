@@ -134,10 +134,7 @@ echo Compile: MyJailbreak Add-on Support DevZones
 spcomp MyJailbreak/Add-ons/myjailbreak_devzones.sp -o../plugins/MyJailbreak/disabled/myjailbreak_devzones.smx  
 echo.
 echo Compile: MyJailbreak Add-on Support MostActive
-spcomp MyJailbreak/Add-ons/myjailbreak_mostactive.sp -o../plugins/MyJailbreak/disabled/myjailbreak_mostactive.smx  
-echo.
-echo Compile: MyJailbreak Add-on Support Kisslick TeamGames
-spcomp MyJailbreak/Add-ons/myjailbreak_teamgames.sp -o../plugins/MyJailbreak/disabled/myjailbreak_teamgames.smx  
+spcomp MyJailbreak/Add-ons/myjailbreak_mostactive.sp -o../plugins/MyJailbreak/disabled/myjailbreak_mostactive.smx
 echo.
 echo Compile: MyJailbreak Add-on Support Steamgroups
 spcomp MyJailbreak/Add-ons/myjailbreak_steamgroups.sp -o../plugins/MyJailbreak/disabled/myjailbreak_steamgroups.smx  
@@ -147,9 +144,6 @@ spcomp MyJailbreak/Add-ons/myjailbreak_stamm.sp -o../plugins/MyJailbreak/disable
 echo.
 echo Compile: MyJailbreak Add-on Support Reputation
 spcomp MyJailbreak/Add-ons/myjailbreak_reputation.sp -o../plugins/MyJailbreak/disabled/myjailbreak_reputation.smx  
-echo.
-echo Compile: MyJailbreak Add-on Support RankMe
-spcomp MyJailbreak/Add-ons/myjailbreak_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_rankme.smx  
 echo.
 echo Compile: MyJailbreak Add-on Support Kento RankMe
 spcomp MyJailbreak/Add-ons/myjailbreak_kento_rankme.sp -o../plugins/MyJailbreak/disabled/myjailbreak_kento_rankme.smx  
