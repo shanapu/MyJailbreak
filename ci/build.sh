@@ -3,7 +3,6 @@ set -ev
 
 BID=$6
 FILE=MyJB-$2-$BID.zip
-LATEST=MyJB-$2-latest.zip
 HOST=$3
 USER=$4
 PASS=$5
@@ -240,11 +239,5 @@ zip -9rq $FILE gameserver fastDL install.txt license.txt CHANGELOG.md
 
 echo "Upload file"
 lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O MyJailbreak/downloads/SM$1/$2/ $FILE"
-
-echo "Add latest build"
-mv $FILE $LATEST
-
-echo "Upload latest build"
-lftp -c "set ftp:ssl-allow no; set ssl:verify-certificate no; open -u $USER,$PASS $HOST; put -O MyJailbreak/downloads/SM$1/ $LATEST"
 
 echo "Build done"

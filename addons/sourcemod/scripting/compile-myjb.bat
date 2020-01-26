@@ -157,17 +157,8 @@ echo.
 echo Compile: MyJailbreak Add-on Support SM Store
 spcomp MyJailbreak/Add-ons/myjailbreak_sm-store_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_sm-store_credits.smx  
 echo.
-echo Compile: MyJailbreak Add-on Support Zeph store credits
-spcomp MyJailbreak/Add-ons/myjailbreak_zephstore_credits.sp -o../plugins/MyJailbreak/disabled/myjailbreak_zephstore_credits.smx  
-echo.
 echo Compile: MyJailbreak Add-on Support simplestats
 spcomp MyJailbreak/Add-ons/myjailbreak_simplestats.sp -o../plugins/MyJailbreak/disabled/myjailbreak_simplestats.smx
-echo.
-echo Compile: MyJailbreak Add-on Support Zeph store paperclips
-spcomp MyJailbreak/Add-ons/warden_zephstore_paperclips.sp -o../plugins/MyJailbreak/disabled/warden_zephstore_paperclips.smx
-echo.
-echo Compile: MyJailbreak Add-on Support Zeph store freeday
-spcomp MyJailbreak/Add-ons/warden_zephstore_freeday.sp -o../plugins/MyJailbreak/disabled/warden_zephstore_freeday.smx
 echo.
 echo Compile: MyJailbreak Add-on add custom menu item
 spcomp MyJailbreak/Add-ons/menu_custom.sp -o../plugins/MyJailbreak/disabled/menu_custom.smx

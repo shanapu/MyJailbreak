@@ -40,7 +40,7 @@ StringMap g_hConVarTrie;
 StringMap g_hPluginTrie;
 
 // Strings
-char g_sFile[64];
+char g_sFile[100];
 
 // Start
 public Plugin myinfo =

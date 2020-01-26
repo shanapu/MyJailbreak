@@ -605,7 +605,7 @@ void ToggleHeal(bool heal)
 
 void SortEventDays()
 {
-	char sBuffer[64];
+	char sBuffer[100];
 	BuildPath(Path_SM, sBuffer, sizeof(sBuffer), "configs/MyJailbreak/sorting_events.ini");
 	File hFile = OpenFile(sBuffer, "r");
 	if (hFile == null)

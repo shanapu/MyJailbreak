@@ -39,7 +39,6 @@
 #include <myjailbreak>
 #include <chat-processor>
 #include <ccc>
-#include <store>
 #include <togsclantags>
 #include <warden>
 #include <myjbwarden>
@@ -58,7 +57,6 @@
 // Booleans
 bool g_bIsLateLoad = false;
 bool gp_bChatProcessor = false;
-bool gp_bStore = false;
 bool gp_bCCC = false;
 bool gp_bTOGsTags = false;
 bool gp_bMyJBWarden = false;
@@ -107,8 +105,6 @@ public Plugin myinfo =
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	MarkNativeAsOptional("Store_GetEquippedItem");
-
 	g_bIsLateLoad = late;
 
 	return APLRes_Success;
@@ -168,7 +164,6 @@ public void OnAllPluginsLoaded()
 	gp_bChatProcessor = LibraryExists("chat-processor");
 	gp_bCCC = LibraryExists("ccc");
 	gp_bTOGsTags = LibraryExists("togsclantags");
-	gp_bStore = LibraryExists("store");
 	gp_bWarden = LibraryExists("warden");
 	gp_bMyJBWarden = LibraryExists("myjbwarden");
 }
@@ -186,10 +181,6 @@ public void OnLibraryRemoved(const char[] name)
 	else if (StrEqual(name, "togsclantags"))
 	{
 		gp_bTOGsTags = false;
-	}
-	else if (StrEqual(name, "store"))
-	{
-		gp_bStore = false;
 	}
 	else if (StrEqual(name, "warden"))
 	{
@@ -214,10 +205,6 @@ public void OnLibraryAdded(const char[] name)
 	else if (StrEqual(name, "togsclantags"))
 	{
 		gp_bTOGsTags = true;
-	}
-	else if (StrEqual(name, "store"))
-	{
-		gp_bStore = true;
 	}
 	else if (StrEqual(name, "warden"))
 	{
@@ -665,14 +652,6 @@ public Action CP_OnChatMessage(int &client, ArrayList recipients, char[] flagstr
 			return Plugin_Continue;
 	}
 
-	if (gp_bStore && !gc_bExtern.BoolValue)
-	{
-		if (Store_GetEquippedItem(client, "nametag") >= 0 && 
-			Store_GetEquippedItem(client, "namecolor") >= 0 && 
-			Store_GetEquippedItem(client, "msgcolor") >= 0)
-			return Plugin_Continue;
-	}
-
 	if (GetClientTeam(client) == CS_TEAM_T)
 	{
 		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][PRISONER]) < 1)
@@ -757,14 +736,6 @@ public Action OnChatMessage(int &client, Handle recipients, char[] name, char[] 
 	if (gp_bTOGsTags && !gc_bExtern.BoolValue)
 	{
 		if (TOGsClanTags_HasAnyTag(client))
-			return Plugin_Continue;
-	}
-
-	if (gp_bStore && !gc_bExtern.BoolValue)
-	{
-		if (Store_GetEquippedItem(client, "nametag") >= 0 && 
-			Store_GetEquippedItem(client, "namecolor") >= 0 && 
-			Store_GetEquippedItem(client, "msgcolor") >= 0)
 			return Plugin_Continue;
 	}
 
