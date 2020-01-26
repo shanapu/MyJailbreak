@@ -104,10 +104,10 @@ char g_sPrefix[64];
 char primaryWeapon[MAXPLAYERS + 1][24];
 char secondaryWeapon[MAXPLAYERS + 1][24];
 
-enum g_hWeapons
+enum struct g_hWeapons
 {
-	String:ItemName[64], 
-	String:desc[64]
+	char ItemName[64];
+	char desc[64];
 }
 
 // Info
@@ -449,9 +449,9 @@ void GiveSavedWeaponsFix(int client)
 					{
 						// Select random menu item (excluding "Random" option)
 						int random = GetRandomInt(0, GetArraySize(g_aPrimary)-1);
-						int Items[g_hWeapons];
-						GetArrayArray(g_aPrimary, random, Items[0]);
-						GivePlayerItem(client, Items[ItemName]);
+						g_hWeapons Item;
+						GetArrayArray(g_aPrimary, random, Item);
+						GivePlayerItem(client, Item.ItemName);
 					}
 					else GivePlayerItem(client, primaryWeapon[client]);
 				}
@@ -461,9 +461,9 @@ void GiveSavedWeaponsFix(int client)
 					{
 						// Select random menu item (excluding "Random" option)
 						int random = GetRandomInt(0, GetArraySize(g_aSecondary)-1);
-						int Items[g_hWeapons];
-						GetArrayArray(g_aSecondary, random, Items[0]);
-						GivePlayerItem(client, Items[ItemName]);
+						g_hWeapons Item;
+						GetArrayArray(g_aSecondary, random, Item);
+						GivePlayerItem(client, Item.ItemName);
 					}
 					else GivePlayerItem(client, secondaryWeapon[client]);
 				}
@@ -559,9 +559,9 @@ void GiveSavedWeapons(int client)
 		{
 			// Select random menu item (excluding "Random" option)
 			int random = GetRandomInt(0, GetArraySize(g_aPrimary)-1);
-			int Items[g_hWeapons];
-			GetArrayArray(g_aPrimary, random, Items[0]);
-			GivePlayerItem(client, Items[ItemName]);
+			g_hWeapons Item;
+			GetArrayArray(g_aPrimary, random, Item);
+			GivePlayerItem(client, Item.ItemName);
 		}
 		else GivePlayerItem(client, primaryWeapon[client]);
 
@@ -569,9 +569,9 @@ void GiveSavedWeapons(int client)
 		{
 			// Select random menu item (excluding "Random" option)
 			int random = GetRandomInt(0, GetArraySize(g_aSecondary)-1);
-			int Items[g_hWeapons];
-			GetArrayArray(g_aSecondary, random, Items[0]);
-			GivePlayerItem(client, Items[ItemName]);
+			g_hWeapons Item;
+			GetArrayArray(g_aSecondary, random, Item);
+			GivePlayerItem(client, Item.ItemName);
 		}
 		else GivePlayerItem(client, secondaryWeapon[client]);
 
@@ -603,156 +603,156 @@ void ListWeapons()
 	ClearArray(g_aPrimary);
 	ClearArray(g_aSecondary);
 
-	int Items[g_hWeapons];
+	g_hWeapons Items;
 
-	Format(Items[ItemName], 64, "weapon_m4a1");
-	Format(Items[desc], 64, "M4A1");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_m4a1");
+	Format(Items.desc, 64, "M4A1");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_m4a1_silencer");
-	Format(Items[desc], 64, "M4A1-S");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_m4a1_silencer");
+	Format(Items.desc, 64, "M4A1-S");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_ak47");
-	Format(Items[desc], 64, "AK-47");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_ak47");
+	Format(Items.desc, 64, "AK-47");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_famas");
-	Format(Items[desc], 64, "FAMAS");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_famas");
+	Format(Items.desc, 64, "FAMAS");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_galilar");
-	Format(Items[desc], 64, "Galil AR");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_galilar");
+	Format(Items.desc, 64, "Galil AR");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_aug");
-	Format(Items[desc], 64, "AUG");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_aug");
+	Format(Items.desc, 64, "AUG");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_sg556");
-	Format(Items[desc], 64, "SG 553");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_sg556");
+	Format(Items.desc, 64, "SG 553");
+	PushArrayArray(g_aPrimary, Items);
 
 	if (gc_bNegev.BoolValue)
 	{
-		Format(Items[ItemName], 64, "weapon_negev");
-		Format(Items[desc], 64, "Negev");
-		PushArrayArray(g_aPrimary, Items[0]);
+		Format(Items.ItemName, 64, "weapon_negev");
+		Format(Items.desc, 64, "Negev");
+		PushArrayArray(g_aPrimary, Items);
 	}
 
 	if (gc_bM249.BoolValue)
 	{
-		Format(Items[ItemName], 64, "weapon_m249");
-		Format(Items[desc], 64, "M249");
-		PushArrayArray(g_aPrimary, Items[0]);
+		Format(Items.ItemName, 64, "weapon_m249");
+		Format(Items.desc, 64, "M249");
+		PushArrayArray(g_aPrimary, Items);
 	}
 
 	if (gc_bAWP.BoolValue)
 	{
-		Format(Items[ItemName], 64, "weapon_awp");
-		Format(Items[desc], 64, "AWP");
-		PushArrayArray(g_aPrimary, Items[0]);
+		Format(Items.ItemName, 64, "weapon_awp");
+		Format(Items.desc, 64, "AWP");
+		PushArrayArray(g_aPrimary, Items);
 	}
 
 	if (gc_bAutoSniper.BoolValue)
 	{
-		Format(Items[ItemName], 64, "weapon_scar20");
-		Format(Items[desc], 64, "SCAR-20");
-		PushArrayArray(g_aPrimary, Items[0]);
+		Format(Items.ItemName, 64, "weapon_scar20");
+		Format(Items.desc, 64, "SCAR-20");
+		PushArrayArray(g_aPrimary, Items);
 		
-		Format(Items[ItemName], 64, "weapon_g3sg1");
-		Format(Items[desc], 64, "G3SG1");
-		PushArrayArray(g_aPrimary, Items[0]);
+		Format(Items.ItemName, 64, "weapon_g3sg1");
+		Format(Items.desc, 64, "G3SG1");
+		PushArrayArray(g_aPrimary, Items);
 	}
 
-	Format(Items[ItemName], 64, "weapon_bizon");
-	Format(Items[desc], 64, "PP-Bizon");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_bizon");
+	Format(Items.desc, 64, "PP-Bizon");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_p90");
-	Format(Items[desc], 64, "P90");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_p90");
+	Format(Items.desc, 64, "P90");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_ump45");
-	Format(Items[desc], 64, "UMP-45");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_ump45");
+	Format(Items.desc, 64, "UMP-45");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_mp5sd");
-	Format(Items[desc], 64, "MP5-SD");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_mp5sd");
+	Format(Items.desc, 64, "MP5-SD");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_mp7");
-	Format(Items[desc], 64, "MP7");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_mp7");
+	Format(Items.desc, 64, "MP7");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_mp9");
-	Format(Items[desc], 64, "MP9");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_mp9");
+	Format(Items.desc, 64, "MP9");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_mac10");
-	Format(Items[desc], 64, "MAC-10");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_mac10");
+	Format(Items.desc, 64, "MAC-10");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_ssg08");
-	Format(Items[desc], 64, "SSG 08");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_ssg08");
+	Format(Items.desc, 64, "SSG 08");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_nova");
-	Format(Items[desc], 64, "Nova");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_nova");
+	Format(Items.desc, 64, "Nova");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_xm1014");
-	Format(Items[desc], 64, "XM1014");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_xm1014");
+	Format(Items.desc, 64, "XM1014");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_sawedoff");
-	Format(Items[desc], 64, "Sawed-Off");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_sawedoff");
+	Format(Items.desc, 64, "Sawed-Off");
+	PushArrayArray(g_aPrimary, Items);
 
-	Format(Items[ItemName], 64, "weapon_mag7");
-	Format(Items[desc], 64, "MAG-7");
-	PushArrayArray(g_aPrimary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_mag7");
+	Format(Items.desc, 64, "MAG-7");
+	PushArrayArray(g_aPrimary, Items);
 
 	// Secondary weapons
-	Format(Items[ItemName], 64, "weapon_deagle");
-	Format(Items[desc], 64, "Desert Eagle");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_deagle");
+	Format(Items.desc, 64, "Desert Eagle");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_revolver");
-	Format(Items[desc], 64, "Revolver");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_revolver");
+	Format(Items.desc, 64, "Revolver");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_tec9");
-	Format(Items[desc], 64, "Tec-9");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_tec9");
+	Format(Items.desc, 64, "Tec-9");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_elite");
-	Format(Items[desc], 64, "Dual Berettas");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_elite");
+	Format(Items.desc, 64, "Dual Berettas");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_fiveseven");
-	Format(Items[desc], 64, "Five-SeveN");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_fiveseven");
+	Format(Items.desc, 64, "Five-SeveN");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_cz75a");
-	Format(Items[desc], 64, "CZ75-Auto");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_cz75a");
+	Format(Items.desc, 64, "CZ75-Auto");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_glock");
-	Format(Items[desc], 64, "Glock-18");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_glock");
+	Format(Items.desc, 64, "Glock-18");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_usp_silencer");
-	Format(Items[desc], 64, "USP-S");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_usp_silencer");
+	Format(Items.desc, 64, "USP-S");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_p250");
-	Format(Items[desc], 64, "P250");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_p250");
+	Format(Items.desc, 64, "P250");
+	PushArrayArray(g_aSecondary, Items);
 
-	Format(Items[ItemName], 64, "weapon_hkp2000");
-	Format(Items[desc], 64, "P2000");
-	PushArrayArray(g_aSecondary, Items[0]);
+	Format(Items.ItemName, 64, "weapon_hkp2000");
+	Format(Items.desc, 64, "P2000");
+	PushArrayArray(g_aSecondary, Items);
 }
 
 /******************************************************************************
@@ -883,7 +883,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 {
 	char info7[255], info8[255];
 	Menu menu;
-	int Items[g_hWeapons];
+	g_hWeapons Items;
 
 	if (primary)
 	{
@@ -894,8 +894,8 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 
 		for (int i=0; i<GetArraySize(g_aPrimary);++i)
 		{
-			GetArrayArray(g_aPrimary, i, Items[0]);
-			AddMenuItem(menu, Items[ItemName], Items[desc]);
+			GetArrayArray(g_aPrimary, i, Items);
+			AddMenuItem(menu, Items.ItemName, Items.desc);
 		}
 	}
 	else
@@ -907,8 +907,8 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 
 		for (int i=0; i<GetArraySize(g_aSecondary);++i)
 		{
-			GetArrayArray(g_aSecondary, i, Items[0]);
-			AddMenuItem(menu, Items[ItemName], Items[desc]);
+			GetArrayArray(g_aSecondary, i, Items);
+			AddMenuItem(menu, Items.ItemName, Items.desc);
 		}
 	}
 	return menu;
