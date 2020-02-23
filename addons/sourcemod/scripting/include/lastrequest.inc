@@ -64,20 +64,6 @@ enum DataType
 	Type_PartnerArray
 };
 
-enum LR_Structure
-{
-	DataType:LR_Type,
-	DataType:Prisoner_Index,
-	DataType:Guard_Index,
-	DataType:Prisoner_Data,
-	DataType:Guard_Data,
-	DataType:Global1,
-	DataType:Global2,
-	DataType:Global3,
-	DataType:Global4,
-	DataType:TheDataPack
-};
-
 public SharedPlugin __pl_lastrequest =
 {
 	name = "lastrequest",
