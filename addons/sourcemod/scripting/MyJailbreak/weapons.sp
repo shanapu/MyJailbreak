@@ -561,7 +561,7 @@ void GiveSavedWeapons(int client)
 			int random = GetRandomInt(0, GetArraySize(g_aPrimary)-1);
 			g_hWeapons Item;
 			GetArrayArray(g_aPrimary, random, Item, sizeof(Item));
-			GivePlayerItem(client, "weapon_m4a1");
+			GivePlayerItem(client, Item.ItemName);
 		}
 		else GivePlayerItem(client, primaryWeapon[client]);
 
