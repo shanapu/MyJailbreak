@@ -450,7 +450,7 @@ void GiveSavedWeaponsFix(int client)
 						// Select random menu item (excluding "Random" option)
 						int random = GetRandomInt(0, GetArraySize(g_aPrimary)-1);
 						g_hWeapons Item;
-						GetArrayArray(g_aPrimary, random, Item);
+						GetArrayArray(g_aPrimary, random, Item, sizeof(Item));
 						GivePlayerItem(client, Item.ItemName);
 					}
 					else GivePlayerItem(client, primaryWeapon[client]);
@@ -462,7 +462,7 @@ void GiveSavedWeaponsFix(int client)
 						// Select random menu item (excluding "Random" option)
 						int random = GetRandomInt(0, GetArraySize(g_aSecondary)-1);
 						g_hWeapons Item;
-						GetArrayArray(g_aSecondary, random, Item);
+						GetArrayArray(g_aSecondary, random, Item, sizeof(Item));
 						GivePlayerItem(client, Item.ItemName);
 					}
 					else GivePlayerItem(client, secondaryWeapon[client]);
@@ -560,8 +560,8 @@ void GiveSavedWeapons(int client)
 			// Select random menu item (excluding "Random" option)
 			int random = GetRandomInt(0, GetArraySize(g_aPrimary)-1);
 			g_hWeapons Item;
-			GetArrayArray(g_aPrimary, random, Item);
-			GivePlayerItem(client, Item.ItemName);
+			GetArrayArray(g_aPrimary, random, Item, sizeof(Item));
+			GivePlayerItem(client, "weapon_m4a1");
 		}
 		else GivePlayerItem(client, primaryWeapon[client]);
 
@@ -570,7 +570,7 @@ void GiveSavedWeapons(int client)
 			// Select random menu item (excluding "Random" option)
 			int random = GetRandomInt(0, GetArraySize(g_aSecondary)-1);
 			g_hWeapons Item;
-			GetArrayArray(g_aSecondary, random, Item);
+			GetArrayArray(g_aSecondary, random, Item, sizeof(Item));
 			GivePlayerItem(client, Item.ItemName);
 		}
 		else GivePlayerItem(client, secondaryWeapon[client]);
@@ -894,7 +894,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 
 		for (int i=0; i<GetArraySize(g_aPrimary);++i)
 		{
-			GetArrayArray(g_aPrimary, i, Items);
+			GetArrayArray(g_aPrimary, i, Items, sizeof(Items));
 			AddMenuItem(menu, Items.ItemName, Items.desc);
 		}
 	}
@@ -907,7 +907,7 @@ Handle Menu_BuildWeaponsMenu(bool primary)
 
 		for (int i=0; i<GetArraySize(g_aSecondary);++i)
 		{
-			GetArrayArray(g_aSecondary, i, Items);
+			GetArrayArray(g_aSecondary, i, Items, sizeof(Items));
 			AddMenuItem(menu, Items.ItemName, Items.desc);
 		}
 	}
