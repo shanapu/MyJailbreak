@@ -1,5 +1,5 @@
 Make sure you have the latest versions of the required plugins
-  
+ 
   
 Open gameserver folder and copy the folders addons/, cfg/, materials/, models/ & sound/ to your gameservers root csgo/ directory  
   
