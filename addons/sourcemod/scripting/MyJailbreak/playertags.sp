@@ -75,19 +75,20 @@ ConVar gc_bJoinIncognito;
 ConVar gc_fIncognitoTime;
 
 // Enum
-enum g_eROLES
+enum struct Roles
 {
-	SPECTATOR,
-	GUARD,
-	DEPUTY,
-	WARDEN,
-	PRISONER
+	char SPECTATOR[64];
+	char GUARD[64];
+	char DEPUTY[64];
+	char WARDEN[64];
+	char PRISONER[64];
 }
+
+Roles g_sChatTag[MAXPLAYERS + 1];
+Roles g_sStatsTag[MAXPLAYERS + 1];
 
 // Strings
 char g_sConfigFile[64];
-char g_sChatTag[MAXPLAYERS + 1][g_eROLES][64];
-char g_sStatsTag[MAXPLAYERS + 1][g_eROLES][64];
 char g_sPlayerTag[MAXPLAYERS + 1][64];
 char g_sPrefix[64];
 
@@ -540,17 +541,17 @@ void LoadPlayerTags(int client)
 
 void GetTags(int client, KeyValues kvMenu)
 {
-	kvMenu.GetString("spectator", g_sStatsTag[client][SPECTATOR], sizeof(g_sStatsTag), "");
-	kvMenu.GetString("warden", g_sStatsTag[client][WARDEN], sizeof(g_sStatsTag), "");
-	kvMenu.GetString("deputy", g_sStatsTag[client][DEPUTY], sizeof(g_sStatsTag), "");
-	kvMenu.GetString("guard", g_sStatsTag[client][GUARD], sizeof(g_sStatsTag), "");
-	kvMenu.GetString("prisoner", g_sStatsTag[client][PRISONER], sizeof(g_sStatsTag), "");
+	kvMenu.GetString("spectator", g_sStatsTag[client].SPECTATOR, sizeof(Roles::SPECTATOR), "");
+	kvMenu.GetString("warden", g_sStatsTag[client].WARDEN, sizeof(Roles::WARDEN), "");
+	kvMenu.GetString("deputy", g_sStatsTag[client].DEPUTY, sizeof(Roles::DEPUTY), "");
+	kvMenu.GetString("guard", g_sStatsTag[client].GUARD, sizeof(Roles::GUARD), "");
+	kvMenu.GetString("prisoner", g_sStatsTag[client].PRISONER, sizeof(Roles::PRISONER), "");
 
-	kvMenu.GetString("spectator_chat", g_sChatTag[client][SPECTATOR], sizeof(g_sChatTag), "");
-	kvMenu.GetString("warden_chat", g_sChatTag[client][WARDEN], sizeof(g_sChatTag), "");
-	kvMenu.GetString("deputy_chat", g_sChatTag[client][DEPUTY], sizeof(g_sChatTag), "");
-	kvMenu.GetString("guard_chat", g_sChatTag[client][GUARD], sizeof(g_sChatTag), "");
-	kvMenu.GetString("prisoner_chat", g_sChatTag[client][PRISONER], sizeof(g_sChatTag), "");
+	kvMenu.GetString("spectator_chat", g_sChatTag[client].SPECTATOR, sizeof(Roles::SPECTATOR), "");
+	kvMenu.GetString("warden_chat", g_sChatTag[client].WARDEN, sizeof(Roles::WARDEN), "");
+	kvMenu.GetString("deputy_chat", g_sChatTag[client].DEPUTY, sizeof(Roles::DEPUTY), "");
+	kvMenu.GetString("guard_chat", g_sChatTag[client].GUARD, sizeof(Roles::GUARD), "");
+	kvMenu.GetString("prisoner_chat", g_sChatTag[client].PRISONER, sizeof(Roles::PRISONER), "");
 }
 
 // Give Tag
@@ -570,60 +571,60 @@ void HandleTag(int client)
 
 	if (GetClientTeam(client) == CS_TEAM_T)
 	{
-		if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client][PRISONER]) < 1)
+		if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client].PRISONER) < 1)
 		{
 			CS_SetClientClanTag(client, g_sPlayerTag[client]);
 		}
 		else
 		{
-			CS_SetClientClanTag(client, g_sStatsTag[client][PRISONER]);
+			CS_SetClientClanTag(client, g_sStatsTag[client].PRISONER);
 		}
 	}
 	else if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		if (gp_bWarden && warden_iswarden(client))
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client][WARDEN]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client].WARDEN) < 1)
 			{
 				CS_SetClientClanTag(client, g_sPlayerTag[client]);
 			}
 			else
 			{
-				CS_SetClientClanTag(client, g_sStatsTag[client][WARDEN]);
+				CS_SetClientClanTag(client, g_sStatsTag[client].WARDEN);
 			}
 		}
 		else if (gp_bMyJBWarden && warden_deputy_isdeputy(client))
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client][DEPUTY]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client].DEPUTY) < 1)
 			{
 				CS_SetClientClanTag(client, g_sPlayerTag[client]);
 			}
 			else
 			{
-				CS_SetClientClanTag(client, g_sStatsTag[client][DEPUTY]);
+				CS_SetClientClanTag(client, g_sStatsTag[client].DEPUTY);
 			}
 		}
 		else
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client][GUARD]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client].GUARD) < 1)
 			{
 				CS_SetClientClanTag(client, g_sPlayerTag[client]);
 			}
 			else
 			{
-				CS_SetClientClanTag(client, g_sStatsTag[client][GUARD]);
+				CS_SetClientClanTag(client, g_sStatsTag[client].GUARD);
 			}
 		}
 	}
 	else if (GetClientTeam(client) == CS_TEAM_SPECTATOR)
 	{
-		if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client][SPECTATOR]) < 1)
+		if (gc_bNoOverwrite.BoolValue && strlen(g_sStatsTag[client].SPECTATOR) < 1)
 		{
 			CS_SetClientClanTag(client, g_sPlayerTag[client]);
 		}
 		else
 		{
-			CS_SetClientClanTag(client, g_sStatsTag[client][SPECTATOR]);
+			CS_SetClientClanTag(client, g_sStatsTag[client].SPECTATOR);
 		}
 	}
 }
@@ -654,60 +655,60 @@ public Action CP_OnChatMessage(int &client, ArrayList recipients, char[] flagstr
 
 	if (GetClientTeam(client) == CS_TEAM_T)
 	{
-		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][PRISONER]) < 1)
+		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].PRISONER) < 1)
 		{
 			Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 		}
 		else
 		{
-			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][PRISONER], name);
+			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].PRISONER, name);
 		}
 	}
 	else if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		if (gp_bWarden && warden_iswarden(client))
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][WARDEN]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].WARDEN) < 1)
 			{
 				Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 			}
 			else
 			{
-				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][WARDEN], name);
+				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].WARDEN, name);
 			}
 		}
 		else if (gp_bMyJBWarden && warden_deputy_isdeputy(client))
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][DEPUTY]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].DEPUTY) < 1)
 			{
 				Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 			}
 			else
 			{
-				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][DEPUTY], name);
+				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].DEPUTY, name);
 			}
 		}
 		else
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][GUARD]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].GUARD) < 1)
 			{
 				Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 			}
 			else
 			{
-				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][GUARD], name);
+				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].GUARD, name);
 			}
 		}
 	}
 	else if (GetClientTeam(client) == CS_TEAM_SPECTATOR)
 	{
-		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][SPECTATOR]) < 1)
+		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].SPECTATOR) < 1)
 		{
 			Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 		}
 		else
 		{
-			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][SPECTATOR], name);
+			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].SPECTATOR, name);
 		}
 	}
 
@@ -741,60 +742,60 @@ public Action OnChatMessage(int &client, Handle recipients, char[] name, char[] 
 
 	if (GetClientTeam(client) == CS_TEAM_T)
 	{
-		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][PRISONER]) < 1)
+		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].PRISONER) < 1)
 		{
 			Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 		}
 		else
 		{
-			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][PRISONER], name);
+			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].PRISONER, name);
 		}
 	}
 	else if (GetClientTeam(client) == CS_TEAM_CT)
 	{
 		if (gp_bWarden && warden_iswarden(client))
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][WARDEN]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].WARDEN) < 1)
 			{
 				Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 			}
 			else
 			{
-				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][WARDEN], name);
+				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].WARDEN, name);
 			}
 		}
 		else if (gp_bMyJBWarden && warden_deputy_isdeputy(client))
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][DEPUTY]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].DEPUTY) < 1)
 			{
 				Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 			}
 			else
 			{
-				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][DEPUTY], name);
+				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].DEPUTY, name);
 			}
 		}
 		else
 		{
-			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][GUARD]) < 1)
+			if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].GUARD) < 1)
 			{
 				Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 			}
 			else
 			{
-				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][GUARD], name);
+				Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].GUARD, name);
 			}
 		}
 	}
 	else if (GetClientTeam(client) == CS_TEAM_SPECTATOR)
 	{
-		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client][SPECTATOR]) < 1)
+		if (gc_bNoOverwrite.BoolValue && strlen(g_sChatTag[client].SPECTATOR) < 1)
 		{
 			Format(name, MAXLENGTH_NAME, "%s %s", g_sPlayerTag[client], name);
 		}
 		else
 		{
-			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client][SPECTATOR], name);
+			Format(name, MAXLENGTH_NAME, "%s %s", g_sChatTag[client].SPECTATOR, name);
 		}
 	}
 
