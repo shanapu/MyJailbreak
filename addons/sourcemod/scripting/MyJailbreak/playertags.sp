@@ -4,7 +4,7 @@
  * https://github.com/shanapu/MyJailbreak/
  * 
  * Copyright (C) 2016-2017 Thomas Schmidt (shanapu)
- * Contributer: Hexer10
+ * Contributer: Hexer10, Cruze
  *
  * This file is part of the MyJailbreak SourceMod Plugin.
  *
@@ -30,7 +30,7 @@
 #include <sdktools>
 #include <sdkhooks>
 #include <cstrike>
-#include <colors>
+#include <multicolors>
 #include <autoexecconfig>
 #include <mystocks>
 
@@ -91,7 +91,7 @@ char g_sConfigFile[64];
 char g_sChatTag[MAXPLAYERS + 1][g_eROLES][64];
 char g_sStatsTag[MAXPLAYERS + 1][g_eROLES][64];
 char g_sPlayerTag[MAXPLAYERS + 1][64];
-char g_sPrefix[64];
+char g_sPrefixx[64];
 
 Handle g_hIncognitoTimer[MAXPLAYERS + 1] = null;
 
@@ -121,7 +121,8 @@ public void OnPluginStart()
 	LoadTranslations("MyJailbreak.PlayerTags.phrases");
 
 	// Client commands
-	RegAdminCmd("sm_incognito", Command_Incognito, ADMFLAG_RESERVATION, "Allows admin to toggle incognito - show default tags instead of admin tags");
+	RegAdminCmd("sm_incognito", Command_Incognito, ADMFLAG_GENERIC, "Allows admin to toggle incognito - show default tags instead of admin tags");
+	RegAdminCmd("sm_reloadjbtags", Command_ReloadTags, ADMFLAG_ROOT);
 
 	// AutoExecConfig
 	AutoExecConfig_SetFile("PlayerTags", "MyJailbreak");
@@ -234,14 +235,14 @@ public void OnSettingChanged(Handle convar, const char[] oldValue, const char[] 
 {
 	if (convar == gc_sPrefix)
 	{
-		strcopy(g_sPrefix, sizeof(g_sPrefix), newValue);
+		strcopy(g_sPrefixx, sizeof(g_sPrefixx), newValue);
 	}
 }
 
 // Initialize Plugin
 public void OnConfigsExecuted()
 {
-	gc_sPrefix.GetString(g_sPrefix, sizeof(g_sPrefix));
+	gc_sPrefix.GetString(g_sPrefixx, sizeof(g_sPrefixx));
 
 	// Set custom Commands
 	int iCount = 0;
@@ -280,7 +281,7 @@ public Action Command_Incognito(int client, int args)
 			g_hIncognitoTimer[client] = INVALID_HANDLE;
 		}
 
-		CReplyToCommand(client, "%s %t", g_sPrefix, "playertags_incognito_off");
+		CReplyToCommand(client, "%s %t", g_sPrefixx, "playertags_incognito_off");
 	}
 	else
 	{
@@ -304,11 +305,11 @@ public Action Command_Incognito(int client, int args)
 		{
 			g_hIncognitoTimer[client] = CreateTimer(fIncognitoTime, Timer_Incognito, GetClientUserId(client));
 
-			CReplyToCommand(client, "%s %t", g_sPrefix, "playertags_incognito_on", fIncognitoTime);
+			CReplyToCommand(client, "%s %t", g_sPrefixx, "playertags_incognito_on", fIncognitoTime);
 		}
 		else
 		{
-			CReplyToCommand(client, "%s %t", g_sPrefix, "playertags_incognito_on_perm", fIncognitoTime);
+			CReplyToCommand(client, "%s %t", g_sPrefixx, "playertags_incognito_on_perm", fIncognitoTime);
 		}
 	}
 
@@ -318,6 +319,21 @@ public Action Command_Incognito(int client, int args)
 	// Apply tag first time
 	HandleTag(client);
 
+	return Plugin_Handled;
+}
+
+public Action Command_ReloadTags(int client, int args)
+{
+	for(int iClient = 1; iClient <= MaxClients; iClient++)
+	{
+		if(!IsClientInGame(iClient))
+		{
+			continue;
+		}
+		LoadPlayerTags(iClient);
+		HandleTag(iClient);
+	}
+	CReplyToCommand(client, "%s Reloaded MyJailbreak tags.", g_sPrefixx);
 	return Plugin_Handled;
 }
 
@@ -378,7 +394,7 @@ public Action Timer_Incognito(Handle tmr, int userid)
 	// Apply tag first time
 	HandleTag(client);
 
-	//CPrintToChat(client, "%s %t", g_sPrefix, "playertags_incognito_off");
+	//CPrintToChat(client, "%s %t", g_sPrefixx, "playertags_incognito_off");
 
 	g_hIncognitoTimer[client] = null;
 
@@ -389,11 +405,13 @@ public void Event_CheckTag(Event event, char[] name, bool dontBroadcast)
 {
 	int client = GetClientOfUserId(event.GetInt("userid"));
 
+	LoadPlayerTags(client);
 	HandleTag(client);
 }
 
 public void warden_OnWardenCreated(int client)
 {
+	LoadPlayerTags(client);
 	HandleTag(client);
 }
 
@@ -404,6 +422,7 @@ public void warden_OnWardenRemoved(int client)
 
 public void warden_OnDeputyCreated(int client)
 {
+	LoadPlayerTags(client);
 	HandleTag(client);
 }
 
@@ -430,6 +449,7 @@ public void Frame_HandleTag(int userid)
 	if (!client)
 		return;
 
+	LoadPlayerTags(client);
 	HandleTag(client);
 }
 
