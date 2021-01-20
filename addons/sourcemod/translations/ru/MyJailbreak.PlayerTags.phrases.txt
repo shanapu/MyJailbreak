@@ -1,0 +1,211 @@
+// Exported from SourceMod Translator
+// Date: 2017-04-20 21:44:33 UTC
+// Language: Russian (ru)
+// 
+// To view other translations for this plugin, please visit:
+// http://translator.mitchdempsey.com/sourcemod_plugins/181
+//
+"Phrases"
+{
+
+	"tags_TA"
+	{
+		"ru"		"[Зэк.Адм]"
+	}
+
+	"tags_T"
+	{
+		"ru"		"[Зэк]"
+	}
+
+	"tags_CTA"
+	{
+		"ru"		"[Охрана.Адм]"
+	}
+
+	"tags_CT"
+	{
+		"ru"		"[Охранник]"
+	}
+
+	"tags_WA"
+	{
+		"ru"		"[КМД.Aдм]"
+	}
+
+	"tags_W"
+	{
+		"ru"		"[КМД]"
+	}
+
+	"tags_TVIP1"
+	{
+		"ru"		"[Зэк.VIP]"
+	}
+
+	"tags_TVIP2"
+	{
+		"ru"		"[Зэк.sVIP]"
+	}
+
+	"tags_CTVIP1"
+	{
+		"ru"		"[Охрана.VIP]"
+	}
+
+	"tags_CTVIP2"
+	{
+		"ru"		"[Охрана.sVIP]"
+	}
+
+	"tags_WVIP1"
+	{
+		"ru"		"[КМД.VIP]"
+	}
+
+	"tags_WVIP2"
+	{
+		"ru"		"[КМД.sVIP]"
+	}
+
+	"tags_TOWN"
+	{
+		"ru"		"[Зэк.Основ]"
+	}
+
+	"tags_CTOWN"
+	{
+		"ru"		"[КТ.Основ]"
+	}
+
+	"tags_WOWN"
+	{
+		"ru"		"[КМД.Оснв]"
+	}
+
+	"tags_CT_chat"
+	{
+		"ru"		"[Охранник]"
+	}
+
+	"tags_CTA_chat"
+	{
+		"ru"		"[Охрана.Адм]"
+	}
+
+	"tags_CTOWN_chat"
+	{
+		"ru"		"[Охранник.Основатель]"
+	}
+
+	"tags_CTVIP1_chat"
+	{
+		"ru"		"[Охранник.VIP]"
+	}
+
+	"tags_CTVIP2_chat"
+	{
+		"ru"		"[Охранник.sVIP]"
+	}
+
+	"tags_T_chat"
+	{
+		"ru"		"[Заключенный]"
+	}
+
+	"tags_TA_chat"
+	{
+		"ru"		"[Заключенный.Администратор]"
+	}
+
+	"tags_TOWN_chat"
+	{
+		"ru"		"[Заключённый.Основатель]"
+	}
+
+	"tags_TVIP1_chat"
+	{
+		"ru"		"[Заключенный.VIP]"
+	}
+
+	"tags_TVIP2_chat"
+	{
+		"ru"		"[Заключенный.sVIP]"
+	}
+
+	"tags_W_chat"
+	{
+		"ru"		"[Командир]"
+	}
+
+	"tags_WA_chat"
+	{
+		"ru"		"[КМД.Aдм]"
+	}
+
+	"tags_WOWN_chat"
+	{
+		"ru"		"[Командир.Основатель]"
+	}
+
+	"tags_WVIP1_chat"
+	{
+		"ru"		"[КМД.VIP]"
+	}
+
+	"tags_WVIP2_chat"
+	{
+		"ru"		"[КМД.sVIP]"
+	}
+
+	"tags_D"
+	{
+		"ru"		"[Заместитель]"
+	}
+
+	"tags_DA"
+	{
+		"ru"		"[Заместитель.Администратор]"
+	}
+
+	"tags_DA_chat"
+	{
+		"ru"		"[Заместитель.Администратор]"
+	}
+
+	"tags_D_chat"
+	{
+		"ru"		"[Заместитель]"
+	}
+
+	"tags_DOWN"
+	{
+		"ru"		"[Заместитель.Создатель]"
+	}
+
+	"tags_DOWN_chat"
+	{
+		"ru"		"[Заместитель.Создатель]"
+	}
+
+	"tags_DVIP1"
+	{
+		"ru"		"[Заместитель.VIP]"
+	}
+
+	"tags_DVIP1_chat"
+	{
+		"ru"		"[Заместитель.VIP]"
+	}
+
+	"tags_DVIP2"
+	{
+		"ru"		"[Заместитель.sVIP]"
+	}
+
+	"tags_DVIP2_chat"
+	{
+		"ru"		"[Заместитель.sVIP]"
+	}
+
+}

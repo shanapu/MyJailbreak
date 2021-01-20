@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:31 UTC
+// Date: 2017-04-20 21:44:28 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"request_tag"
+	{
+		"ru"		"[{green}MyJB.requests{default}]"
+	}
 
 	"request_openrefuse"
 	{
@@ -30,12 +35,12 @@
 
 	"request_notalivect"
 	{
-		"ru"		"Вы не мертвы или не КТ"
+		"ru"		"Вы не мертвы или не охранник"
 	}
 
 	"request_fullhp"
 	{
-		"ru"		"Хорошая попытка, у Вас полное здоровье"
+		"ru"		"Хорошая попытка, у вас полное здоровье"
 	}
 
 	"request_refusedtimes"
@@ -60,22 +65,22 @@
 
 	"request_accepted"
 	{
-		"ru"		"{2} одобрил {1} запрос. "
+		"ru"		"{2} одобрил запрос {1}."
 	}
 
 	"request_noaccepted"
 	{
-		"ru"		"К{2} НЕ одобрил {1} запрос."
+		"ru"		"{2} НЕ одобрил запрос {1}."
 	}
 
 	"request_refuser"
 	{
-		"ru"		"Игрок, который отказывается"
+		"ru"		"Игрок отказывается"
 	}
 
 	"request_acceptcapitulation"
 	{
-		"ru"		"Одобрить Капитуляцию?"
+		"ru"		"Одобрить капитуляцию?"
 	}
 
 	"request_acceptheal"
@@ -85,7 +90,7 @@
 
 	"request_health"
 	{
-		"ru"		"У вас есть {purple} healthshot{default}"
+		"ru"		"У вас есть {purple} выстрел здоровья{default}"
 	}
 
 	"request_heal"
@@ -130,7 +135,7 @@
 
 	"request_repeat"
 	{
-		"ru"		"Игрок, который просит повторить"
+		"ru"		"Игрок просит повторить"
 	}
 
 	"request_menu_title"
@@ -140,7 +145,7 @@
 
 	"request_menu_repeat"
 	{
-		"ru"		"Повторите объявление"
+		"ru"		"Повторить объявление"
 	}
 
 	"request_menu_refuse"
@@ -190,22 +195,22 @@
 
 	"request_freeday"
 	{
-		"ru"		"Следующий раунд фридей."
+		"ru"		"Следующий раунд - Фридэй."
 	}
 
 	"request_swapfreekiller"
 	{
-		"ru"		"Перевести фрикиллера за Т"
+		"ru"		"Перевести фрикиллера к заключённым"
 	}
 
 	"request_aliveorct"
 	{
-		"ru"		"Вы живы или КТ"
+		"ru"		"Вы живы или охранник"
 	}
 
 	"request_nokiller"
 	{
-		"ru"		"Простите, мы не можем найти Вашего убийцу"
+		"ru"		"Простите, мы не можем найти вашего убийцу"
 	}
 
 	"request_respawned"
@@ -230,12 +235,12 @@
 
 	"request_swapbcfreekill"
 	{
-		"ru"		"Вы были переведены за команду террористов из-за {darkred}фрикилла."
+		"ru"		"Вы были переведены в команду заключённых из-за {darkred}фрикилла."
 	}
 
 	"request_swapbcfreekillall"
 	{
-		"ru"		"{green}{1}{default} был переведён из-за {darkred}фрикилла{default} в команду террористов."
+		"ru"		"{green}{1}{default} был переведён из-за {darkred}фрикилла{default} в команду заключённых."
 	}
 
 	"request_handlerespawn"
@@ -255,7 +260,7 @@
 
 	"request_respawnwarden"
 	{
-		"ru"		"Воскрешение перед командиром."
+		"ru"		"Возродить перед командиром."
 	}
 
 	"request_freekilltimes"
@@ -360,12 +365,12 @@
 
 	"request_stopcountdown_nc"
 	{
-		"ru"		"Конеч через {1} секунд!"
+		"ru"		"Конец через {1} сек.!"
 	}
 
 	"request_stopcountdown"
 	{
-		"ru"		"Конец через {purple}{1}{default} секунд!"
+		"ru"		"Конец через {purple}{1}{default} сек.!"
 	}
 
 }

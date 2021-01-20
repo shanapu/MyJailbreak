@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:17 UTC
+// Date: 2017-04-20 21:44:33 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,79 +8,84 @@
 "Phrases"
 {
 
+	"ffa_tag"
+	{
+		"ru"		"[{green}MyJB.FFA{default}]"
+	}
+
 	"ffa_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}FFA"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры в {darkred}Каждый сам за себя"
 	}
 
 	"ffa_voting"
 	{
-		"ru"		"Голосования за FFA {purple}отключено"
+		"ru"		"Голосования за игру Каждый сам за себя {purple}отключено"
 	}
 
 	"ffa_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор FFA"
+		"ru"		"Командир {purple}отключил{default} выбор игры Каждый сам за себя"
 	}
 
 	"ffa_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор FFA"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Каждый сам за себя"
 	}
 
 	"ffa_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
+		"ru"		"Охранники выжили"
 	}
 
 	"ffa_twin_nc"
 	{
-		"ru"		"Террористы выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"ffa_minplayer"
 	{
-		"ru"		"Для FFA необходимо как минимум {purple}один КТ"
+		"ru"		"Для игры Каждый сам за себя необходим как минимум {purple}один охранник"
 	}
 
 	"ffa_end"
 	{
-		"ru"		"{purple}FFA{default} окончен"
+		"ru"		"Игра {purple}Каждый сам за себя{default} окончена"
 	}
 
 	"ffa_next"
 	{
-		"ru"		"Следующий раунд {purple}FFA"
+		"ru"		"Следующий раунд: {purple}Каждый сам за себя"
 	}
 
 	"ffa_next_nc"
 	{
-		"ru"		"Следующий раунд FFA"
+		"ru"		"Следующий раунд: Каждый сам за себя"
 	}
 
 	"ffa_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"ffa_start"
 	{
-		"ru"		"{purple}Все Против Всех{default} начался!"
+		"ru"		"{purple}Каждый сам за себя{default} началась!"
 	}
 
 	"ffa_start"
 	{
-		"ru"		"{purple}Все Против Всех{default} начался!"
+		"ru"		"{purple}Каждый сам за себя{default} началась!"
 	}
 
 	"ffa_start_nc"
 	{
-		"ru"		"FFA началось!"
+		"ru"		"Игра каждый сам за себя началась!"
 	}
 
 	"ffa_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}FFA"
+		"ru"		"Вы уже проголосовали за игру {purple}каждый сам за себя"
 	}
 
 	"ffa_progress"
@@ -90,32 +95,32 @@
 
 	"ffa_disabled"
 	{
-		"ru"		"FFA {purple} отключено."
+		"ru"		"Игра каждый сам за себя {purple} отключена."
 	}
 
 	"ffa_damage_nc"
 	{
-		"ru"		"{1} секунд до активации урона"
+		"ru"		"{1} сек. до активации урона"
 	}
 
 	"ffa_info_title"
 	{
-		"ru"		"Свободных смертельный бой для всех активен!"
+		"ru"		"Бой насмерть каждый сам за себя активен!"
 	}
 
 	"ffa_info_line1"
 	{
-		"ru"		"Не удивляйтесь, если появитесь на КТ спавне"
+		"ru"		"Не удивляйтесь, если появитесь на спавне"
 	}
 
 	"ffa_info_line2"
 	{
-		"ru"		"Свободна для всех - игрок против игрока - Последний герой"
+		"ru"		"Каждый сам за себя - Игрок против игрока - Последний в живых побеждает"
 	}
 
 	"ffa_info_line3"
 	{
-		"ru"		"В то время как повреждения отключены карта в тени"
+		"ru"		"Убегайте во время фазы 'отсутствия урона'"
 	}
 
 	"ffa_info_line4"
@@ -135,27 +140,32 @@
 
 	"ffa_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
+	}
+
+	"RoundOne"
+	{
+		"ru"		"Раунд 1 из 3"
+	}
+
+	"RoundTwo"
+	{
+		"ru"		"Раунд 2 из 3"
+	}
+
+	"RoundThree"
+	{
+		"ru"		"Последний раунд игры каждый сам за себя"
 	}
 
 	"ffa_wait"
 	{
-		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
+		"ru"		"Вы должны подождать {purple}{1}{default} раундов"
 	}
 
 	"ffa_name"
 	{
-		"ru"		"Все против всех"
-	}
-
-	"ffa_now_nc"
-	{
-		"ru"		"Начинается Все-Против-Всех раунд"
-	}
-
-	"ffa_now"
-	{
-		"ru"		"Начинается {purple}Все-Против-Всех{default} раунд."
+		"ru"		"Каждый сам за себя"
 	}
 
 }

@@ -1,4 +1,9 @@
 ## MyJailbreak
+
+## Languages
+ - [Русский](https://github.com/shanapu/MyJailbreak/blob/master/README_RU.md)
+ 
+## [Install](https://github.com/shanapu/MyJailbreak/blob/master/install.txt)
   
   a plugin pack for CS:GO jailserver
   

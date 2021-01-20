@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:06 UTC
+// Date: 2017-04-20 21:44:30 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,9 +8,14 @@
 "Phrases"
 {
 
+	"cowboy_tag"
+	{
+		"ru"		"[{green}MyJB.Ковбой{default}]"
+	}
+
 	"cowboy_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}ковбоя"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}ковбоя"
 	}
 
 	"cowboy_rounds"
@@ -20,52 +25,52 @@
 
 	"cowboy_twin_nc"
 	{
-		"ru"		"Террористы выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"cowboy_voting"
 	{
-		"ru"		"Голосования за ковбоя {purple}отключено"
+		"ru"		"Голосование за игру ковбоя {purple}отключено"
 	}
 
 	"cowboy_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор ковбоя"
+		"ru"		"Командир {purple}отключил{default} выбор игры ковбоя"
 	}
 
 	"cowboy_minplayer"
 	{
-		"ru"		"Для ковбоя необходимо как минимум {purple}один КТ"
+		"ru"		"Для игры ковбоя необходим как минимум {purple}один охранник"
 	}
 
 	"cowboy_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор ковбоя"
+		"ru"		"Администратор {purple}отключил{default} выбор игры ковбоя"
 	}
 
 	"cowboy_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
+		"ru"		"Охранники выжили"
 	}
 
 	"cowboy_end"
 	{
-		"ru"		"{purple}Ковбой{default} окончен!"
+		"ru"		"Игра {purple}ковбоя{default} окончена!"
 	}
 
 	"cowboy_next"
 	{
-		"ru"		"Следующий раунд {purple}Ковбой"
+		"ru"		"Следующий раунд: {purple}Ковбой"
 	}
 
 	"cowboy_next_nc"
 	{
-		"ru"		"Следующий раунд ковбой"
+		"ru"		"Следующий раунд: Ковбой"
 	}
 
 	"cowboy_start"
 	{
-		"ru"		"{purple}Ковбой{default} начался!"
+		"ru"		"День игры {purple}ковбой{default} начался!"
 	}
 
 	"cowboy_start_nc"
@@ -90,7 +95,7 @@
 
 	"cowboy_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до начала"
+		"ru"		"{1} сек. до начала"
 	}
 
 	"cowboy_info_line1"
@@ -100,12 +105,12 @@
 
 	"cowboy_info_line2"
 	{
-		"ru"		"Борьба на пистолетах - DM"
+		"ru"		"Борьба на пистолетах - Бой насмерть"
 	}
 
 	"cowboy_info_line3"
 	{
-		"ru"		"Вы можете двигаться во время отсутствия урона"
+		"ru"		"Вы можете двигаться во время фазы 'отсутствия урона'"
 	}
 
 	"cowboy_info_line4"
@@ -125,12 +130,12 @@
 
 	"cowboy_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"cowboy_wait"
 	{
-		"ru"		"Вы должны подождать больше {1} раундов"
+		"ru"		"Вы должны подождать {1} раундов"
 	}
 
 	"cowboy_name"
@@ -141,16 +146,6 @@
 	"cowboy_info_title"
 	{
 		"ru"		"Ковбой активен"
-	}
-
-	"cowboy_now_nc"
-	{
-		"ru"		"Начинается ковбой раунд."
-	}
-
-	"cowboy_now"
-	{
-		"ru"		"Начинается {purple}Ковбой{default} раунд."
 	}
 
 }

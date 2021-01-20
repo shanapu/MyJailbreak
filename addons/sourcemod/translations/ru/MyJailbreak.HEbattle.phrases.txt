@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:22 UTC
+// Date: 2017-04-20 21:44:39 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,79 +8,84 @@
 "Phrases"
 {
 
+	"hebattle_tag"
+	{
+		"ru"		"[{green}MyJB.HEBattle{default}]"
+	}
+
 	"hebattle_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Битвы Гранатами"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}Битва гранатами"
 	}
 
 	"hebattle_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"hebattle_minplayer"
 	{
-		"ru"		"Для битвы гранатами необходимо как минимум {purple}один КТ"
+		"ru"		"Для битвы гранатами необходим как минимум {purple}один охранник"
 	}
 
 	"hebattle_twin_nc"
 	{
-		"ru"		"Террористы выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"hebattle_voting"
 	{
-		"ru"		"Голосования за Битву Гранатами {purple}отключено"
+		"ru"		"Голосование за игры Битвы гранатами {purple}отключено"
 	}
 
 	"hebattle_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор Битву Гранатами"
+		"ru"		"Командир {purple}отключил{default} выбор игры Битвы гранатами"
 	}
 
 	"hebattle_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор Битву Гранатами"
+		"ru"		"Командир {purple}отключил{default} выбор игры Битвы гранатами"
 	}
 
 	"hebattle_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор Битвы Гранатами"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Битвы гранатами"
 	}
 
 	"hebattle_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
+		"ru"		"Охранники выжили"
 	}
 
 	"hebattle_end"
 	{
-		"ru"		"{purple}Битва Гранатами{default} окончена!"
+		"ru"		"Игра {purple}Битва гранатами{default} окончена!"
 	}
 
 	"hebattle_next"
 	{
-		"ru"		"Следующий раунд {purple}Битва Гранатами"
+		"ru"		"Следующий раунд: {purple}Битва гранатами"
 	}
 
 	"hebattle_next_nc"
 	{
-		"ru"		"Следующий раунд Битва Гранатами"
+		"ru"		"Следующий раунд: Битва гранатами"
 	}
 
 	"hebattle_start"
 	{
-		"ru"		"{purple}Битва гранатами{default} началась!"
+		"ru"		"Игра {purple}Битва гранатами{default} началась!"
 	}
 
 	"hebattle_start_nc"
 	{
-		"ru"		"Битва Гранатами началась!"
+		"ru"		"Игра Битва гранатами началась!"
 	}
 
 	"hebattle_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}Битву Гранатами"
+		"ru"		"Вы уже проголосовали за игру {purple}Битва гранатами"
 	}
 
 	"hebattle_progress"
@@ -90,32 +95,32 @@
 
 	"hebattle_disabled"
 	{
-		"ru"		"Битва Гранатами {purple}отключена."
+		"ru"		"Игра Битва гранатами {purple}отключена."
 	}
 
 	"hebattle_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до начала!"
+		"ru"		"{1} сек. до начала!"
 	}
 
 	"hebattle_info_title"
 	{
-		"ru"		"Битва Гранатами активна"
+		"ru"		"Битва гранатами активна"
 	}
 
 	"hebattle_info_line1"
 	{
-		"ru"		"Все против всех, битва грантами с низкой гравитацией"
+		"ru"		"Все против всех, битва гранатами с низкой гравитацией"
 	}
 
 	"hebattle_info_line2"
 	{
-		"ru"		"Не удивляйтесь, появлению на КТ спавне!"
+		"ru"		"Не удивляйтесь, появлению на спавне охранников!"
 	}
 
 	"hebattle_info_line3"
 	{
-		"ru"		"Не наносите урона до старта"
+		"ru"		"Не наносите урона до начала"
 	}
 
 	"hebattle_info_line4"
@@ -135,27 +140,17 @@
 
 	"hebattle_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"hebattle_wait"
 	{
-		"ru"		"Вы должны подождать больше {1} раундов"
+		"ru"		"Вы должны подождать {1} раундов"
 	}
 
 	"hebattle_name"
 	{
-		"ru"		"Битва Гранатами"
-	}
-
-	"hebattle_now_nc"
-	{
-		"ru"		"Начинается Гранатный раунд."
-	}
-
-	"hebattle_now"
-	{
-		"ru"		"Начинается {purple}Гранатный{default} раунд."
+		"ru"		"Битва гранатами"
 	}
 
 }

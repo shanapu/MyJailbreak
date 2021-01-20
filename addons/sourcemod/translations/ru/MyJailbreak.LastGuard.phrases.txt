@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:12 UTC
+// Date: 2017-04-20 21:44:28 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,64 +8,69 @@
 "Phrases"
 {
 
+	"lastguard_tag"
+	{
+		"ru"		"[{green}MyJB.LastGuardRule{default}]"
+	}
+
 	"lastguard_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} осталось голосов до {darkred}Правила Последнего КТ"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} осталось голосов до игры {darkred}Правила последнего охранника"
 	}
 
 	"lastguard_twin_nc"
 	{
-		"ru"		"Террористы выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"lastguard_minplayer"
 	{
-		"ru"		"Для Правила Последнего КТ необходимо максимум {purple}один КТ и минимум 2 Т"
+		"ru"		"Для игры Правила последнего охранника необходимо максимум {purple}один охранник и минимум 2 заключённых"
 	}
 
 	"lastguard_hp"
 	{
-		"ru"		"{purple}{1} живые террористы{default} имеют вместе {purple}{2} здоровья{default}. Последний КТ {4} получил {purple}{3} HP{default}."
+		"ru"		"{purple}{1} живые заключённые{default} имеют вместе {purple}{2} здоровья{default}. Последний охранник {4} получил {purple}{3} ОЗ{default}."
 	}
 
 	"lastguard_setbyadmin"
 	{
-		"ru"		"Установка Правила Последнего КТ от админа {purple}отключено"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Правила последнего охранника"
 	}
 
 	"lastguard_ctwin_nc"
 	{
-		"ru"		"Counter-Terrorists одержали победу!"
+		"ru"		"Охранники одержали победу!"
 	}
 
 	"lastguard_end"
 	{
-		"ru"		"{purple}Правило последнего КТ{default} окончено"
+		"ru"		"Игра {purple}Правила последнего охранника{default} окончена"
 	}
 
 	"lastguard_startnow"
 	{
-		"ru"		"Внимание! {purple}Последнее Правило КТ{default} установлено!"
+		"ru"		"Внимание! Игра {purple}Правила последнего охранника{default} начинается!"
 	}
 
 	"lastguard_startnow_nc"
 	{
-		"ru"		"Внимание! Последний Guard установлен!"
+		"ru"		"Внимание! Игра Правила последнего охранника начинается!"
 	}
 
 	"lastguard_start"
 	{
-		"ru"		"{purple}Правило последнего КТ{default} началось!"
+		"ru"		"Игра {purple}Правила последнего охранника{default} началась!"
 	}
 
 	"lastguard_lr"
 	{
-		"ru"		"{purple}Последнее желание{default} активны! Правила последнего КТ отключены."
+		"ru"		"{purple}Последнее желание{default} активно! Правила последнего охранника отключены."
 	}
 
 	"lastguard_start_nc"
 	{
-		"ru"		"Правило последнего КТ стартовало!"
+		"ru"		"Игра Правила последнего охранника началась!"
 	}
 
 	"lastguard_movenow"
@@ -80,42 +85,42 @@
 
 	"lastguard_voted"
 	{
-		"ru"		"Вы уже голосовали за {purple}Правила Последнего КТ"
+		"ru"		"Вы уже голосовали за игру {purple}Правила последнего охранника"
 	}
 
 	"lastguard_notalive"
 	{
-		"ru"		"Вы {purple}должны быть живы{default} для это команды."
+		"ru"		"Вы {purple}должны быть живы{default} для этой команды."
 	}
 
 	"lastguard_progress"
 	{
-		"ru"		"Игровой день {darkred}{1} {default} в {purple}процессе. Правило последнего КТ отключено!"
+		"ru"		"Игровой день {darkred}{1} {default} в {purple}процессе. Игра Правила последнего охранника отключена!"
 	}
 
 	"lastguard_running"
 	{
-		"ru"		"Правила последнего КТ {purple}активированы."
+		"ru"		"Игра Правила последнего охранника {purple}активирована."
 	}
 
 	"lastguard_disabled"
 	{
-		"ru"		"Правило последнего КТ {purple}отключено."
+		"ru"		"Игра Правила последнего охранника {purple}отключена."
 	}
 
 	"lastguard_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до старта!"
+		"ru"		"{1} сек. до старта!"
 	}
 
 	"lastguard_info_title"
 	{
-		"ru"		"Правило последнего КТ активно"
+		"ru"		"Игра Правила последнего охранника активна"
 	}
 
 	"lastguard_info_line1"
 	{
-		"ru"		"Правила последнего КТ - КТ vs Т"
+		"ru"		"Правила последнего охранника - Охранник против заключённых"
 	}
 
 	"lastguard_info_line4"
@@ -130,17 +135,17 @@
 
 	"lastguard_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"lastguard_info_line2"
 	{
-		"ru"		"Все террористы бунтуют!"
+		"ru"		"Все заключённые - бунтовщики!"
 	}
 
 	"lastguard_info_line3"
 	{
-		"ru"		"Последний КТ получили много ХП!"
+		"ru"		"Последний охранник получили много ОЗ!"
 	}
 
 	"lastguard_info_line6"

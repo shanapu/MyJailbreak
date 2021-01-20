@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:24 UTC
+// Date: 2017-04-20 21:44:41 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,29 +8,34 @@
 "Phrases"
 {
 
+	"duckhunt_tag"
+	{
+		"ru"		"[{green}MyJB.Охота на уток{default}]"
+	}
+
 	"duckhunt_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"duckhunt_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Охоты на уток"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}охота на уток"
 	}
 
 	"duckhunt_voting"
 	{
-		"ru"		"Голосования за Охоту на Уток {purple}отключено"
+		"ru"		"Голосование за игру охота на уток {purple}отключено"
 	}
 
 	"duckhunt_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор Охоты на Уток"
+		"ru"		"Командир {purple}отключил{default} выбор игры охоты на уток"
 	}
 
 	"duckhunt_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор Охоты на Уток"
+		"ru"		"Администратор {purple}отключил{default} выбор игры охоты на уток"
 	}
 
 	"duckhunt_ctwin_nc"
@@ -50,27 +55,27 @@
 
 	"duckhunt_next"
 	{
-		"ru"		"Следующий раунд {purple}Охота на уток"
+		"ru"		"Следующий раунд: {purple}Охота на уток"
 	}
 
 	"duckhunt_next_nc"
 	{
-		"ru"		"Следующий раунд Охота на Уток"
+		"ru"		"Следующий раунд: Охота на уток"
 	}
 
 	"duckhunt_start"
 	{
-		"ru"		"{purple}Охота на уток{default} началась!"
+		"ru"		"День игры {purple}охоты на уток{default} начался!"
 	}
 
 	"duckhunt_start_nc"
 	{
-		"ru"		"Охота на Уток началась!"
+		"ru"		"Охота на уток началась!"
 	}
 
 	"duckhunt_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}Охоту на уток"
+		"ru"		"Вы уже проголосовали за игру {purple}охоты на уток"
 	}
 
 	"duckhunt_progress"
@@ -80,7 +85,7 @@
 
 	"duckhunt_minplayer"
 	{
-		"ru"		"Для охоты на уток нужно как минимум {purple} один КТ и один Т"
+		"ru"		"Для игры охоты на уток нужно как минимум {purple} один охранник и один заключённый"
 	}
 
 	"duckhunt_disabled"
@@ -90,7 +95,7 @@
 
 	"duckhunt_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до начала"
+		"ru"		"{1} сек. до начала"
 	}
 
 	"duckhunt_info_title"
@@ -105,12 +110,12 @@
 
 	"duckhunt_info_line2"
 	{
-		"ru"		"КТ получили дробовики"
+		"ru"		"Охранники получили дробовики"
 	}
 
 	"duckhunt_info_line3"
 	{
-		"ru"		"Террористы утки и они получили гранаты. Разрешена только правая кнопка мыши"
+		"ru"		"Заключённые утки и они получили гранаты. Разрешена только правая кнопка мыши"
 	}
 
 	"duckhunt_info_line4"
@@ -130,7 +135,7 @@
 
 	"duckhunt_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"duckhunt_name"
@@ -140,17 +145,7 @@
 
 	"duckhunt_wait"
 	{
-		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
-	}
-
-	"duckhunt_now_nc"
-	{
-		"ru"		"Начинается Охота на уток раунд."
-	}
-
-	"duckhunt_now"
-	{
-		"ru"		"Начинается {purple}Охота на уток{default} раунд."
+		"ru"		"Вы должны подождать {purple}{1}{default} раундов"
 	}
 
 }

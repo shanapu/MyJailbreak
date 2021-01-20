@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:53 UTC
+// Date: 2017-04-20 21:44:40 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"weapons_tag"
+	{
+		"ru"		"[{green}MyJB.weapons{default}]"
+	}
 
 	"weapons_disabled"
 	{
@@ -40,7 +45,7 @@
 
 	"weapons_ta"
 	{
-		"ru"		"У вас есть {purple} TA  граната{default}"
+		"ru"		"У вас есть {purple} TA граната{default}"
 	}
 
 	"weapons_health"
@@ -85,7 +90,7 @@
 
 	"weapons_info_sec"
 	{
-		"ru"		"Второе оружие:"
+		"ru"		"Доп. оружие:"
 	}
 
 }

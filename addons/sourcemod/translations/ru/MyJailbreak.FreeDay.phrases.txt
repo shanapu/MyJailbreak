@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:39 UTC
+// Date: 2017-04-20 21:44:34 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,54 +8,59 @@
 "Phrases"
 {
 
+	"freeday_tag"
+	{
+		"ru"		"[{green}JB.Фридэй{default}]"
+	}
+
 	"freeday_end"
 	{
-		"ru"		"{purple}Фридей {default}закончен"
+		"ru"		"Игра {purple}Фридэй {default}закончена"
 	}
 
 	"freeday_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Фридея"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}Фридэй"
 	}
 
 	"freeday_next"
 	{
-		"ru"		"Следующий раунд {purple}Фридей"
+		"ru"		"Следующий раунд: {purple}Фридэй"
 	}
 
 	"freeday_next_nc"
 	{
-		"ru"		"Следующий раунд Фридей"
+		"ru"		"Следующий раунд: Фридэй"
 	}
 
 	"freeday_voting"
 	{
-		"ru"		"Голосование игроков за Фридей {purple}отключено"
+		"ru"		"Голосование игроков за игру Фридэй {purple}отключено"
 	}
 
 	"freeday_setbywarden"
 	{
-		"ru"		"Запуск фридея командиром {purple}выключен"
+		"ru"		"Игра Фридэй выключена {purple}командиром"
 	}
 
 	"freeday_setbyadmin"
 	{
-		"ru"		"Фридей отключен {purple}администратором"
+		"ru"		"Игра Фридэй отключена {purple}администратором"
 	}
 
 	"freeday_start_nc"
 	{
-		"ru"		"Фридей начался!"
+		"ru"		"Игра Фридэй началась!"
 	}
 
 	"freeday_start"
 	{
-		"ru"		"{purple}Фридей {default}начался!"
+		"ru"		"Игра {purple}Фридэй {default}началась!"
 	}
 
 	"freeday_voted"
 	{
-		"ru"		"Ты уже проголосовал за {purple}Фридей"
+		"ru"		"Вы уже проголосовали за игру {purple}Фридэй"
 	}
 
 	"freeday_progress"
@@ -65,17 +70,17 @@
 
 	"freeday_disabled"
 	{
-		"ru"		"Фридей {purple}отключен."
+		"ru"		"Фридэй {purple}отключен."
 	}
 
 	"freeday_info_title"
 	{
-		"ru"		"Фридей!"
+		"ru"		"Фридэй!"
 	}
 
 	"freeday_info_line1"
 	{
-		"ru"		"Это фридей!"
+		"ru"		"Это Фридэй!"
 	}
 
 	"freeday_info_line2"
@@ -110,22 +115,12 @@
 
 	"freeday_wait"
 	{
-		"ru"		"Ты должен подождать {1}  раундов"
+		"ru"		"Вы должны подождать {1} раундов"
 	}
 
 	"freeday_name"
 	{
-		"ru"		"Фридей"
-	}
-
-	"freeday_now_nc"
-	{
-		"ru"		"Начинается Свободный день раунд."
-	}
-
-	"freeday_now"
-	{
-		"ru"		"Начинается {purple}Свободный День{default} раунд."
+		"ru"		"Фридэй"
 	}
 
 }
