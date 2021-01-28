@@ -56,6 +56,7 @@
 
 // Defines
 #define MAX_BUTTONS 25
+#define WARDEN_SPAM 5
 
 // Console Variables
 ConVar gc_bPlugin;
@@ -113,6 +114,7 @@ bool gp_bDeadGames = false;
 // Integers
 int g_iApplicationTime= 0;
 int g_iCMDCoolDown[MAXPLAYERS+1] = 0;
+int g_iCMDCoolDownSpam[MAXPLAYERS+1] = 0;
 int g_iWarden = -1;
 int g_iLastWarden = -1;
 int g_iTempWarden[MAXPLAYERS+1] = -1;
@@ -658,10 +660,14 @@ public Action Command_BecomeWarden(int client, int args)
 		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_wait", RoundFloat(gc_fCMDCooldown.FloatValue));
 		return Plugin_Handled;
 	}
-
+	
 	if (GetLimit(client) < gc_iLimitWarden.IntValue || gc_iLimitWarden.IntValue == 0 || (gc_iCoolDownMinPlayer.IntValue > GetTeamPlayersCount(CS_TEAM_CT)))
 	{
-		if (SetTheWarden(client, client) != Plugin_Handled)
+		if (g_iCMDCoolDownSpam[client] > GetTime())
+		{
+			CReplyToCommand(client, "%s %t", g_sPrefix, "warden_wait_spam_become");
+		}
+		else if (SetTheWarden(client, client) != Plugin_Handled)
 		{
 			Forward_OnWardenCreatedByUser(client);
 		}
@@ -703,6 +709,13 @@ public Action Command_ExitWarden(int client, int args)
 		}
 		return Plugin_Handled;
 	}
+	
+	if (g_iCMDCoolDownSpam[client] > GetTime())
+	{
+		CReplyToCommand(client, "%s %t", g_sPrefix, "warden_wait_spam_retire");
+		return Plugin_Handled;
+	}
+	g_iCMDCoolDownSpam[client] = GetTime() + WARDEN_SPAM;
 
 	Forward_OnWardenRemovedBySelf(client);
 	RemoveTheWarden();
@@ -1388,6 +1401,8 @@ Action SetTheWarden(int client, int caller)
 		{
 			SetLimit(client, 1);
 		}
+		
+		g_iCMDCoolDownSpam[client] = GetTime() + WARDEN_SPAM;
 
 		GetEntPropString(client, Prop_Data, "m_ModelName", g_sModelPathPrevious, sizeof(g_sModelPathPrevious));
 

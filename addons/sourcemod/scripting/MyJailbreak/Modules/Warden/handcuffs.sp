@@ -741,6 +741,8 @@ public Action Timer_StillPaperClip(Handle timer, int client)
 
 void StripZeus(int client)
 {
+	if (!gc_bPlugin.BoolValue || !g_bEnabled || !gc_bHandCuff.BoolValue)
+		return;
 	if (!IsValidClient(client, true, false))
 		return;
 
