@@ -950,6 +950,16 @@
 		"#format"	"{1:i}"
 		"en"		"As {green}last round warden{default} you have to wait {purple}{1} seconds{default} to become warden again."
 	}
+	
+	"warden_wait_spam_become"
+	{
+		"en"		"You just decided to {green}retire as warden{default}! Please wait {purple}a few seconds{default} to become warden again."
+	}
+	
+	"warden_wait_spam_retire"
+	{
+		"en"		"You just {green}became warden{default}! Please wait {purple}a few seconds{default} to retire."
+	}
 
 	"warden_deputy_removed"
 	{
