@@ -747,7 +747,7 @@ void StripZeus(int client)
 	if (!IsValidClient(client, true, false))
 		return;
 
-	if (g_bClientIsDisconnecting) // OnClientDisconnect is called BEFORE client fully disconnects, so he still passes IsValidClient check
+	if (g_bClientIsDisconnecting[client]) // OnClientDisconnect is called BEFORE client fully disconnects, so he still passes IsValidClient check
 		return; // prevents infinite loops with #GameUI_Disconnect_TooManyCommands since FakeClientCommand is used
 
 	if ((!IsClientWarden(client) && (!IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
