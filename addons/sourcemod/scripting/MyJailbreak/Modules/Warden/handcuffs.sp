@@ -69,6 +69,7 @@ ConVar gc_iCuffedColorBlue;
 
 // Booleans
 bool g_bCuffed[MAXPLAYERS+1] = false;
+bool g_bClientIsDisconnecting[MAXPLAYERS+1]; // fixes StripZeus crash
 
 // Integers
 int g_iPlayerHandCuffs[MAXPLAYERS+1];
@@ -443,6 +444,7 @@ public void HandCuffs_OnClientDisconnect(int client)
 		g_iCuffed--;
 
 	g_iLastButtons[client] = 0;
+	g_bClientIsDisconnecting[client] = true;
 
 	if (BreakTimer[client] != null)
 	{
@@ -484,6 +486,7 @@ public void HandCuffs_OnMapEnd()
 public void HandCuffs_OnClientPutInServer(int client)
 {
 	g_iPlayerPaperClips[client] = 0;
+	g_bClientIsDisconnecting[client] = false;
 	SDKHook(client, SDKHook_OnTakeDamage, HandCuffs_OnTakedamage);
 }
 
@@ -743,6 +746,9 @@ void StripZeus(int client)
 {
 	if (!IsValidClient(client, true, false))
 		return;
+
+	if (g_bClientIsDisconnecting) // OnClientDisconnect is called BEFORE client fully disconnects, so he still passes IsValidClient check
+		return; // prevents infinite loops with #GameUI_Disconnect_TooManyCommands since FakeClientCommand is used
 
 	if ((!IsClientWarden(client) && (!IsClientDeputy(client) && gc_bHandCuffDeputy.BoolValue)))
 		return;
