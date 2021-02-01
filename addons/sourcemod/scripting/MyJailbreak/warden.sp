@@ -1241,6 +1241,8 @@ public void OnClientPutInServer(int client)
 // Warden disconnect
 public void OnClientDisconnect(int client)
 {
+	HandCuffs_OnClientDisconnect(client); // this is prioritised to fix a crash with the StripZeus function
+	
 	if (IsClientWarden(client))
 	{
 		CPrintToChatAll("%s %t", g_sPrefix, "warden_disconnected", client);
@@ -1248,8 +1250,6 @@ public void OnClientDisconnect(int client)
 		{
 			PrintCenterTextAll("%t", "warden_disconnected_nc", client);
 		}
-
-		HandCuffs_OnClientDisconnect(client); // this is prioritised to fix a crash with the StripZeus function
 
 		Forward_OnWardenRemoved(client);
 		Forward_OnWardenDisconnected(client);
