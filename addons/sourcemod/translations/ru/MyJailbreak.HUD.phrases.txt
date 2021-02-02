@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:42 UTC
+// Date: 2017-04-20 21:44:26 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -38,24 +38,24 @@
 		"ru"		"Заключённые:"
 	}
 
+	"hud_tag"
+	{
+		"ru"		"[MyJB.Интерфейс]"
+	}
+
 	"hud_on"
 	{
-		"ru"		"HUD {purple}активен"
+		"ru"		"Интерфейс {purple}активен"
 	}
 
 	"hud_off"
 	{
-		"ru"		"HUD {purple}отключен"
+		"ru"		"Интерфейс {purple}отключен"
 	}
 
 	"hud_lastCT"
 	{
 		"ru"		"Последний охранник:"
-	}
-
-	"hud_youwarden"
-	{
-		"ru"		"Вы командир!"
 	}
 
 }

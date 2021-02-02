@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:46 UTC
+// Date: 2017-04-20 21:44:43 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,49 +8,54 @@
 "Phrases"
 {
 
+	"ghosts_tag"
+	{
+		"ru"		"[{green}MyJB.Призраки{default}]"
+	}
+
 	"ghosts_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голос(ов) требуется для игры в {darkred}Призраков."
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов требуется для игры в {darkred}Призраков."
 	}
 
 	"ghosts_voting"
 	{
-		"ru"		"Голосование за Призраков {purple}отключено!"
+		"ru"		"Голосование за игру Призраков {purple}отключен!"
 	}
 
 	"ghosts_setbywarden"
 	{
-		"ru"		"Выбор Призраков {purple}отключено{default} командиром"
+		"ru"		"Командир {purple}отключил{default} выбор игры Призраков"
 	}
 
 	"ghosts_setbyadmin"
 	{
-		"ru"		"Установка призраков {purple}отключен{default}администратором!"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Призраков!"
 	}
 
 	"ghosts_setbyadmin"
 	{
-		"ru"		"Установки призраков {purple}отключен{default}администратором!"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Призраков!"
 	}
 
 	"ghosts_ctwin_nc"
 	{
-		"ru"		"Охранник выжил!"
+		"ru"		"Охранники выжили!"
 	}
 
 	"ghosts_twin_nc"
 	{
-		"ru"		"Заключённый выжил!"
+		"ru"		"Заключённые выжили!"
 	}
 
 	"ghosts_minplayer"
 	{
-		"ru"		"Для Призраков необходимо как минимум {purple}один Охранник, один заключённый!"
+		"ru"		"Для игры Призраков необходим как минимум {purple}один Охранник и заключённый!"
 	}
 
 	"ghosts_end"
 	{
-		"ru"		"{purple}Призраки{default} закончены!"
+		"ru"		"Игра {purple}Призраков{default} закончена!"
 	}
 
 	"ghosts_next"
@@ -70,32 +75,32 @@
 
 	"ghosts_start"
 	{
-		"ru"		"{purple}Призраки{default} начались!"
+		"ru"		"Игра {purple}Призраков{default} началась!"
 	}
 
 	"ghosts_start_nc"
 	{
-		"ru"		"Призраки начались!"
+		"ru"		"Игра Призраков началась!"
 	}
 
 	"ghosts_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}Призраков!"
+		"ru"		"Вы уже проголосовали за игру {purple}Призраков!"
 	}
 
 	"ghosts_progress"
 	{
-		"ru"		"Игровой день {darkred}{1} {default}уже в {purple}процессе!"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе!"
 	}
 
 	"ghosts_disabled"
 	{
-		"ru"		"Призраки на данный момент {purple}отключены!"
+		"ru"		"Игра Призраков на данный момент {purple}отключена!"
 	}
 
 	"ghosts_damage_nc"
 	{
-		"ru"		"{1} секунд до активации урона!"
+		"ru"		"{1} сек. до активации урона!"
 	}
 
 	"ghosts_info_title"
@@ -120,7 +125,7 @@
 
 	"ghosts_info_line3"
 	{
-		"ru"		"Свобода для всех - Игрок VS Игрок - Последний выживший побеждает!"
+		"ru"		"Каждый сам за себя - Игрок против игрока - Последний выживший побеждает!"
 	}
 
 	"ghosts_info_line4"
@@ -130,7 +135,7 @@
 
 	"ghosts_info_line5"
 	{
-		"ru"		"Последнее Желание отключено во время этого раунда!"
+		"ru"		"Последнее желание отключено во время этого раунда!"
 	}
 
 	"ghosts_info_line6"
@@ -140,12 +145,12 @@
 
 	"ghosts_info_line7"
 	{
-		"ru"		"Не будь дурачком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"ghosts_wait"
 	{
-		"ru"		"Вы должны подождать {purple}{1}{default} раундов для Игрового Дня!"
+		"ru"		"Вы должны подождать {purple}{1}{default} раундов!"
 	}
 
 	"ghosts_name"
@@ -161,16 +166,6 @@
 	"ghosts_invisible"
 	{
 		"ru"		"НЕВИДИМОСТЬ"
-	}
-
-	"ghosts_now_nc"
-	{
-		"ru"		"Начинается Призраки раунд."
-	}
-
-	"ghosts_now"
-	{
-		"ru"		"Начинается {purple}Призраки{default} раунд."
 	}
 
 }

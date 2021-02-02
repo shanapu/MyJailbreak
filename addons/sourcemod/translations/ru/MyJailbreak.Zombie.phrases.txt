@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:26 UTC
+// Date: 2017-04-20 21:44:40 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,29 +8,34 @@
 "Phrases"
 {
 
+	"zombie_tag"
+	{
+		"ru"		"[{green}MyJB.Zombie{default}]"
+	}
+
 	"zombie_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Зомби дня"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}Зомби дня"
 	}
 
 	"zombie_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"zombie_voting"
 	{
-		"ru"		"Голосования за зомби день {purple}отключено"
+		"ru"		"Голосования за игру зомби день {purple}отключено"
 	}
 
 	"zombie_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор Зомби дня"
+		"ru"		"Командир {purple}отключил{default} выбор игры Зомби день"
 	}
 
 	"zombie_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор Зомби дня"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Зомби день"
 	}
 
 	"zombie_ctwin_nc"
@@ -45,37 +50,37 @@
 
 	"zombie_end"
 	{
-		"ru"		"{purple}Зомби день{default} окончен!"
+		"ru"		"Игра {purple}Зомби день{default} окончена!"
 	}
 
 	"zombie_next_nc"
 	{
-		"ru"		"Следующий раунд Зомби день"
+		"ru"		"Следующий раунд: Зомби день"
 	}
 
 	"zombie_next"
 	{
-		"ru"		"Следующий раунд {purple}Зомби день"
+		"ru"		"Следующий раунд: {purple}Зомби день"
 	}
 
 	"zombie_start"
 	{
-		"ru"		"{purple}Зомби день{default} начались!"
+		"ru"		"Игра {purple}Зомби день{default} началась!"
 	}
 
 	"zombie_start"
 	{
-		"ru"		"{purple}Зомби день{default} начались!"
+		"ru"		"Игра {purple}Зомби день{default} началась!"
 	}
 
 	"zombie_start_nc"
 	{
-		"ru"		"Зомби день начался!"
+		"ru"		"Игра Зомби день началась!"
 	}
 
 	"zombie_voted"
 	{
-		"ru"		"Вы проголосовали за {purple}Зомби день"
+		"ru"		"Вы проголосовали за игру {purple}Зомби день"
 	}
 
 	"zombie_progress"
@@ -85,17 +90,17 @@
 
 	"zombie_minplayer"
 	{
-		"ru"		"Для зомби дня нужен минимум {purple} один КТ"
+		"ru"		"Для зомби дня нужен минимум {purple} один охранник"
 	}
 
 	"zombie_timeuntilzombie_nc"
 	{
-		"ru"		"{1} секунд, чтобы спрятаться"
+		"ru"		"{1} сек., чтобы спрятаться"
 	}
 
 	"zombie_timetounfreeze_nc"
 	{
-		"ru"		"{1} секунд до разморозки"
+		"ru"		"{1} сек. до разморозки"
 	}
 
 	"zombie_info_title"
@@ -105,17 +110,17 @@
 
 	"zombie_info_line1"
 	{
-		"ru"		"Зомби(ct) против Людей(t)"
+		"ru"		"Зомби(ct) против людей(t)"
 	}
 
 	"zombie_info_line2"
 	{
-		"ru"		"Зомби заморожены и Люди могут спрятаться"
+		"ru"		"Зомби заморожены и люди могут спрятаться"
 	}
 
 	"zombie_info_line3"
 	{
-		"ru"		"Зомби получили очень много ХП."
+		"ru"		"Зомби получили очень много ОЗ."
 	}
 
 	"zombie_info_line4"
@@ -135,12 +140,12 @@
 
 	"zombie_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"zombie_wait"
 	{
-		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов"
+		"ru"		"Вы должны подождать {purple}{1}{default} раундов"
 	}
 
 	"zombie_disabled"
@@ -151,16 +156,6 @@
 	"zombie_name"
 	{
 		"ru"		"Зомби день"
-	}
-
-	"zombie_now_nc"
-	{
-		"ru"		"Начинается Зомби раунд."
-	}
-
-	"zombie_now"
-	{
-		"ru"		"Начинается {purple}Зомби{default} раунд."
 	}
 
 }

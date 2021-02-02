@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:29 UTC
+// Date: 2017-04-20 21:44:38 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -7,6 +7,11 @@
 //
 "Phrases"
 {
+
+	"zeus_tag"
+	{
+		"ru"		"[{green}MyJB.zeus{default}]"
+	}
 
 	"zeus_need"
 	{
@@ -20,62 +25,62 @@
 
 	"zeus_twin_nc"
 	{
-		"ru"		"Т выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"zeus_voting"
 	{
-		"ru"		"Голосования за день зевса {purple}отключено"
+		"ru"		"Голосование за день зевса {purple}отключено"
 	}
 
 	"zeus_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор дня зевса"
+		"ru"		"Командир {purple}отключил{default} выбор игры дня зевса"
 	}
 
 	"zeus_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор дня зевса"
+		"ru"		"Администратор {purple}отключил{default} выбор игры дня зевса"
 	}
 
 	"zeus_minplayer"
 	{
-		"ru"		"Для дня Зевса необходимо как минимум {purple}один КТ"
+		"ru"		"Для дня зевса необходим как минимум {purple}один охранник"
 	}
 
 	"zeus_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
+		"ru"		"Охранники выжили"
 	}
 
 	"zeus_end"
 	{
-		"ru"		"{purple}День зевса{default} окончен!"
+		"ru"		"Игра {purple}День зевса{default} окончен!"
 	}
 
 	"zeus_next"
 	{
-		"ru"		"Следующий день {purple}День зевса"
+		"ru"		"Следующий день: {purple}День зевса"
 	}
 
 	"zeus_next_nc"
 	{
-		"ru"		"Следующий день День Зевса"
+		"ru"		"Следующий день: День зевса"
 	}
 
 	"zeus_start"
 	{
-		"ru"		"{purple}День зевса{default} начался!"
+		"ru"		"Игра {purple}День зевса{default} начался!"
 	}
 
 	"zeus_start_nc"
 	{
-		"ru"		"День Зевса начался!"
+		"ru"		"Игра День зевса начался!"
 	}
 
 	"zeus_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}День Зевса"
+		"ru"		"Вы уже проголосовали за игру {purple}День Зевса"
 	}
 
 	"zeus_progress"
@@ -90,7 +95,7 @@
 
 	"zeus_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до начала"
+		"ru"		"{1} сек. до начала"
 	}
 
 	"zeus_info_title"
@@ -100,7 +105,7 @@
 
 	"zeus_info_line1"
 	{
-		"ru"		"День зевса - все против всех"
+		"ru"		"День зевса - Каждый сам за себя"
 	}
 
 	"zeus_info_line2"
@@ -110,7 +115,7 @@
 
 	"zeus_info_line3"
 	{
-		"ru"		"Убейте зевсом или ножом, чтобы получить новый зевс"
+		"ru"		"Убейте, используя Zeus или нож, чтобы получить новый Zeus"
 	}
 
 	"zeus_info_line4"
@@ -130,27 +135,17 @@
 
 	"zeus_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"zeus_wait"
 	{
-		"ru"		"Вы должны подождать больше {1} раундов"
+		"ru"		"Вы должны подождать {1} раундов"
 	}
 
 	"zeus_name"
 	{
 		"ru"		"День зевса"
-	}
-
-	"zeus_now_nc"
-	{
-		"ru"		"Начинается Зевс раунд."
-	}
-
-	"zeus_now"
-	{
-		"ru"		"Начинается {purple}Зевс{default} раунд."
 	}
 
 }

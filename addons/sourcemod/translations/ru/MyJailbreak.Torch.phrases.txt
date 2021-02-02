@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:59 UTC
+// Date: 2017-04-20 21:44:37 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,69 +8,74 @@
 "Phrases"
 {
 
+	"torch_tag"
+	{
+		"ru"		"[{green}MyJB.TorchRelay{default}]"
+	}
+
 	"torch_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры Torch Relay"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred} Эстафеты Олимпийского огня"
 	}
 
 	"torch_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} с {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"torch_end"
 	{
-		"ru"		"{purple}Игра Torch Relay{default} завершена"
+		"ru"		"Игра {purple}Эстафеты Олимпийского огня{default} завершена"
 	}
 
 	"torch_voting"
 	{
-		"ru"		"Голосование игроков за игру Torch Relay {purple}отключено"
+		"ru"		"Голосование за игру Эстафеты Олимпийского огня {purple}отключено"
 	}
 
 	"torch_setbywarden"
 	{
-		"ru"		"Установка игры Torch Relay КМД {purple}отменена"
+		"ru"		"Командир {purple}отключил{default} выбор игры Эстафеты Олимпийского огня!"
 	}
 
 	"torch_setbyadmin"
 	{
-		"ru"		"Установка игры Torch Relay админом {purple}отменена"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Эстафеты Олимпийского огня!"
 	}
 
 	"torch_next"
 	{
-		"ru"		"Следующий раунд игра {purple}Torch Relay"
+		"ru"		"Следующий раунд: {purple}Эстафеты Олимпийского огня"
 	}
 
 	"torch_next_nc"
 	{
-		"ru"		"Следующий раунд игра Torch Relay"
+		"ru"		"Следующий раунд: Эстафеты Олимпийского огня"
 	}
 
 	"torch_start"
 	{
-		"ru"		"Игра {purple}Torch Relay{default} началась"
+		"ru"		"Игра {purple}Эстафеты Олимпийского огня{default} началась"
 	}
 
 	"torch_start_nc"
 	{
-		"ru"		"Игра Torch Relay началась!"
+		"ru"		"Игра Эстафеты Олимпийского огня началась!"
 	}
 
 	"torch_voted"
 	{
-		"ru"		"Вы уже проголосовали за игру {purple}Torch Relay"
+		"ru"		"Вы уже проголосовали за игру {purple}Эстафеты Олимпийского огня"
 	}
 
 	"torch_progress"
 	{
-		"ru"		"Игра {darkred}{1} {default}уже {purple}началась."
+		"ru"		"Игра {darkred}{1} {default}в {purple}процессе."
 	}
 
 	"torch_minplayer"
 	{
-		"ru"		"Для игры Torch Relay нужно как минимум {purple}3 игрока, и 1 должен быть КТ"
+		"ru"		"Для игры Эстафеты Олимпийского огня нужно как минимум {purple}3 игрока, и 1 должен быть охранником"
 	}
 
 	"torch_sprint"
@@ -80,12 +85,12 @@
 
 	"torch_sprintend"
 	{
-		"ru"		"{blue}Спринт кончился!{default} Время восстановления {1} секнуд"
+		"ru"		"{blue}Спринт кончился!{default} Время восстановления {1} сек."
 	}
 
 	"torch_random"
 	{
-		"ru"		"{darkred}Случайный Torch Relay - {1}"
+		"ru"		"{darkred}Случайные Эстафеты Олимпийского огня - {1}"
 	}
 
 	"torch_sprintagain"
@@ -95,17 +100,17 @@
 
 	"torch_disabled"
 	{
-		"ru"		"Игра Torch Relay {purple}отключена."
+		"ru"		"Игра Эстафеты Олимпийского огня {purple}отключена."
 	}
 
 	"torch_info_title"
 	{
-		"ru"		"Игра Torch Relay активирована!"
+		"ru"		"Игра Эстафеты Олимпийского огня активирована!"
 	}
 
 	"torch_info_line1"
 	{
-		"ru"		"Случайный игрок будет подожжен"
+		"ru"		"Случайный игрок будет подожжён"
 	}
 
 	"torch_info_line2"
@@ -120,22 +125,22 @@
 
 	"torch_info_line4"
 	{
-		"ru"		"Стандартные правила джайлов отменены"
+		"ru"		"Стандартные правила тюрьмы отменены"
 	}
 
 	"torch_info_line5"
 	{
-		"ru"		"Вы не можете активировать !lr в "
+		"ru"		"Здесь нету последних желаний!"
 	}
 
 	"torch_info_line5"
 	{
-		"ru"		"Вы не можете активировать !lr в "
+		"ru"		"Здесь нету последних желаний!"
 	}
 
 	"torch_info_line6"
 	{
-		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
+		"ru"		"Оставайтесь в камерах! Не убегайте в нычки!"
 	}
 
 	"torch_info_line7"
@@ -145,12 +150,12 @@
 
 	"torch_wait"
 	{
-		"ru"		"Вы должны подождать ещё {purple}{1}{default} пару раундов"
+		"ru"		"Вы должны подождать ещё {purple}{1}{default} раундов"
 	}
 
 	"torch_damage_nc"
 	{
-		"ru"		"Случайный игрок загорится через {1} секунд"
+		"ru"		"Случайный игрок загорится через {1} сек."
 	}
 
 	"torch_torchem"
@@ -171,16 +176,6 @@
 	"torch_name"
 	{
 		"ru"		"Эстафета Олимпийского огня"
-	}
-
-	"torch_now_nc"
-	{
-		"ru"		"Начинается Факел раунд."
-	}
-
-	"torch_now"
-	{
-		"ru"		"Начинается {purple}Факел{default} раунд."
 	}
 
 }

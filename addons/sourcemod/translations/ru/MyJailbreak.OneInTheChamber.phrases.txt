@@ -1,156 +1,123 @@
-// Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:21 UTC
-// Language: Russian (ru)
-// 
-// To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/283
-//
 "Phrases"
 {
-
+	"oneinthechamber_tag"
+	{
+		"ru"		"[{green}MyJB.OITC{default}]"
+	}
 	"oneinthechamber_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Один Патрон."
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}День одиночной камеры."
 	}
-
 	"oneinthechamber_rounds"
 	{
 		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
-
 	"oneinthechamber_twin_nc"
 	{
-		"ru"		"Заключенные выжили!"
+		"ru"		"Заключённые выжили!"
 	}
-
 	"oneinthechamber_voting"
 	{
-		"ru"		"Голосования за Один Патрон {purple}отключено!"
+		"ru"		"Голосование за игру {purple}отключено!"
 	}
-
 	"oneinthechamber_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбирать Один Патрон"
+		"ru"		"Командир {purple}отключил{default} выбор игры День одиночной камеры!"
 	}
-
 	"oneinthechamber_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбирать Один Патрон"
+		"ru"		"Администратор {purple}отключил{default} выбор игры День одиночной камеры!"
 	}
-
 	"oneinthechamber_minplayer"
 	{
-		"ru"		"Для Одного Патрона необходимо как минимум {purple}один КТ и один Т"
+		"ru"		"Для игры День одиночной камеры необходим как минимум {purple}один охранник и один заключённый!"
 	}
-
 	"oneinthechamber_ctwin_nc"
 	{
 		"ru"		"Охранники выжили!"
 	}
-
 	"oneinthechamber_end"
 	{
-		"ru"		"{purple}Один Патрон{default} окончен."
+		"ru"		"Игра {purple}День одиночной камеры{default} окончена."
 	}
-
 	"oneinthechamber_next"
 	{
-		"ru"		"Следующий раунд: {purple}Один Патрон."
+		"ru"		"В следующем раунде: {purple}День одиночной камеры."
 	}
-
 	"oneinthechamber_next_nc"
 	{
-		"ru"		"Следующий раунд: Один Патрон."
+		"ru"		"В следующем раунде: День одиночной камеры."
 	}
-
 	"oneinthechamber_now_nc"
 	{
-		"ru"		"Сейчас начнётся Один Патрон."
+		"ru"		"Начинается раунд Дня одиночной камеры."
 	}
-
 	"oneinthechamber_now"
 	{
-		"ru"		"Сейчас начнётся {purple}Один Патрон{default}."
+		"ru"		"Начинается раунд {purple}Дня одиночной камеры{default}."
 	}
-
 	"oneinthechamber_start"
 	{
-		"ru"		"{purple}Один Патрон{default} начался!"
+		"ru"		"{purple}День одиночной камеры{default} начался!"
 	}
-
 	"oneinthechamber_start_nc"
 	{
-		"ru"		"Один Патрон начался!"
+		"ru"		"День одиночной камеры начался!"
 	}
-
 	"oneinthechamber_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}Один Патрон!"
+		"ru"		"Вы уже проголосовали за {purple}День одиночной камеры!"
 	}
-
 	"oneinthechamber_progress"
 	{
-		"ru"		"Игра {darkred}{1} {purple}уже в начата!"
+		"ru"		"Игровой день {darkred}{1} {default}в {purple}процессе!"
 	}
-
 	"oneinthechamber_disabled"
 	{
-		"ru"		"Один Патрон сейчас {purple}отключен!"
+		"ru"		"День одиночной камеры {purple}отключен!"
 	}
-
 	"oneinthechamber_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до начала!"
+		"ru"		"{1} сек. до начала раунда!"
 	}
-
 	"oneinthechamber_info_title"
 	{
-		"ru"		"Один Патрон Начался!"
+		"ru"		"День одиночной камеры активирован!"
 	}
-
 	"oneinthechamber_info_line1"
 	{
-		"ru"		"Один Патрон - Все Против Всех!"
+		"ru"		"День одиночной камеры - Каждый сам за себя!"
 	}
-
 	"oneinthechamber_info_line2"
 	{
-		"ru"		"Вы имеете один патрон в дигле!"
+		"ru"		"У вас есть только один выстрел в deagle!"
 	}
-
 	"oneinthechamber_info_line3"
 	{
-		"ru"		"Когда вы убиваете,вы получаете ещё один патрон!"
+		"ru"		"Когда вы убьёте, вы будете вознаграждены ещё одной пулей!"
 	}
-
 	"oneinthechamber_info_line4"
 	{
-		"ru"		"В этом раунде все правила Тюрьмы отменяются!"
+		"ru"		"Никакие правила тюрьмы не применяются в этом раунде!"
 	}
-
 	"oneinthechamber_info_line5"
 	{
-		"ru"		"ЛР отключен в этом раунде!"
+		"ru"		"Здесь нету последних желаний!"
 	}
-
 	"oneinthechamber_info_line6"
 	{
 		"ru"		"Оставайтесь в главной камере! Не уходите в нычки!"
 	}
-
 	"oneinthechamber_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
-
 	"oneinthechamber_wait"
 	{
-		"ru"		"Вы должны подождать больше {purple}{1}{default} раундов!"
+		"ru"		"Вы должны подождать {purple}{1}{default} раундов!"
 	}
-
 	"oneinthechamber_name"
 	{
-		"ru"		"Один Патрон"
+		"ru"		"День одиночной камеры"
 	}
-
 }

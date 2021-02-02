@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:26:34 UTC
+// Date: 2017-04-20 21:44:38 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,99 +8,104 @@
 "Phrases"
 {
 
+	"noscope_tag"
+	{
+		"ru"		"[{green}MyJB.noscope{default}]"
+	}
+
 	"noscope_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}игры No Scope Battle"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}Битва без прицела"
 	}
 
 	"noscope_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} с {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"noscope_twin_nc"
 	{
-		"ru"		"Террористы выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"noscope_voting"
 	{
-		"ru"		"Голосование игроков за игру Noscope {purple}отключено"
+		"ru"		"Голосование игроков за игру Битва без прицела {purple}отключено"
 	}
 
 	"noscope_setbywarden"
 	{
-		"ru"		"Установка игры No Scope Battle КМД {purple}отменена"
+		"ru"		"Командир {purple}отключил{default} выбор игры Битва без прицела!"
 	}
 
 	"noscope_minplayer"
 	{
-		"ru"		"Для игры No Scope Battle вам нужен как минимум {purple}1 КТ"
+		"ru"		"Для игры Битва без прицела вам нужен как минимум {purple}1 охранник"
 	}
 
 	"noscope_setbyadmin"
 	{
-		"ru"		"Установка игры No Scope Battle админом {purple}отменена"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Битва без прицела!"
 	}
 
 	"noscope_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
+		"ru"		"Охранники выжили"
 	}
 
 	"noscope_end"
 	{
-		"ru"		"{purple}Игра No Scope Battle{default} завершена"
+		"ru"		"Игра {purple}Битва без прицела{default} завершена!"
 	}
 
 	"noscope_next"
 	{
-		"ru"		"Следующий раунд игра {purple}No Scope Battle"
+		"ru"		"Следующий раунд: {purple}Битва без прицела"
 	}
 
 	"noscope_next_nc"
 	{
-		"ru"		"Следующий раунд игра No Scope Battle"
+		"ru"		"Следующий раунд: Битва без прицела"
 	}
 
 	"noscope_start"
 	{
-		"ru"		"Игра {purple}No Scope Battle{default} началась"
+		"ru"		"Игра {purple}Битва без прицела{default} началась!"
 	}
 
 	"noscope_start_nc"
 	{
-		"ru"		"Игра No Scope Battle началась!"
+		"ru"		"Игра Битва без прицела началась!"
 	}
 
 	"noscope_voted"
 	{
-		"ru"		"Вы уже проголосовали за игру {purple}No Scope Battle"
+		"ru"		"Вы уже проголосовали за игру {purple}Битва без прицела"
 	}
 
 	"noscope_progress"
 	{
-		"ru"		"Игра {darkred}{1} {default}уже {purple}началась."
+		"ru"		"Игра {darkred}{1} {default}в {purple}процессе."
 	}
 
 	"noscope_disabled"
 	{
-		"ru"		"Игра No Scope Battle {purple}отключена."
+		"ru"		"Игра Битва без прицела {purple}отключена."
 	}
 
 	"noscope_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до старта"
+		"ru"		"{1} сек. до старта"
 	}
 
 	"noscope_info_title"
 	{
-		"ru"		"Игра No Scope Battle активирована"
+		"ru"		"Игра Битва без прицела активирована"
 	}
 
 	"noscope_info_line1"
 	{
-		"ru"		"No Scope Battle - Free for All"
+		"ru"		"Битва без прицела - Каждый сам за себя"
 	}
 
 	"noscope_info_line2"
@@ -110,12 +115,12 @@
 
 	"noscope_info_line3"
 	{
-		"ru"		"вы можете двигаться и выйти из wk во время nodamage"
+		"ru"		"Убегайте во время фазы 'отсутствия урона'!"
 	}
 
 	"noscope_info_line4"
 	{
-		"ru"		"Стандартные правила джайлов отменены"
+		"ru"		"Стандартные правила тюрьмы отменены!"
 	}
 
 	"noscope_info_line5"
@@ -125,7 +130,7 @@
 
 	"noscope_info_line6"
 	{
-		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
+		"ru"		"Оставайтесь в камерах! Не убегайте в нычки!"
 	}
 
 	"noscope_info_line7"
@@ -135,22 +140,12 @@
 
 	"noscope_wait"
 	{
-		"ru"		"Вы должны подождать ещё {1} пару раундов"
+		"ru"		"Вы должны подождать ещё {1} раундов"
 	}
 
 	"noscope_name"
 	{
 		"ru"		"Битва без прицела"
-	}
-
-	"noscope_now_nc"
-	{
-		"ru"		"Раунд Битва-Без-Прицела начинается"
-	}
-
-	"noscope_now"
-	{
-		"ru"		"Начинается {purple}Битва-Без-Прицела{default} раунд."
 	}
 
 }

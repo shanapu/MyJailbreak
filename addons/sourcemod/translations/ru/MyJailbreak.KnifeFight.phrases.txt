@@ -1,5 +1,5 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:15 UTC
+// Date: 2017-04-20 21:44:41 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
@@ -8,114 +8,119 @@
 "Phrases"
 {
 
+	"knifefight_tag"
+	{
+		"ru"		"[{green}MyJB.Knife Fight{default}]"
+	}
+
 	"knifefight_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Ножевой схватки"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}Ножевая схватка"
 	}
 
 	"knifefight_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} с {purple}{2}"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"knifefight_twin_nc"
 	{
-		"ru"		"Террористы выжили"
+		"ru"		"Заключённые выжили"
 	}
 
 	"knifefight_voting"
 	{
-		"ru"		"Голосование игроков за Ножевую Схватку {purple}отменено"
+		"ru"		"Голосование игроков за игру Ножевая схватка {purple}отменено"
 	}
 
 	"knifefight_setbywarden"
 	{
-		"ru"		"Установка ножевой схватки КМД {purple}отменена"
+		"ru"		"Командир {purple}отключил{default} выбор игры Ножевая схватка!"
 	}
 
 	"knifefight_setbyadmin"
 	{
-		"ru"		"Установка ножевой схватки админом{purple}отменена"
+		"ru"		"Администратор {purple}отключил{default} выбор игры Ножевая схватка!"
 	}
 
 	"knifefight_ctwin_nc"
 	{
-		"ru"		"КТ выжили"
+		"ru"		"Охранники выжили"
 	}
 
 	"knifefight_minplayer"
 	{
-		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 КТ и 1 Т"
+		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 охранник и 1 заключённый"
 	}
 
 	"knifefight_minplayer"
 	{
-		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 КТ и 1 Т"
+		"ru"		"Для ножевой битвы вам нужно как минимум {purple} 1 охранник и 1 заключённый"
 	}
 
 	"knifefight_end"
 	{
-		"ru"		"{purple}Ножевая схватка{default} завершена"
+		"ru"		"Игра {purple}Ножевая схватка{default} завершена"
 	}
 
 	"knifefight_next"
 	{
-		"ru"		"Следующий раунд  {purple}Ножевая схватка!"
+		"ru"		"Следующий раунд: {purple}Ножевая схватка!"
 	}
 
 	"knifefight_next_nc"
 	{
-		"ru"		"Следующий раунд - Ножевая схватка"
+		"ru"		"Следующий раунд: Ножевая схватка"
 	}
 
 	"knifefight_start"
 	{
-		"ru"		"{purple}Ножевая схватка{default} началась!"
+		"ru"		"Игра {purple}Ножевая схватка{default} началась!"
 	}
 
 	"knifefight_start_nc"
 	{
-		"ru"		"Ножевая схватка началась!"
+		"ru"		"Игра Ножевая схватка началась!"
 	}
 
 	"knifefight_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}ножевую схватку"
+		"ru"		"Вы уже проголосовали за игру {purple}Ножевая схватка"
 	}
 
 	"knifefight_progress"
 	{
-		"ru"		"Игра {darkred}{1} {default}уже {purple}началась."
+		"ru"		"Игра {darkred}{1} {default}в {purple}процессе."
 	}
 
 	"knifefight_disabled"
 	{
-		"ru"		"Ножевая схватка {purple}отключена."
+		"ru"		"Игра Ножевая схватка {purple}отключена."
 	}
 
 	"knifefight_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до старта"
+		"ru"		"{1} сек. до старта"
 	}
 
 	"knifefight_info_title"
 	{
-		"ru"		"FFA Knife Fight - Free for all активирована"
+		"ru"		"Ножевая схватка - Каждый сам са себя активирован"
 	}
 
 	"knifefight_info_line1"
 	{
-		"ru"		"Не удивляйтесь, если появитесь на КТ спавне!"
+		"ru"		"Не удивляйтесь, если появитесь на спавне охранников!"
 	}
 
 	"knifefight_info_line2"
 	{
-		"ru"		"Коньки, вид от 3 лица & низкая гравитация включены."
+		"ru"		"Коньки, вид от 3 лица и низкая гравитация включены."
 	}
 
 	"knifefight_info_line3"
 	{
-		"ru"		"вы можете двигаться и выйти из wk во время nodamage"
+		"ru"		"Убегайте во время фазы 'отсутствия урона'!"
 	}
 
 	"knifefight_info_line4"
@@ -130,7 +135,7 @@
 
 	"knifefight_info_line6"
 	{
-		"ru"		"Оставайтесь в клетках! Не убегайте в нычки!"
+		"ru"		"Оставайтесь в камерах! Не убегайте в нычки!"
 	}
 
 	"knifefight_info_line7"
@@ -140,32 +145,12 @@
 
 	"knifefight_wait"
 	{
-		"ru"		"Вы должны подождать ещё {1} пару раундов"
+		"ru"		"Вы должны подождать ещё {1} раундов"
 	}
 
 	"knifefight_name"
 	{
 		"ru"		"Ножевая схватка"
-	}
-
-	"knifefight_now_nc"
-	{
-		"ru"		"Начинается поножовщина раунд."
-	}
-
-	"knifefight_now_nc"
-	{
-		"ru"		"Начинается поножовщина раунд."
-	}
-
-	"knifefight_now_nc"
-	{
-		"ru"		"Начинается поножовщина раунд!"
-	}
-
-	"knifefight_now"
-	{
-		"ru"		"Начинается {purple}поножовщина{default} раунд."
 	}
 
 }

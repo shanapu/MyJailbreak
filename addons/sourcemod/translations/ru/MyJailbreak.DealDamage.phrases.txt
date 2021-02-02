@@ -1,76 +1,61 @@
 // Exported from SourceMod Translator
-// Date: 2018-05-23 19:27:28 UTC
+// Date: 2017-04-20 21:44:30 UTC
 // Language: Russian (ru)
 // 
 // To view other translations for this plugin, please visit:
-// http://translator.mitchdempsey.com/sourcemod_plugins/281
+// http://translator.mitchdempsey.com/sourcemod_plugins/200
 //
 "Phrases"
 {
 
+	"dealdamage_tag"
+	{
+		"ru"		"[{green}MyJB.День урона{default}]"
+	}
+
 	"dealdamage_need"
 	{
-		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до {darkred}Дня Урона"
+		"ru"		"{purple}{2}{default} проголосовал. {purple}{1}{default} голосов осталось до игры {darkred}Дня урона"
 	}
 
 	"dealdamage_rounds"
 	{
-		"ru"		"Раунд {purple}{1}{default} о {purple}{2}"
-	}
-
-	"dealdamage_twin_nc"
-	{
-		"ru"		"Команда КРАСНЫХ победила нанеся {1} урона!"
+		"ru"		"Раунд {purple}{1}{default} из {purple}{2}"
 	}
 
 	"dealdamage_voting"
 	{
-		"ru"		"Голосования за День Урона {purple}отключено"
+		"ru"		"Голосование за игру день Урона {purple}отключено"
 	}
 
 	"dealdamage_setbywarden"
 	{
-		"ru"		"Командир {purple}отключил{default} выбор День Урона"
+		"ru"		"Командир {purple}отключил{default} выбор игры день урона"
 	}
 
 	"dealdamage_setbyadmin"
 	{
-		"ru"		"Администратор {purple}отключил{default} выбор День Урона"
-	}
-
-	"dealdamage_ctwin_nc"
-	{
-		"ru"		"Команда СИНИХ победила нанеся {1} урона!"
+		"ru"		"Администратор {purple}отключил{default} выбор игры день урона"
 	}
 
 	"dealdamage_end"
 	{
-		"ru"		"{purple}День урона{default} окончен"
+		"ru"		"Игра {purple}день урона{default} окончена"
 	}
 
 	"dealdamage_next"
 	{
-		"ru"		"Следующий раунд {purple}День Урона"
+		"ru"		"Следующий раунд: {purple}День урона"
 	}
 
 	"dealdamage_next_nc"
 	{
-		"ru"		"Следующий раунд День Урона"
+		"ru"		"Следующий раунд: День урона"
 	}
 
 	"dealdamage_start"
 	{
 		"ru"		"{purple}День урона{default} начался!"
-	}
-
-	"dealdamage_now_nc"
-	{
-		"ru"		"Начинается Наноси Урон раунд."
-	}
-
-	"dealdamage_now"
-	{
-		"ru"		"Начинается {purple}Наноси Урон{default} раунд."
 	}
 
 	"dealdamage_start_nc"
@@ -80,7 +65,7 @@
 
 	"dealdamage_voted"
 	{
-		"ru"		"Вы уже проголосовали за {purple}День Урона"
+		"ru"		"Вы уже проголосовали за {purple}день урона"
 	}
 
 	"dealdamage_progress"
@@ -95,7 +80,7 @@
 
 	"dealdamage_timeuntilstart_nc"
 	{
-		"ru"		"{1} секунд до начала"
+		"ru"		"{1} сек. до начала"
 	}
 
 	"dealdamage_info_title"
@@ -110,7 +95,7 @@
 
 	"dealdamage_info_line2"
 	{
-		"ru"		"Нанесите как можно больше урона вражеского команде"
+		"ru"		"Нанесите как можно больше урона вражеской команде"
 	}
 
 	"dealdamage_info_line3"
@@ -135,62 +120,52 @@
 
 	"dealdamage_info_line7"
 	{
-		"ru"		"Не будь мудаком!"
+		"ru"		"Не будь засранцем!"
 	}
 
 	"dealdamage_wait"
 	{
-		"ru"		"Вы должны подождать больше {1} раундов"
+		"ru"		"Вы должны подождать {1} раундов"
 	}
 
 	"dealdamage_result"
 	{
-		"ru"		"Результаты Дня Урона"
+		"ru"		"Результаты дня урона"
 	}
 
 	"dealdamage_total"
 	{
-		"ru"		"Всего урона: {1} жизни"
+		"ru"		"Всего урона: {1} ОЗ"
 	}
 
 	"dealdamage_most"
 	{
-		"ru"		"Большинство урона: {1} урона: {2} жизни"
+		"ru"		"Большинство урона: {1} урона: {2} ОЗ"
 	}
 
 	"dealdamage_ct"
 	{
-		"ru"		"СИНИЕ нанесли: {1} ХП"
+		"ru"		"Урон синих: {1} ОЗ"
 	}
 
 	"dealdamage_t"
 	{
-		"ru"		"урон КРАСНЫХ: {1} ХП"
+		"ru"		"Урон красных: {1} ОЗ"
 	}
 
 	"dealdamage_bestct"
 	{
-		"ru"		"Лучший СИНИХ: {1} урон: {2} ХП"
+		"ru"		"Лучший в команде синих: {1} урона: {2} ОЗ"
 	}
 
 	"dealdamage_bestt"
 	{
-		"ru"		"Лучший КРАСНЫХ: {1} урон: {2} ХП"
+		"ru"		"Лучший в команде красных: {1} урона: {2} ОЗ"
 	}
 
 	"dealdamage_client"
 	{
-		"ru"		"Ваш урон: {1} жизни"
-	}
-
-	"dealdamage_ctdealed"
-	{
-		"ru"		"СИНИЕ нанесли:"
-	}
-
-	"dealdamage_tdealed"
-	{
-		"ru"		"КРАСНЫЕ нанесли:"
+		"ru"		"Ваш урон: {1} ОЗ"
 	}
 
 	"dealdamage_clientdealed"
@@ -210,52 +185,56 @@
 
 	"dealdamage_teamblue"
 	{
-		"ru"		"Вы в {blue}команде СИНИХ"
+		"ru"		"Вы в {blue}команде синих"
 	}
 
 	"dealdamage_teamred"
 	{
-		"ru"		"Вы в {darkred}команде КРАСНЫХ"
+		"ru"		"Вы в {darkred}команде красных"
 	}
 
 	"dealdamage_teamblue_nc"
 	{
-		"ru"		"Вы в команде СИНИХ"
+		"ru"		"Вы в команде синих"
 	}
 
 	"dealdamage_teamred_nc"
 	{
-		"ru"		"Вы в команде КРАСНЫХ"
+		"ru"		"Вы в команде красных"
 	}
 
 	"dealdamage_playerteamblue"
 	{
-		"ru"		"{purple}{1}{default} в {darkred}команде СИНИХ"
+		"ru"		"{purple}{1}{default} в {blue}команде синих"
 	}
 
 	"dealdamage_playerteamred"
 	{
-		"ru"		"{purple}{1}{default} в {darkred}команде КРАСНЫХ"
+		"ru"		"{purple}{1}{default} в {darkred}команде красных"
 	}
 
 	"dealdamage_blue_nc"
 	{
-		"ru"		"СИНИЙ"
+		"ru"		"Синие"
 	}
 
 	"dealdamage_red_nc"
 	{
-		"ru"		"КРАСНЫЙ"
+		"ru"		"Красные"
 	}
 
 	"dealdamage_info_blueteam"
 	{
-		"ru"		"Вы в команде СИНИХ"
+		"ru"		"Вы в команде синих"
 	}
 
 	"dealdamage_info_redteam"
 	{
-		"ru"		"Вы в команде КРАСНЫХ"
+		"ru"		"Вы в команде красных"
 	}
 
+	"dealdamage_info_line1"
+	{
+		"ru"		"Команда синих против команды красных"
+	}
 }
