@@ -286,7 +286,7 @@ public int Handle_MarkerMenu(Menu menu, MenuAction action, int client, int itemN
 {
 	if (action == MenuAction_Select)
 	{
-		if(IsValidClient(client, false, false) && (!IsClientWarden(client) && !IsClientDeputy(client)))
+		if (IsValidClient(client, false, false) && (IsClientWarden(client) || IsClientDeputy(client)))
 		{
 			char info[32];char info2[32];
 			bool found = menu.GetItem(itemNum, info, sizeof(info), _, info2, sizeof(info2));
