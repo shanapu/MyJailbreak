@@ -48,12 +48,10 @@ ConVar gc_sCustomCommandNoBlock;
 
 // Extern Convars
 ConVar g_bNoBlockSolid;
+ConVar g_bHostiesNoBlock;
 
 // Booleans
 bool g_bNoBlock = true;
-
-// Integers
-
 
 // Start
 public void NoBlock_OnPluginStart()
@@ -69,6 +67,7 @@ public void NoBlock_OnPluginStart()
 	gc_sCustomCommandNoBlock = AutoExecConfig_CreateConVar("sm_warden_cmds_noblock", "block, unblock, collision", "Set your custom chat command for toggle no block (!noblock (no 'sm_'/'!')(seperate with comma ', ')(max. 12 commands))");
 
 	// Hooks
+	HookEvent("round_start", NoBlock_RoundStart);
 	HookEvent("round_end", NoBlock_RoundEnd);
 
 	// FindConVar
@@ -116,6 +115,11 @@ public Action Command_ToggleNoBlock(int client, int args)
                    EVENTS
 ******************************************************************************/
 
+public void NoBlock_RoundStart(Event event, const char[] name, bool dontBroadcast)
+{
+	NoBlock_CheckHosties();
+}
+
 public void NoBlock_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	SetCvar("mp_solid_teammates", g_bNoBlockSolid.BoolValue);
@@ -162,5 +166,29 @@ public void NoBlock_OnConfigsExecuted()
 		Format(sCommand, sizeof(sCommand), "sm_%s", sCommandsL[i]);
 		if (!CommandExists(sCommand))
 			RegConsoleCmd(sCommand, Command_ToggleNoBlock, "Allows the Warden to toggle no block");
+	}
+	
+	// Find hosties' NoBlock ConVar
+	g_bHostiesNoBlock = FindConVar("sm_hosties_noblock_enable");
+	NoBlock_CheckHosties();
+}
+
+/******************************************************************************
+                   LOCAL FUNCTIONS
+******************************************************************************/
+
+void NoBlock_CheckHosties()
+{
+	if (g_bHostiesNoBlock != null)
+	{
+		g_bNoBlock = g_bHostiesNoBlock.BoolValue;
+	}
+	else
+	{
+		g_bHostiesNoBlock = FindConVar("sm_hosties_noblock_enable"); // Retry
+		if (g_bHostiesNoBlock != null)
+		{
+			g_bNoBlock = g_bHostiesNoBlock.BoolValue;
+		}
 	}
 }
