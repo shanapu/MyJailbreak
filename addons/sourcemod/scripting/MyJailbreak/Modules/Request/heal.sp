@@ -55,9 +55,6 @@ ConVar gc_iHealColorBlue;
 ConVar gc_sCustomCommandHeal;
 ConVar gc_sAdminFlagHeal;
 
-// Booleans
-bool g_bHealed[MAXPLAYERS+1];
-
 // Integers
 int g_iHealCounter[MAXPLAYERS+1];
 
@@ -126,7 +123,6 @@ public Action Command_Heal(int client, int args)
 								{
 									g_bIsRequest = true;
 									g_hTimerRequest = CreateTimer (gc_fHealTime.FloatValue, Timer_IsRequest);
-									g_bHealed[client] = true;
 									g_iHealCounter[client]++;
 									CPrintToChatAll("%s %t", g_sPrefix, "request_heal", client);
 									SetEntityRenderColor(client, gc_iHealColorRed.IntValue, gc_iHealColorGreen.IntValue, gc_iHealColorBlue.IntValue, 255);
@@ -166,7 +162,6 @@ public void Heal_Event_RoundStart(Event event, char[] name, bool dontBroadcast)
 		delete g_hTimerHeal[i];
 
 		g_iHealCounter[i] = 0;
-		g_bHealed[i] = false;
 
 		if (MyJB_CheckVIPFlags(i, "sm_heal_flag", gc_sAdminFlagHeal, "sm_heal_flag"))
 		{
@@ -210,8 +205,6 @@ public void Heal_OnClientPutInServer(int client)
 	{
 		g_iHealCounter[client] = -1;
 	}
-
-	g_bHealed[client] = false;
 }
 
 public void Heal_OnClientDisconnect(int client)
@@ -256,7 +249,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 				if (!IsValidClient(i, false, true))
 					continue;
 
-				if (!g_bHealed[i])
+				if (g_hTimerHeal[i] == null)
 					continue;
 
 				g_bIsRequest = false;
@@ -276,7 +269,7 @@ public int HealMenuHandler(Menu menu, MenuAction action, int client, int Positio
 				if (!IsValidClient(i, false, true))
 					continue;
 
-				if (!g_bHealed[i])
+				if (g_hTimerHeal[i] == null)
 					continue;
 
 				CPrintToChatAll("%s %t", g_sPrefix, "request_noaccepted", i, client);
@@ -306,5 +299,4 @@ public Action Timer_ResetColorHeal(Handle timer, int userid)
 	}
 
 	g_hTimerHeal[client] = null;
-	g_bHealed[client] = false;
 }
