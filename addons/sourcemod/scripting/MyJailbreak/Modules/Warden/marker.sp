@@ -235,14 +235,6 @@ void MarkerMenu(int client)
 		return;
 	}
 
-	float radius = 2*GetVectorDistance(g_fMarkerSetupEndOrigin, g_fMarkerSetupStartOrigin);
-	if (radius <= 0.0)
-	{
-		RemoveMarker(marker);
-		CPrintToChat(client, "%s %t", g_sPrefix, "warden_wrong");
-		return;
-	}
-
 	float g_fPos[3];
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", g_fPos);
 
