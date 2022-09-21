@@ -50,6 +50,12 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+// m_takedamage values
+#define DAMAGE_NO 0
+#define DAMAGE_EVENTS_ONLY 1 // Call damage functions, but don't modify health
+#define DAMAGE_YES 2
+#define DAMAGE_AIM 3
+
 // Booleans
 bool g_bIsFreeday = false;
 bool g_bStartFreeday = false;
@@ -706,7 +712,7 @@ void StartEventRound(bool thisround)
 
 			if (IsPlayerAlive(i))
 			{
-				SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+				SetEntProp(i, Prop_Data, "m_takedamage", DAMAGE_NO, 1);
 
 				SetEntityMoveType(i, MOVETYPE_NONE);
 			}
@@ -779,11 +785,11 @@ void PrepareDay()
 
 			if (!gc_bdamage.BoolValue)
 			{
-				SetEntProp(i, Prop_Data, "m_takedamage", 0, 1);
+				SetEntProp(i, Prop_Data, "m_takedamage", DAMAGE_NO, 1); // Disable damage received (godmode)
 			}
 			else
 			{
-				SetEntProp(i, Prop_Data, "m_takedamage", 1, 1);
+				SetEntProp(i, Prop_Data, "m_takedamage", DAMAGE_YES, 1); // Allow damage receive (no godmode, normal)
 			}
 
 			SetEntityMoveType(i, MOVETYPE_WALK);
