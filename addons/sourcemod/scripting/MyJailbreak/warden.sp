@@ -845,12 +845,7 @@ public void Event_PlayerDeath(Event event, const char[] name, bool dontBroadcast
 			EmitSoundToAllAny(g_sUnWarden);
 		}
 
-	//	delete g_hTimerOpen; // why delete don't work?
-		if (g_hTimerRandom != null)
-		{
-			KillTimer(g_hTimerRandom);
-		}
-		g_hTimerRandom = null;
+		delete g_hTimerRandom;
 
 		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
@@ -891,12 +886,7 @@ public void Event_PostRoundStart(Event event, const char[] name, bool dontBroadc
 
 	if ((g_iWarden == -1) && gc_bBecomeWarden.BoolValue && !gc_bChoiceWarden.BoolValue)
 	{
-		//	delete g_hTimerOpen; // why delete don't work?
-		if (g_hTimerRandom != null)
-		{
-			KillTimer(g_hTimerRandom);
-		}
-		g_hTimerRandom = null;
+		delete g_hTimerRandom;
 
 		g_hTimerRandom = CreateTimer(gc_fRandomTimer.FloatValue, Timer_ChooseRandom);
 
@@ -1420,12 +1410,7 @@ Action SetTheWarden(int client, int caller)
 			}
 		}
 
-	//	delete g_hTimerRandom; // why delete don't work?
-		if (g_hTimerRandom != null)
-		{
-			KillTimer(g_hTimerRandom);
-		}
-		g_hTimerRandom = null;
+		delete g_hTimerRandom;
 	}
 	else CReplyToCommand(client, "%s %t", g_sPrefix, "warden_disabled");
 
@@ -1694,9 +1679,10 @@ public int Handler_SetWardenOverwrite(Menu menu, MenuAction action, int client, 
 // Choose a random Warden after a defined time
 public Action Timer_ChooseRandom(Handle timer)
 {
+	g_hTimerRandom = null;
+	
 	if (!gc_bPlugin.BoolValue || !g_bEnabled || (g_bIsLR && gc_bRemoveLR.BoolValue) || g_iWarden != -1 || !gc_bChooseRandom.BoolValue)
 	{
-		g_hTimerRandom = null;
 		return Plugin_Stop;
 	}
 
@@ -1706,9 +1692,11 @@ public Action Timer_ChooseRandom(Handle timer)
 	{
 		CPrintToChatAll("%s %t", g_sPrefix, "warden_randomwarden");
 	}
-	else CreateTimer (0.1, Timer_ChooseRandom);
+	else
+	{
+		g_hTimerRandom = CreateTimer(0.1, Timer_ChooseRandom);
+	}
 
-	g_hTimerRandom = null;
 	return Plugin_Stop;
 }
 
