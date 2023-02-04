@@ -91,6 +91,7 @@ public void Mute_OnPluginStart()
 	// Hooks
 	HookEvent("round_end", Mute_Event_RoundEnd);
 	HookEvent("round_start", Mute_Event_RoundStart);
+	HookEvent("player_team", Mute_Event_PlayerTeam_Post, EventHookMode_Post);
 }
 
 public void Mute_OnConfigsExecuted()
@@ -226,6 +227,16 @@ public void Mute_Event_RoundStart(Event event, const char[] name, bool dontBroad
 public void Mute_Event_RoundEnd(Event event, const char[] name, bool dontBroadcast)
 {
 	UnMuteAll(true);
+}
+
+public void Mute_Event_PlayerTeam_Post(Event event, const char[] szName, bool bDontBroadcast)
+{
+	int client = GetClientOfUserId(event.GetInt("userid"));
+
+	if (event.GetInt("team") == CS_TEAM_CT)
+	{
+		UnMuteClient(client, -1);
+	}
 }
 
 /******************************************************************************
